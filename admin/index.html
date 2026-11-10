@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>एडमिन पैनल — दीपांकर-कुंज</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <!-- ================= LOGIN ================= -->
+    <main id="login" class="login" hidden>
+      <form id="loginForm" class="login-card" novalidate>
+        <img src="../assets/logo.jpg" width="72" height="72" alt="" />
+        <h1>एडमिन पैनल</h1>
+        <p class="muted">दीपांकर-कुंज [NGO] · अमरपुर, बांका</p>
+        <label for="pw">पासवर्ड</label>
+        <input id="pw" type="password" autocomplete="current-password" required />
+        <p class="err" id="loginErr" role="alert"></p>
+        <button class="btn btn-primary" type="submit">लॉगिन करें</button>
+        <p class="demo-note">डेमो: पासवर्ड <code>dk@2010</code> · सारा डेटा इसी ब्राउज़र में सेव होता है।</p>
+      </form>
+    </main>
+
+    <!-- ================= APP ================= -->
+    <div id="app" class="app" hidden>
+      <aside class="sidebar" id="sidebar">
+        <a class="sb-brand" href="#dashboard">
+          <img src="../assets/logo.jpg" width="40" height="40" alt="" />
+          <span><b>दीपांकर-कुंज</b><small>एडमिन पैनल</small></span>
+        </a>
+        <nav class="sb-nav" aria-label="एडमिन मेनू">
+          <a href="#dashboard" data-view="dashboard"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/></svg>डैशबोर्ड</a>
+          <a href="#members" data-view="members"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zM8 12a3 3 0 1 0-3-3 3 3 0 0 0 3 3zM16 13c-2.7 0-8 1.3-8 4v3h16v-3c0-2.7-5.3-4-8-4zM8 14c-.3 0-.7 0-1.1.1A4.6 4.6 0 0 1 9 17v3H1v-2.5C1 15.3 5.6 14 8 14z"/></svg>सदस्य<span class="sb-badge" id="pendingBadge" hidden></span></a>
+          <a href="#donations" data-view="donations"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h11v2h-4.3a5 5 0 0 1 1.1 2H18v2h-3.2A5.5 5.5 0 0 1 10 14.9L16 21h-2.8l-6-6.2V13h2.5a3.5 3.5 0 0 0 3.2-3H7V8h5.7A3.5 3.5 0 0 0 9.7 6H7z"/></svg>दान</a>
+          <a href="#media" data-view="media"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5z"/></svg>गैलरी व अख़बार</a>
+        </nav>
+        <div class="sb-foot">
+          <a href="../index.html" target="_blank" rel="noopener">वेबसाइट देखें ↗</a>
+          <button type="button" id="logout">लॉग आउट</button>
+        </div>
+      </aside>
+      <div class="sb-scrim" id="scrim" hidden></div>
+
+      <div class="main">
+        <header class="topbar">
+          <button type="button" class="menu-btn" id="menuBtn" aria-controls="sidebar" aria-expanded="false" aria-label="मेनू खोलें"><span></span></button>
+          <h1 id="viewTitle">डैशबोर्ड</h1>
+          <span class="demo-pill" title="डेटा केवल इसी ब्राउज़र की localStorage में है">डेमो मोड</span>
+        </header>
+
+        <!-- DASHBOARD -->
+        <section class="view" data-view="dashboard">
+          <div class="stats" id="stats"></div>
+          <div class="grid-2">
+            <div class="panel">
+              <div class="panel-head"><h2>नए सदस्यता अनुरोध</h2><a href="#members">सभी देखें</a></div>
+              <div id="recentMembers"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head"><h2>हाल के दान</h2><a href="#donations">सभी देखें</a></div>
+              <div id="recentDonations"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MEMBERS -->
+        <section class="view" data-view="members">
+          <div class="toolbar">
+            <input type="search" id="mSearch" placeholder="नाम, मोबाइल या क्रमांक से खोजें" aria-label="सदस्य खोजें" />
+            <select id="mStatus" aria-label="स्थिति से छाँटें">
+              <option value="">सभी स्थिति</option>
+              <option value="pending">लंबित</option>
+              <option value="approved">स्वीकृत</option>
+              <option value="paid">भुगतान प्राप्त</option>
+              <option value="rejected">अस्वीकृत</option>
+            </select>
+            <button type="button" class="btn" id="mAddBtn">+ सदस्य जोड़ें</button>
+            <button type="button" class="btn" id="mExport">CSV डाउनलोड</button>
+          </div>
+          <form class="panel inline-form" id="mForm" hidden>
+            <h2>नया सदस्य जोड़ें</h2>
+            <div class="fields">
+              <label>नाम *<input name="name" required minlength="2" maxlength="100" /></label>
+              <label>मोबाइल *<input name="phone" required inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" /></label>
+              <label>गाँव / शहर<input name="place" maxlength="120" /></label>
+              <label>राशि (₹) *<input name="amount" type="number" min="1" required value="51" /></label>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">सेव करें</button><button class="btn" type="button" data-cancel>रद्द करें</button></div>
+          </form>
+          <div class="panel table-wrap"><table class="tbl" id="mTable"></table></div>
+        </section>
+
+        <!-- DONATIONS -->
+        <section class="view" data-view="donations">
+          <div class="toolbar">
+            <input type="search" id="dSearch" placeholder="दाता का नाम या रसीद क्रमांक" aria-label="दान खोजें" />
+            <button type="button" class="btn btn-primary" id="dAddBtn">+ दान दर्ज करें</button>
+            <button type="button" class="btn" id="dExport">CSV डाउनलोड</button>
+          </div>
+          <form class="panel inline-form" id="dForm" hidden>
+            <h2>दान दर्ज करें</h2>
+            <div class="fields">
+              <label>दाता का नाम *<input name="donor_name" required minlength="2" maxlength="100" /></label>
+              <label>मोबाइल<input name="phone" inputmode="numeric" maxlength="10" /></label>
+              <label>गाँव / शहर<input name="place" maxlength="120" /></label>
+              <label>राशि (₹) *<input name="amount" type="number" min="1" required /></label>
+              <label>माध्यम
+                <select name="mode"><option value="cash">नकद</option><option value="upi">UPI</option><option value="bank">बैंक ट्रांसफ़र</option><option value="cheque">चेक</option><option value="other">अन्य</option></select>
+              </label>
+              <label>दिनांक *<input name="donated_on" type="date" required /></label>
+              <label class="wide">उद्देश्य<input name="purpose" maxlength="120" placeholder="जैसे — पुस्तकालय, भवन मरम्मत" /></label>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">सेव करें</button><button class="btn" type="button" data-cancel>रद्द करें</button></div>
+          </form>
+          <div class="panel table-wrap"><table class="tbl" id="dTable"></table></div>
+        </section>
+
+        <!-- MEDIA -->
+        <section class="view" data-view="media">
+          <form class="panel inline-form" id="uForm">
+            <h2>नई तस्वीर जोड़ें</h2>
+            <p class="muted">यहाँ जोड़ी गई तस्वीरें वेबसाइट की गैलरी (मुख्य पृष्ठ) या अख़बार-कटिंग (उपलब्धियाँ) में दिखेंगी।</p>
+            <div class="fields">
+              <label>कहाँ दिखे
+                <select name="kind"><option value="gallery">गैलरी — झलकियाँ</option><option value="press">अख़बार की कटिंग</option></select>
+              </label>
+              <label>तस्वीर * (JPG / PNG)<input name="file" type="file" accept="image/jpeg,image/png,image/webp" required /></label>
+              <label class="wide">कैप्शन (हिंदी) *<input name="caption" required maxlength="200" /></label>
+              <label class="wide">Caption (English)<input name="caption_en" maxlength="200" /></label>
+            </div>
+            <p class="err" id="uErr" role="alert"></p>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">अपलोड करें</button></div>
+          </form>
+          <div class="media-grid" id="mediaGrid"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="../js/store.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>

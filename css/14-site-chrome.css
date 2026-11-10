@@ -125,3 +125,9 @@ footer.site-footer{background:var(--ink);color:#d9cfbb;text-align:left;border-to
 
 /* the bottom sticky CTA bar is gone, so the floating WhatsApp button sits at the normal corner */
 @media (max-width:860px){ #waFloat{bottom:calc(18px + env(safe-area-inset-bottom))} }
+
+/* join form — privacy line under the submit button */
+.form-privacy{margin:12px 0 0;font-size:.86rem;color:var(--ink-soft);text-align:center}
+
+/* photos added from the admin panel use the same gallery/press styles; keep the card reveal visible */
+[data-admin-media].press-card{opacity:1;transform:none}

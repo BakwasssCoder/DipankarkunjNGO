@@ -133,6 +133,7 @@
     var lbEl = document.getElementById("lightbox"), zb = document.getElementById("lb-zoom");
     if(zb && lbEl && !lbEl.classList.contains("zoomed")) zb.textContent = lang === "en" ? "Read in large size" : "बड़ा करके पढ़ें";
     updateBanner();
+    if(typeof renderAdminMedia === "function") renderAdminMedia();
   }
   document.querySelectorAll(".lang-toggle button").forEach(function(b){
     b.addEventListener("click", function(){ applyLang(b.getAttribute("data-lang")); });
@@ -208,9 +209,46 @@
   }
   function openLb(btn){ collect(btn); render(); lb.classList.add("open"); document.body.style.overflow = "hidden"; }
   function closeLb(){ lb.classList.remove("open"); lb.classList.remove("zoomed"); document.body.style.overflow = ""; }
-  document.querySelectorAll(".gal button, .press-card").forEach(function(b){
-    b.addEventListener("click", function(){ openLb(b); });
+  /* delegated, so photos added from the admin panel open in the lightbox too */
+  document.addEventListener("click", function(e){
+    var b = e.target.closest && e.target.closest(".gal button, .press-card");
+    if(b) openLb(b);
   });
+
+  /* photos published from the admin panel (js/store.js) — appended after the built-in ones */
+  var ZOOM_SVG = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M16 3h3a2 2 0 0 1 2 2v3"/><path d="M8 21H5a2 2 0 0 1-2-2v-3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+  function renderAdminMedia(){
+    if(!window.DK_STORE) return;
+    document.querySelectorAll("[data-admin-media]").forEach(function(el){ el.remove(); });
+    [["gallery", "galGrid"], ["press", "pressGrid"]].forEach(function(pair){
+      var box = document.getElementById(pair[1]);
+      if(!box) return;
+      DK_STORE.publishedMedia(pair[0]).forEach(function(m){
+        var cap = (curLang === "en" && m.caption_en) ? m.caption_en : (m.caption || "");
+        var b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("data-admin-media", "");
+        b.setAttribute("data-cap", cap);
+        var img = document.createElement("img");
+        img.src = m.image; img.alt = cap; img.loading = "lazy";
+        var capEl = document.createElement("span");
+        capEl.textContent = cap;
+        if(pair[0] === "gallery"){
+          var ph = document.createElement("span"); ph.className = "gal-ph";
+          var z = document.createElement("span"); z.className = "gal-zoom"; z.setAttribute("aria-hidden", "true"); z.innerHTML = ZOOM_SVG;
+          ph.appendChild(img); ph.appendChild(z);
+          capEl.className = "gal-cap";
+          b.appendChild(ph); b.appendChild(capEl);
+        } else {
+          b.className = "press-card";
+          capEl.className = "pc-head";
+          b.appendChild(img); b.appendChild(capEl);
+        }
+        box.appendChild(b);
+      });
+    });
+  }
+  renderAdminMedia();
   document.getElementById("lb-close").addEventListener("click", closeLb);
   document.getElementById("lb-prev").addEventListener("click", function(){ idx = (idx - 1 + items.length) % items.length; render(); });
   document.getElementById("lb-next").addEventListener("click", function(){ idx = (idx + 1) % items.length; render(); });
@@ -364,7 +402,9 @@
     if(!okName){ document.getElementById("inName").focus(); return; }
     if(!okPhone){ document.getElementById("inPhone").focus(); return; }
     var now = new Date();
-    var id = "DK-" + now.getFullYear() + "-" + String(Math.floor(1000 + Math.random() * 9000));
+    /* saved as a pending membership request — visible in the admin panel (admin/) */
+    var id = (window.DK_STORE && DK_STORE.submitMembership({name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, msg: document.getElementById("inMsg").value.trim(), lang: curLang}))
+      || "DK-" + now.getFullYear() + "-" + String(Math.floor(1000 + Math.random() * 9000));
     var dateStr = now.toLocaleDateString(curLang === "en" ? "en-IN" : "hi-IN", {day: "numeric", month: "long", year: "numeric"});
     receiptData = {id: id, name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, date: dateStr, msg: document.getElementById("inMsg").value.trim()};
     var waText = curLang === "en" ?

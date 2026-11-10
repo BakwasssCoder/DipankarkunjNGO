@@ -20,9 +20,32 @@ css/
   14-site-chrome.css       site header, mobile menu, page banner, footer (website look)
 js/
   translations.js      English strings (window.DK_EN) — Hindi is the text in index.html
+  store.js             DK_STORE — demo data layer (localStorage) shared with the admin panel
   main.js              loader, router, language toggle, lightbox, carousel, join form, receipt
+admin/                 admin panel (index.html, admin.css, admin.js) — open /admin/
 assets/                photos (all images used by the site)
+robots.txt             keeps /admin/ out of search engines
 ```
+
+## Admin panel (demo)
+
+Open `http://localhost:8000/admin/` — demo password **`dk@2010`** (set in `admin/admin.js`).
+
+| Sidebar | What it does |
+|---|---|
+| डैशबोर्ड | totals: members, pending requests, donations, this month |
+| सदस्य | requests from the website "सदस्य बनिए" form — search, filter, change status, WhatsApp, CSV export, add manually |
+| दान | record donations, print receipt, CSV export |
+| गैलरी व अख़बार | upload photos → they appear in the website gallery / press section; hide or delete |
+
+**Demo limits:** all data is stored in the browser's `localStorage` (`js/store.js`).
+It is per-browser (another phone/computer sees nothing), limited to ~5 MB, and the
+password is visible in the source. Website and admin must be opened on the same
+address (both `localhost:8000`, or both on the same Netlify domain).
+
+**Going live:** replace the functions in `js/store.js` with calls to a real backend
+(e.g. Supabase: tables `members`, `donations`, `media` + Auth for login). Website and admin
+code only talk to `DK_STORE`, so nothing else needs to change.
 
 ### How pages work
 

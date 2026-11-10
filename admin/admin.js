@@ -1,0 +1,281 @@
+/* Deepankar-Kunj admin panel — demo version.
+   Data: js/store.js (browser localStorage, shared with the website on the same origin).
+   shortcut: demo password checked in the browser — anyone can read it in this file.
+   Replace with real login (Supabase Auth / server) before going live. */
+(function(){
+  "use strict";
+  var DEMO_PASSWORD = "dk@2010";
+  var S = window.DK_STORE;
+  var $ = function(id){ return document.getElementById(id); };
+
+  var STATUS = { pending: "लंबित", approved: "स्वीकृत", paid: "भुगतान प्राप्त", rejected: "अस्वीकृत" };
+  var MODE = { cash: "नकद", upi: "UPI", bank: "बैंक ट्रांसफ़र", cheque: "चेक", other: "अन्य" };
+  var VIEWS = { dashboard: "डैशबोर्ड", members: "सदस्य", donations: "दान", media: "गैलरी व अख़बार" };
+
+  function esc(v){
+    return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function rupees(n){ return "₹" + Number(n || 0).toLocaleString("en-IN"); }
+  function fmtDate(iso){
+    var d = new Date(iso);
+    return isNaN(d) ? "" : d.toLocaleDateString("hi-IN", { day: "numeric", month: "short", year: "numeric" });
+  }
+  var toastTimer;
+  function toast(msg){
+    var t = $("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastTimer); toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2400);
+  }
+
+  /* ---------- login ---------- */
+  function loggedIn(){ try { return sessionStorage.getItem("dk_admin") === "1"; } catch(e){ return false; } }
+  function showApp(){
+    var ok = loggedIn();
+    $("login").hidden = ok; $("app").hidden = !ok;
+    if(ok) route(); else $("pw").focus();
+  }
+  $("loginForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    if($("pw").value !== DEMO_PASSWORD){ $("loginErr").textContent = "पासवर्ड ग़लत है।"; $("pw").select(); return; }
+    try { sessionStorage.setItem("dk_admin", "1"); } catch(err){}
+    $("pw").value = ""; $("loginErr").textContent = "";
+    showApp();
+  });
+  $("logout").addEventListener("click", function(){
+    try { sessionStorage.removeItem("dk_admin"); } catch(err){}
+    showApp();
+  });
+
+  /* ---------- sidebar + routing (#dashboard, #members, #donations, #media) ---------- */
+  function setNav(open){
+    $("app").classList.toggle("nav-open", open);
+    $("scrim").hidden = !open;
+    $("menuBtn").setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  $("menuBtn").addEventListener("click", function(){ setNav(!$("app").classList.contains("nav-open")); });
+  $("scrim").addEventListener("click", function(){ setNav(false); });
+  document.addEventListener("keydown", function(e){ if(e.key === "Escape") setNav(false); });
+
+  function current(){ var v = location.hash.slice(1); return VIEWS[v] ? v : "dashboard"; }
+  function route(){
+    if(!loggedIn()) return;
+    var v = current();
+    document.querySelectorAll(".view").forEach(function(s){ s.hidden = s.getAttribute("data-view") !== v; });
+    document.querySelectorAll(".sb-nav a").forEach(function(a){
+      var on = a.getAttribute("data-view") === v;
+      a.classList.toggle("active", on);
+      if(on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    });
+    $("viewTitle").textContent = VIEWS[v];
+    document.title = VIEWS[v] + " — एडमिन · दीपांकर-कुंज";
+    setNav(false);
+    render();
+  }
+  window.addEventListener("hashchange", route);
+  /* a membership submitted on the website in another tab shows up here immediately */
+  window.addEventListener("storage", function(){ if(loggedIn()) render(); });
+
+  function render(){
+    var pending = S.list("members").filter(function(m){ return m.status === "pending"; }).length;
+    $("pendingBadge").hidden = !pending; $("pendingBadge").textContent = pending;
+    ({ dashboard: renderDashboard, members: renderMembers, donations: renderDonations, media: renderMedia })[current()]();
+  }
+
+  /* ---------- dashboard ---------- */
+  function renderDashboard(){
+    var members = S.list("members"), donations = S.list("donations");
+    var now = new Date(), ym = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+    var sum = function(arr, f){ return arr.reduce(function(t, r){ return t + (Number(r[f]) || 0); }, 0); };
+    var cards = [
+      ["कुल सदस्य", members.filter(function(m){ return m.status !== "rejected"; }).length, "var(--board)"],
+      ["लंबित अनुरोध", members.filter(function(m){ return m.status === "pending"; }).length, "var(--rani)"],
+      ["कुल दान", rupees(sum(donations, "amount")), "var(--leaf)"],
+      ["इस महीने का दान", rupees(sum(donations.filter(function(d){ return (d.donated_on || "").slice(0, 7) === ym; }), "amount")), "var(--saffron)"]
+    ];
+    $("stats").innerHTML = cards.map(function(c){
+      return '<div class="stat" style="--c:' + c[2] + '"><span>' + esc(c[0]) + "</span><b>" + esc(c[1]) + "</b></div>";
+    }).join("");
+    $("recentMembers").innerHTML = members.length ? members.slice(0, 5).map(function(m){
+      return '<div class="mini-row"><div><b>' + esc(m.name) + "</b><small>" + esc(m.member_no) + " · " + esc(fmtDate(m.created_at)) +
+        '</small></div><span class="status st-' + esc(m.status) + '">' + esc(STATUS[m.status]) + "</span></div>";
+    }).join("") : '<p class="empty">अभी कोई अनुरोध नहीं। वेबसाइट के “सदस्य बनिए” फ़ॉर्म से अनुरोध यहाँ आएँगे।</p>';
+    $("recentDonations").innerHTML = donations.length ? donations.slice(0, 5).map(function(d){
+      return '<div class="mini-row"><div><b>' + esc(d.donor_name) + "</b><small>" + esc(d.receipt_no) + " · " + esc(fmtDate(d.donated_on)) +
+        "</small></div><b>" + esc(rupees(d.amount)) + "</b></div>";
+    }).join("") : '<p class="empty">अभी कोई दान दर्ज नहीं है।</p>';
+  }
+
+  /* ---------- members ---------- */
+  $("mSearch").addEventListener("input", renderMembers);
+  $("mStatus").addEventListener("change", renderMembers);
+  function renderMembers(){
+    var q = $("mSearch").value.trim().toLowerCase(), st = $("mStatus").value;
+    var rows = S.list("members").filter(function(m){
+      return (!st || m.status === st) && (!q || [m.name, m.phone, m.member_no, m.place].join(" ").toLowerCase().indexOf(q) !== -1);
+    });
+    var head = "<thead><tr><th>क्रमांक</th><th>नाम</th><th>मोबाइल</th><th>सदस्यता</th><th>स्थिति</th><th></th></tr></thead>";
+    if(!rows.length){ $("mTable").innerHTML = head + '<tbody><tr><td colspan="6" class="empty">कोई सदस्य नहीं मिला।</td></tr></tbody>'; return; }
+    $("mTable").innerHTML = head + "<tbody>" + rows.map(function(m){
+      var opts = Object.keys(STATUS).map(function(k){
+        return '<option value="' + k + '"' + (k === m.status ? " selected" : "") + ">" + STATUS[k] + "</option>";
+      }).join("");
+      return "<tr><td><b>" + esc(m.member_no) + '</b><span class="sub">' + esc(fmtDate(m.created_at)) + "</span></td>" +
+        "<td>" + esc(m.name) + '<span class="sub">' + esc(m.place) + (m.message ? " · “" + esc(m.message) + "”" : "") + "</span></td>" +
+        '<td><a href="tel:+91' + esc(m.phone) + '">' + esc(m.phone) + "</a></td>" +
+        "<td>" + esc(m.tier) + '<span class="sub">' + esc(rupees(m.amount)) + "</span></td>" +
+        '<td><select data-status="' + esc(m.id) + '" aria-label="स्थिति बदलें">' + opts + "</select></td>" +
+        '<td><div class="actions"><a class="btn btn-sm" target="_blank" rel="noopener" href="https://wa.me/91' + esc(m.phone) + '">WhatsApp</a>' +
+        '<button type="button" class="btn btn-sm btn-danger" data-del-member="' + esc(m.id) + '">हटाएँ</button></div></td></tr>';
+    }).join("") + "</tbody>";
+  }
+  $("mTable").addEventListener("change", function(e){
+    var id = e.target.getAttribute("data-status");
+    if(id){ S.update("members", id, { status: e.target.value }); toast("स्थिति बदल दी गई"); render(); }
+  });
+  $("mTable").addEventListener("click", function(e){
+    var id = e.target.getAttribute("data-del-member");
+    if(id && confirm("इस सदस्य को हटाना है? यह वापस नहीं आएगा।")){ S.remove("members", id); toast("सदस्य हटा दिया गया"); render(); }
+  });
+  $("mAddBtn").addEventListener("click", function(){ $("mForm").hidden = false; $("mForm").elements.name.focus(); });
+  $("mForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var f = e.target;
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var no = S.submitMembership({ name: f.elements.name.value.trim(), phone: f.elements.phone.value.trim(), place: f.elements.place.value.trim(),
+      tier: "कार्यालय से जोड़ा गया", amount: parseInt(f.elements.amount.value, 10) });
+    if(!no){ toast("सेव नहीं हुआ — ब्राउज़र स्टोरेज भरा है"); return; }
+    f.reset(); f.hidden = true; toast("सदस्य जोड़ा गया — " + no); render();
+  });
+
+  /* ---------- donations ---------- */
+  $("dSearch").addEventListener("input", renderDonations);
+  function renderDonations(){
+    var q = $("dSearch").value.trim().toLowerCase();
+    var rows = S.list("donations").filter(function(d){
+      return !q || [d.donor_name, d.receipt_no, d.phone, d.purpose].join(" ").toLowerCase().indexOf(q) !== -1;
+    });
+    var head = "<thead><tr><th>रसीद</th><th>दाता</th><th>उद्देश्य</th><th>माध्यम</th><th style='text-align:right'>राशि</th><th></th></tr></thead>";
+    if(!rows.length){ $("dTable").innerHTML = head + '<tbody><tr><td colspan="6" class="empty">कोई दान दर्ज नहीं है।</td></tr></tbody>'; return; }
+    $("dTable").innerHTML = head + "<tbody>" + rows.map(function(d){
+      return "<tr><td><b>" + esc(d.receipt_no) + '</b><span class="sub">' + esc(fmtDate(d.donated_on)) + "</span></td>" +
+        "<td>" + esc(d.donor_name) + '<span class="sub">' + esc([d.phone, d.place].filter(Boolean).join(" · ")) + "</span></td>" +
+        "<td>" + esc(d.purpose || "—") + "</td><td>" + esc(MODE[d.mode] || d.mode) + "</td>" +
+        '<td class="num"><b>' + esc(rupees(d.amount)) + "</b></td>" +
+        '<td><div class="actions"><button type="button" class="btn btn-sm" data-print="' + esc(d.id) + '">रसीद</button>' +
+        '<button type="button" class="btn btn-sm btn-danger" data-del-donation="' + esc(d.id) + '">हटाएँ</button></div></td></tr>';
+    }).join("") + "</tbody>";
+  }
+  $("dAddBtn").addEventListener("click", function(){
+    var f = $("dForm"); f.hidden = false;
+    f.elements.donated_on.value = new Date().toISOString().slice(0, 10);
+    f.elements.donor_name.focus();
+  });
+  $("dForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var f = e.target;
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var rec = S.add("donations", {
+      receipt_no: S.newReceiptNo(), donor_name: f.elements.donor_name.value.trim(), phone: f.elements.phone.value.trim(),
+      place: f.elements.place.value.trim(), amount: parseInt(f.elements.amount.value, 10), mode: f.elements.mode.value,
+      donated_on: f.elements.donated_on.value, purpose: f.elements.purpose.value.trim()
+    });
+    if(!rec){ toast("सेव नहीं हुआ — ब्राउज़र स्टोरेज भरा है"); return; }
+    f.reset(); f.hidden = true; toast("दान दर्ज हुआ — " + rec.receipt_no); render();
+  });
+  $("dTable").addEventListener("click", function(e){
+    var del = e.target.getAttribute("data-del-donation"), pr = e.target.getAttribute("data-print");
+    if(del && confirm("यह दान-प्रविष्टि हटानी है?")){ S.remove("donations", del); toast("प्रविष्टि हटा दी गई"); render(); }
+    if(pr){ printReceipt(S.list("donations").filter(function(d){ return d.id === pr; })[0]); }
+  });
+  function printReceipt(d){
+    if(!d) return;
+    var w = window.open("", "_blank", "width=720,height=640");
+    if(!w){ toast("पॉप-अप ब्लॉक है — इसे अनुमति दीजिए"); return; }
+    var logo = new URL("../assets/logo.jpg", location.href).href;
+    w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>' + esc(d.receipt_no) + '</title>' +
+      '<style>body{font-family:Mukta,system-ui,sans-serif;padding:40px;color:#1d1a16}.r{border:2px solid #1d1a16;padding:28px;max-width:560px;margin:auto}' +
+      'h1{margin:6px 0 0;font-size:1.6rem}.c{text-align:center}.c img{width:70px;border-radius:50%}table{width:100%;margin-top:18px;border-collapse:collapse}' +
+      'td{padding:8px 0;border-bottom:1px solid #ddd}td:first-child{color:#5d5646;width:40%}.sig{margin-top:48px;text-align:right}</style></head><body><div class="r">' +
+      '<div class="c"><img src="' + esc(logo) + '" alt=""><h1>दीपांकर-कुंज [NGO]</h1><div>अमरपुर, बांका (बिहार) · पंजी. – 849, 2010-11</div><h2>दान रसीद</h2></div>' +
+      "<table><tr><td>रसीद क्रमांक</td><td><b>" + esc(d.receipt_no) + "</b></td></tr><tr><td>दिनांक</td><td>" + esc(fmtDate(d.donated_on)) + "</td></tr>" +
+      "<tr><td>दाता</td><td>" + esc(d.donor_name) + "</td></tr><tr><td>राशि</td><td><b>" + esc(rupees(d.amount)) + "</b></td></tr>" +
+      "<tr><td>माध्यम</td><td>" + esc(MODE[d.mode] || d.mode) + "</td></tr><tr><td>उद्देश्य</td><td>" + esc(d.purpose || "—") + "</td></tr></table>" +
+      '<p class="sig">हस्ताक्षर — सचिव, दीपांकर-कुंज</p></div><script>onload=function(){print()}<\/script></body></html>');
+    w.document.close();
+  }
+
+  /* ---------- CSV export (UTF-8 BOM so Excel shows Hindi correctly) ---------- */
+  function downloadCsv(name, cols, rows){
+    var cell = function(v){ v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+    var csv = "﻿" + [cols.map(function(c){ return cell(c[1]); }).join(",")].concat(rows.map(function(r){
+      return cols.map(function(c){ return cell(r[c[0]]); }).join(",");
+    })).join("\n");
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    a.download = name + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  }
+  $("mExport").addEventListener("click", function(){
+    downloadCsv("deepankar-kunj-members", [["member_no","क्रमांक"],["name","नाम"],["phone","मोबाइल"],["place","गाँव/शहर"],["tier","सदस्यता"],["amount","राशि"],["status","स्थिति"],["message","संदेश"],["created_at","दिनांक"]], S.list("members"));
+  });
+  $("dExport").addEventListener("click", function(){
+    downloadCsv("deepankar-kunj-donations", [["receipt_no","रसीद"],["donated_on","दिनांक"],["donor_name","दाता"],["phone","मोबाइल"],["place","गाँव/शहर"],["amount","राशि"],["mode","माध्यम"],["purpose","उद्देश्य"]], S.list("donations"));
+  });
+
+  document.querySelectorAll("[data-cancel]").forEach(function(b){
+    b.addEventListener("click", function(){ var f = b.closest("form"); f.reset(); f.hidden = true; });
+  });
+
+  /* ---------- media (gallery + press) ---------- */
+  /* shrink to max 1400px JPEG so photos fit in localStorage (~5 MB total) */
+  function toDataUrl(file){
+    return new Promise(function(resolve, reject){
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function(){
+        var scale = Math.min(1, 1400 / Math.max(img.width, img.height));
+        var c = document.createElement("canvas");
+        c.width = Math.round(img.width * scale); c.height = Math.round(img.height * scale);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url);
+        resolve(c.toDataURL("image/jpeg", 0.8));
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); reject(); };
+      img.src = url;
+    });
+  }
+  $("uForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var f = e.target, file = f.elements.file.files[0];
+    $("uErr").textContent = "";
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    if(!/^image\/(jpeg|png|webp)$/.test(file.type)){ $("uErr").textContent = "केवल JPG, PNG या WebP तस्वीर चुनिए।"; return; }
+    toDataUrl(file).then(function(dataUrl){
+      var rec = S.add("media", { kind: f.elements.kind.value, image: dataUrl, caption: f.elements.caption.value.trim(),
+        caption_en: f.elements.caption_en.value.trim(), published: true, sort: Date.now() });
+      if(!rec){ $("uErr").textContent = "जगह नहीं बची — ब्राउज़र स्टोरेज भर गया है। पुरानी तस्वीरें हटाइए।"; return; }
+      f.reset(); toast("तस्वीर जोड़ी गई — वेबसाइट पर दिख रही है"); render();
+    }, function(){ $("uErr").textContent = "यह तस्वीर खुल नहीं पाई। दूसरी फ़ाइल चुनिए।"; });
+  });
+  function renderMedia(){
+    var all = S.list("media");
+    $("mediaGrid").innerHTML = all.length ? all.map(function(m){
+      return '<div class="m-card' + (m.published ? "" : " off") + '"><img src="' + esc(m.image) + '" alt="' + esc(m.caption) + '" loading="lazy" />' +
+        '<div class="m-body"><span class="m-cap">' + esc(m.caption) + '</span><span class="sub muted">' + (m.kind === "press" ? "अख़बार" : "गैलरी") +
+        " · " + (m.published ? "वेबसाइट पर दिख रही" : "छिपी हुई") + "</span>" +
+        '<div class="m-row"><button type="button" class="btn btn-sm" data-toggle="' + esc(m.id) + '">' + (m.published ? "छिपाएँ" : "दिखाएँ") + "</button>" +
+        '<button type="button" class="btn btn-sm btn-danger" data-del-media="' + esc(m.id) + '">हटाएँ</button></div></div></div>';
+    }).join("") : '<p class="empty">अभी कोई तस्वीर नहीं जोड़ी गई। वेबसाइट की मूल तस्वीरें अपनी जगह पर हैं — यहाँ से नई जोड़िए।</p>';
+  }
+  $("mediaGrid").addEventListener("click", function(e){
+    var t = e.target.getAttribute("data-toggle"), d = e.target.getAttribute("data-del-media");
+    if(t){
+      var m = S.list("media").filter(function(x){ return x.id === t; })[0];
+      if(m){ S.update("media", t, { published: !m.published }); toast(m.published ? "तस्वीर छिपा दी गई" : "तस्वीर वेबसाइट पर दिख रही है"); render(); }
+    }
+    if(d && confirm("यह तस्वीर हटानी है?")){ S.remove("media", d); toast("तस्वीर हटा दी गई"); render(); }
+  });
+
+  showApp();
+})();
