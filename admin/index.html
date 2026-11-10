@@ -41,6 +41,7 @@
           <a href="#messages" data-view="messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg>संदेश<span class="sb-badge" id="unreadBadge" hidden></span></a>
           <a href="#notices" data-view="notices"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11v2h4v-2zm-2 6.6 3.2 2.4 1.2-1.6-3.2-2.4zM20.4 5.6 19.2 4 16 6.4l1.2 1.6zM4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1v4h2v-4h1l5 3V6L8 9zm11.5 3A4.5 4.5 0 0 0 14 8.6v6.8a4.5 4.5 0 0 0 1.5-3.4z"/></svg>सूचनाएँ</a>
           <a href="#settings" data-view="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.6 7.6 0 0 0 1.7 1L11 21h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 3.5-3.5 3.5 3.5 0 0 1-3.5 3.5z"/></svg>सेटिंग्स</a>
+          <a href="#privacy" data-view="privacy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5v6c0 5 3.4 9.7 8 11 4.6-1.3 8-6 8-11V5zm-1 14-4-4 1.4-1.4 2.6 2.6 5.6-5.6L18 9z"/></svg>डेटा अनुरोध (DPDP)<span class="sb-badge" id="dprBadge" hidden></span></a>
         </nav>
         <div class="sb-foot">
           <a href="../index.html" target="_blank" rel="noopener">वेबसाइट देखें ↗</a>
@@ -166,6 +167,31 @@
             <div class="form-actions"><button class="btn btn-primary" type="submit">प्रकाशित करें</button></div>
           </form>
           <div class="panel table-wrap"><table class="tbl" id="nTable"></table></div>
+        </section>
+
+        <!-- DPDP: rights requests, person lookup / erasure, retention, processing log -->
+        <section class="view" data-view="privacy">
+          <div class="panel">
+            <div class="panel-head"><h2>अधिकार अनुरोध</h2><span class="muted">हर अनुरोध का जवाब 30 दिन के भीतर देना है</span></div>
+            <div class="table-wrap"><table class="tbl" id="rTable"></table></div>
+          </div>
+          <form class="panel inline-form" id="lookupForm">
+            <h2>किसी व्यक्ति का डेटा देखें / मिटाएँ</h2>
+            <p class="muted">“जानकारी देखना”, “मिटाना” या “सहमति वापस” अनुरोध पर यहाँ मोबाइल नंबर डालिए। दान का रिकॉर्ड लेखा-क़ानून के कारण नहीं मिटता।</p>
+            <div class="fields"><label>मोबाइल नंबर<input name="phone" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" required /></label></div>
+            <div class="form-actions"><button class="btn" type="submit">डेटा दिखाएँ</button></div>
+            <div id="lookupOut"></div>
+          </form>
+          <div class="panel">
+            <h2>डेटा रखने की अवधि</h2>
+            <p class="muted">गोपनीयता सूचना के अनुसार पढ़े हुए संदेश 1 वर्ष बाद और पूरे हो चुके अनुरोध 1 वर्ष बाद मिटाने हैं।</p>
+            <div class="form-actions"><button type="button" class="btn" id="purgeOld">1 वर्ष से पुराने रिकॉर्ड मिटाएँ</button></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h2>कामकाज का लॉग</h2><button type="button" class="btn btn-sm" id="logExport">CSV डाउनलोड</button></div>
+            <p class="muted">DPDP नियम 8(3): यह रिकॉर्ड कम से कम 1 वर्ष रखना ज़रूरी है — इसे मिटाया नहीं जाता।</p>
+            <div class="table-wrap"><table class="tbl" id="logTable"></table></div>
+          </div>
         </section>
 
         <!-- SETTINGS -->

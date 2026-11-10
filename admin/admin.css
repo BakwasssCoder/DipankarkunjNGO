@@ -144,3 +144,9 @@ label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:.92re
 .msg-head .sub{display:block;font-size:.86rem;margin-top:2px}
 .msg-head .actions{display:flex;gap:6px;flex-wrap:wrap}
 .msg-body{margin:10px 0 0;white-space:pre-wrap;line-height:1.6}
+
+/* ---------- DPDP view ---------- */
+.tbl td.late{color:var(--red);font-weight:700}
+.person{margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
+.person h3{font-size:1rem;margin:12px 0 4px}
+.person ul{margin:0;padding-left:20px;line-height:1.7}

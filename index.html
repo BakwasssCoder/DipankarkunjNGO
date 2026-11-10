@@ -573,9 +573,14 @@
             </div>
             <div class="field wide" id="cMsg"><label for="ctMsg" data-i18n="ct.msg">संदेश *</label><textarea id="ctMsg" rows="4" maxlength="1000" required></textarea><span class="err" data-i18n="ct.msg.err">कृपया अपना संदेश लिखिए।</span></div>
           </div>
-          <button class="btn btn-gold" type="submit" data-i18n="ct.submit">संदेश भेजिए</button>
+          <div class="field consent" id="cConsentWrap">
+                <p class="notice-mini" data-i18n="cn.ct.notice"><b>सूचना:</b> हम आपका नाम, मोबाइल और संदेश केवल आपके सवाल का जवाब देने के लिए लेते हैं। यह जानकारी किसी और को नहीं दी जाती। <a href="#/privacy">पूरी गोपनीयता सूचना पढ़िए</a>।</p>
+                <label class="check"><input type="checkbox" id="cConsent" /> <span data-i18n="cn.agree">मैं ऊपर बताए उद्देश्य के लिए अपनी जानकारी देने की सहमति देता/देती हूँ।</span></label>
+                <label class="check"><input type="checkbox" id="cAdult" /> <span data-i18n="cn.adult">मेरी आयु 18 वर्ष या उससे अधिक है। (18 वर्ष से कम हों तो माता-पिता/अभिभावक यह फ़ॉर्म भरें।)</span></label>
+                <div class="err" data-i18n="cn.err">आगे बढ़ने के लिए दोनों बॉक्स पर टिक कीजिए।</div>
+              </div>
+              <button class="btn btn-gold" type="submit" data-i18n="ct.submit">संदेश भेजिए</button>
           <p class="ct-ok" id="ctOk" role="status" aria-live="polite"></p>
-          <p class="form-privacy" data-i18n="form.privacy">आपका नाम और मोबाइल नंबर केवल संस्था के पास रहेगा — इसे किसी और के साथ साझा नहीं किया जाएगा।</p>
         </form>
       </div>
     </section>
@@ -635,8 +640,13 @@
                 <label for="inMsg" data-i18n="f.msg.label">संदेश (यदि चाहें)</label>
                 <textarea id="inMsg" rows="2" placeholder="संस्था के लिए आपका संदेश…" data-i18n-ph="f.msg.ph"></textarea>
               </div>
+              <div class="field consent" id="jConsentWrap">
+                <p class="notice-mini" data-i18n="cn.join.notice"><b>सूचना:</b> हम आपका नाम, मोबाइल, गाँव/शहर, सदस्यता राशि और संदेश केवल आपकी सदस्यता दर्ज करने, रसीद बनाने और सदस्यता के बारे में आपसे संपर्क करने के लिए लेते हैं। यह जानकारी बेची या किसी और को नहीं दी जाती। आप कभी भी सहमति वापस ले सकते हैं या जानकारी मिटवा सकते हैं — <a href="#/privacy">पूरी गोपनीयता सूचना पढ़िए</a>।</p>
+                <label class="check"><input type="checkbox" id="jConsent" /> <span data-i18n="cn.agree">मैं ऊपर बताए उद्देश्य के लिए अपनी जानकारी देने की सहमति देता/देती हूँ।</span></label>
+                <label class="check"><input type="checkbox" id="jAdult" /> <span data-i18n="cn.adult">मेरी आयु 18 वर्ष या उससे अधिक है। (18 वर्ष से कम हों तो माता-पिता/अभिभावक यह फ़ॉर्म भरें।)</span></label>
+                <div class="err" data-i18n="cn.err">आगे बढ़ने के लिए दोनों बॉक्स पर टिक कीजिए।</div>
+              </div>
               <button class="btn btn-gold submit-btn" type="submit" data-i18n="form.submit">संकल्प दर्ज करें — रसीद बनाइए</button>
-              <p class="form-privacy" data-i18n="form.privacy">आपका नाम और मोबाइल नंबर केवल संस्था के पास रहेगा — इसे किसी और के साथ साझा नहीं किया जाएगा।</p>
             </form>
             <div id="receipt" aria-live="polite">
               <h4 data-i18n="r.h">🪔 धन्यवाद! आपका संकल्प दर्ज हुआ</h4>
@@ -883,6 +893,136 @@
       </div>
     </section>
 
+    <!-- ================= PRIVACY NOTICE (DPDP Act 2023 + DPDP Rules 2025) =================
+         Bilingual by block: .pv-hi / .pv-en are shown according to <html lang>.
+         When this text changes, bump NOTICE_VERSION in js/store.js and the date below. -->
+    <section class="sec privacy-sec" id="privacy" data-page="privacy">
+      <div class="wrap pv-wrap">
+        <div class="pv-hi" lang="hi">
+          <p class="pv-meta">संस्करण 1 · लागू: 10 नवंबर 2026 · डिजिटल व्यक्तिगत डेटा संरक्षण अधिनियम, 2023 और नियम, 2025 के अनुसार</p>
+          <p>दीपांकर-कुंज [NGO] (पंजी. – 849, 2010-11), अमरपुर, बांका, बिहार – 813101 इस वेबसाइट के ज़रिए दी गई आपकी व्यक्तिगत जानकारी की ज़िम्मेदार संस्था (“डेटा फ़िड्यूशियरी”) है। यह सूचना सरल भाषा में बताती है कि हम क्या जानकारी लेते हैं, क्यों लेते हैं, कितने समय रखते हैं और आपके क्या अधिकार हैं।</p>
+
+          <h2>1. हम कौन-सी जानकारी लेते हैं और क्यों</h2>
+          <table class="pv-table">
+            <thead><tr><th>कहाँ</th><th>कौन-सी जानकारी</th><th>उद्देश्य</th><th>कब तक रखते हैं</th></tr></thead>
+            <tbody>
+              <tr><td>“सदस्य बनिए” फ़ॉर्म</td><td>नाम, मोबाइल नंबर, गाँव/शहर, सदस्यता श्रेणी व राशि, आपका संदेश</td><td>सदस्यता दर्ज करना, सदस्य क्रमांक व रसीद बनाना, सदस्यता के बारे में संपर्क</td><td>सदस्यता रहने तक; सदस्यता समाप्त होने या आपके कहने पर मिटा दी जाती है</td></tr>
+              <tr><td>“संदेश भेजिए” फ़ॉर्म</td><td>नाम, मोबाइल नंबर, विषय, संदेश</td><td>आपके सवाल का जवाब देना / स्वयंसेवक के रूप में जोड़ना</td><td>जवाब देने के बाद अधिकतम 1 वर्ष</td></tr>
+              <tr><td>दान का रिकॉर्ड (कार्यालय द्वारा)</td><td>दाता का नाम, मोबाइल, राशि, माध्यम, दिनांक</td><td>रसीद देना और संस्था का हिसाब-किताब</td><td>लेखा व कर क़ानूनों में ज़रूरी अवधि तक</td></tr>
+              <tr><td>“डेटा अधिकार अनुरोध” फ़ॉर्म</td><td>नाम, मोबाइल, अनुरोध का विवरण</td><td>आपके अनुरोध पर कार्रवाई और उसका रिकॉर्ड</td><td>कार्रवाई के बाद 1 वर्ष</td></tr>
+            </tbody>
+          </table>
+          <p>हम आपकी जानकारी <b>न बेचते हैं, न विज्ञापन के लिए उपयोग करते हैं</b> और ऊपर लिखे उद्देश्य के अलावा किसी काम में नहीं लेते। हम आधार, बैंक या कार्ड का विवरण वेबसाइट पर नहीं माँगते।</p>
+
+          <h2>2. आपकी सहमति</h2>
+          <p>फ़ॉर्म भेजने से पहले आप अलग से टिक करके सहमति देते हैं। सहमति देना आपकी इच्छा है — पर उसके बिना हम आपका सदस्यता अनुरोध दर्ज नहीं कर सकते। आप जितनी आसानी से सहमति देते हैं, उतनी ही आसानी से <b>कभी भी सहमति वापस ले सकते हैं</b> — नीचे दिए “डेटा अधिकार अनुरोध” फ़ॉर्म से या WhatsApp पर एक संदेश भेजकर। सहमति वापस लेने के बाद हम आपकी जानकारी का उपयोग बंद कर देंगे और उसे मिटा देंगे (सिवाय उस रिकॉर्ड के जो क़ानूनन रखना ज़रूरी है)। सहमति वापस लेने से पहले हुए काम पर इसका असर नहीं पड़ता।</p>
+
+          <h2>3. बच्चों की जानकारी</h2>
+          <p>हमारे फ़ॉर्म 18 वर्ष या उससे अधिक आयु के लोगों के लिए हैं। 18 वर्ष से कम आयु के व्यक्ति की ओर से फ़ॉर्म केवल माता-पिता या अभिभावक भरें। हम बच्चों की जानकारी पर नज़र रखने, उनके व्यवहार का विश्लेषण करने या उन्हें लक्षित विज्ञापन दिखाने का कोई काम नहीं करते।</p>
+
+          <h2>4. जानकारी किसके पास जाती है</h2>
+          <p>जानकारी केवल संस्था के अधिकृत पदाधिकारी देखते हैं। अगर आप WhatsApp बटन से संदेश भेजते हैं, तो वह संदेश WhatsApp (Meta) की सेवा से जाता है और उस पर WhatsApp की अपनी नीति लागू होती है। वेबसाइट के अक्षर (फ़ॉन्ट) Google Fonts से लोड होते हैं, जिससे Google को आपके ब्राउज़र का सामान्य तकनीकी विवरण (जैसे IP पता) मिल सकता है। क़ानून द्वारा माँगे जाने पर ही हम किसी सरकारी संस्था को जानकारी देंगे।</p>
+
+          <h2>5. सुरक्षा</h2>
+          <p>हम आपकी जानकारी को अनधिकृत पहुँच से बचाने के लिए उचित सुरक्षा उपाय अपनाते हैं — केवल अधिकृत लोगों को पासवर्ड से पहुँच, कामकाज का रिकॉर्ड (लॉग) कम से कम एक वर्ष तक, और नियमित बैकअप। अगर कभी आपकी जानकारी से जुड़ी कोई सुरक्षा चूक (डेटा ब्रीच) होती है, तो हम बिना देर किए आपको और भारतीय डेटा संरक्षण बोर्ड को सूचित करेंगे।</p>
+
+          <h2>6. आपके अधिकार</h2>
+          <ul>
+            <li><b>जानकारी पाने का अधिकार</b> — हमारे पास आपकी कौन-सी जानकारी है और उसका क्या उपयोग हुआ।</li>
+            <li><b>सुधार व पूरा करवाने का अधिकार</b> — ग़लत या अधूरी जानकारी ठीक करवाना।</li>
+            <li><b>मिटवाने का अधिकार</b> — अपनी जानकारी हटवाना। मिटाने से कम से कम 48 घंटे पहले हम आपको सूचित करेंगे, जब तक आपने स्वयं मिटाने को न कहा हो।</li>
+            <li><b>सहमति वापस लेने का अधिकार</b> — कभी भी।</li>
+            <li><b>शिकायत निवारण का अधिकार</b> — नीचे दिए शिकायत अधिकारी से।</li>
+            <li><b>नामांकन का अधिकार</b> — अपनी मृत्यु या अक्षमता की स्थिति में अपने अधिकारों के उपयोग के लिए किसी व्यक्ति को नामित करना।</li>
+          </ul>
+          <p>हम हर अनुरोध का जवाब <b>30 दिनों के भीतर</b> देंगे। पहचान की पुष्टि के लिए हम आपके पंजीकृत मोबाइल नंबर पर संपर्क कर सकते हैं।</p>
+
+          <h2>7. शिकायत अधिकारी / संपर्क</h2>
+          <p class="pv-contact"><b>शिकायत अधिकारी:</b> सचिव, दीपांकर-कुंज [NGO]<br />पता: अमरपुर, बांका, बिहार – 813101<br />WhatsApp / फ़ोन: <a href="https://wa.me/917857043185" target="_blank" rel="noopener">+91 78570 43185</a></p>
+          <p>अगर हमारे जवाब से आप संतुष्ट नहीं हैं, तो आप <b>भारतीय डेटा संरक्षण बोर्ड (Data Protection Board of India)</b> में शिकायत कर सकते हैं। बोर्ड से पहले हमारे शिकायत अधिकारी के पास शिकायत करना ज़रूरी है।</p>
+
+          <h2>8. आपकी ज़िम्मेदारी</h2>
+          <p>कृपया सही जानकारी दीजिए, किसी और की जानकारी उसकी अनुमति के बिना मत भरिए, और झूठी शिकायत मत कीजिए।</p>
+
+          <h2>9. इस सूचना में बदलाव</h2>
+          <p>बदलाव होने पर नई तारीख़ और संस्करण के साथ यहीं प्रकाशित किया जाएगा। बड़े बदलाव पर हम आपसे दोबारा सहमति लेंगे।</p>
+        </div>
+
+        <div class="pv-en" lang="en">
+          <p class="pv-meta">Version 1 · Effective: 10 November 2026 · Under the Digital Personal Data Protection Act, 2023 and the DPDP Rules, 2025</p>
+          <p>Deepankar-Kunj [NGO] (Regd. 849, 2010-11), Amarpur, Banka, Bihar – 813101 is responsible (the “Data Fiduciary”) for personal data you give through this website. This notice explains, in plain language, what we collect, why, how long we keep it and what your rights are.</p>
+
+          <h2>1. What we collect and why</h2>
+          <table class="pv-table">
+            <thead><tr><th>Where</th><th>What</th><th>Purpose</th><th>How long we keep it</th></tr></thead>
+            <tbody>
+              <tr><td>“Become a Member” form</td><td>Name, mobile number, village/city, membership tier and amount, your message</td><td>Register your membership, issue member number and receipt, contact you about membership</td><td>While you are a member; erased when membership ends or when you ask</td></tr>
+              <tr><td>“Send us a message” form</td><td>Name, mobile number, subject, message</td><td>Answer your question / onboard you as a volunteer</td><td>Up to 1 year after we reply</td></tr>
+              <tr><td>Donation records (entered by the office)</td><td>Donor name, mobile, amount, mode, date</td><td>Issue receipts and keep the institution's accounts</td><td>For the period required by accounting and tax laws</td></tr>
+              <tr><td>“Data rights request” form</td><td>Name, mobile, request details</td><td>Act on your request and keep a record of it</td><td>1 year after it is resolved</td></tr>
+            </tbody>
+          </table>
+          <p>We <b>do not sell your data or use it for advertising</b>, and we do not use it for anything beyond the purposes above. We never ask for Aadhaar, bank or card details on this website.</p>
+
+          <h2>2. Your consent</h2>
+          <p>Before sending a form you give consent by ticking a separate box. Consent is your choice, but without it we cannot register a membership request. You can <b>withdraw consent at any time</b>, as easily as you gave it — through the “Data rights request” form below or one WhatsApp message. After withdrawal we stop using your data and erase it (except records the law requires us to keep). Withdrawal does not affect processing done before it.</p>
+
+          <h2>3. Children</h2>
+          <p>Our forms are for people aged 18 or above. For anyone under 18, only a parent or guardian should fill in the form. We do not track, monitor the behaviour of, or target advertising at children.</p>
+
+          <h2>4. Who receives your data</h2>
+          <p>Only authorised office-bearers of the institution can see it. If you use a WhatsApp button, that message travels through WhatsApp (Meta) and WhatsApp's own policy applies. The website's fonts load from Google Fonts, which may receive basic technical details from your browser (such as your IP address). We share data with government authorities only when the law requires it.</p>
+
+          <h2>5. Security</h2>
+          <p>We use reasonable safeguards against unauthorised access — password-protected access for authorised people only, activity logs kept for at least one year, and regular backups. If a personal data breach ever affects you, we will inform you and the Data Protection Board of India without delay.</p>
+
+          <h2>6. Your rights</h2>
+          <ul>
+            <li><b>Access</b> — what data we hold about you and how it was used.</li>
+            <li><b>Correction and completion</b> — fix wrong or incomplete data.</li>
+            <li><b>Erasure</b> — have your data deleted. We will tell you at least 48 hours before erasing, unless you asked for the erasure yourself.</li>
+            <li><b>Withdraw consent</b> — at any time.</li>
+            <li><b>Grievance redressal</b> — through the Grievance Officer below.</li>
+            <li><b>Nomination</b> — name a person to exercise your rights in case of your death or incapacity.</li>
+          </ul>
+          <p>We reply to every request <b>within 30 days</b>. To confirm your identity we may contact you on your registered mobile number.</p>
+
+          <h2>7. Grievance Officer / contact</h2>
+          <p class="pv-contact"><b>Grievance Officer:</b> Secretary, Deepankar-Kunj [NGO]<br />Address: Amarpur, Banka, Bihar – 813101<br />WhatsApp / phone: <a href="https://wa.me/917857043185" target="_blank" rel="noopener">+91 78570 43185</a></p>
+          <p>If you are not satisfied with our reply, you can complain to the <b>Data Protection Board of India</b>. You must first raise the grievance with our Grievance Officer.</p>
+
+          <h2>8. Your duties</h2>
+          <p>Please give correct information, do not submit someone else's details without their permission, and do not file false complaints.</p>
+
+          <h2>9. Changes to this notice</h2>
+          <p>Changes will be published here with a new date and version. For significant changes we will ask for your consent again.</p>
+        </div>
+
+        <!-- rights request form → admin → डेटा अनुरोध -->
+        <form class="contact-form rights-form" id="rightsForm" novalidate>
+          <h3 class="serif" data-i18n="rq.h">डेटा अधिकार अनुरोध</h3>
+          <p class="ct-sub" data-i18n="rq.p">अपनी जानकारी देखने, सुधारने, मिटवाने, सहमति वापस लेने, नामांकन या शिकायत के लिए यह फ़ॉर्म भरिए। हम 30 दिनों के भीतर जवाब देंगे।</p>
+          <div class="ct-grid">
+            <div class="field wide"><label for="rqType" data-i18n="rq.type">अनुरोध का प्रकार *</label>
+              <select id="rqType">
+                <option value="जानकारी देखना" data-i18n="rq.t1">मेरी जानकारी दिखाइए (Access)</option>
+                <option value="सुधार" data-i18n="rq.t2">मेरी जानकारी ठीक कीजिए (Correction)</option>
+                <option value="मिटाना" data-i18n="rq.t3">मेरी जानकारी मिटाइए (Erasure)</option>
+                <option value="सहमति वापस" data-i18n="rq.t4">मैं सहमति वापस लेता/लेती हूँ (Withdraw consent)</option>
+                <option value="नामांकन" data-i18n="rq.t5">किसी को नामित करना है (Nomination)</option>
+                <option value="शिकायत" data-i18n="rq.t6">शिकायत (Grievance)</option>
+              </select>
+            </div>
+            <div class="field" id="rName"><label for="rqName" data-i18n="ct.name">आपका नाम *</label><input id="rqName" autocomplete="name" maxlength="100" /><span class="err" data-i18n="f.name.err">कृपया अपना नाम लिखिए।</span></div>
+            <div class="field" id="rPhone"><label for="rqPhone" data-i18n="rq.phone">फ़ॉर्म में दिया गया मोबाइल नंबर *</label><input id="rqPhone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="14" /><span class="err" data-i18n="f.phone.err">कृपया सही 10 अंकों का मोबाइल नंबर लिखिए।</span></div>
+            <div class="field wide"><label for="rqDetails" data-i18n="rq.details">विवरण (क्या ठीक करना है / किसे नामित करना है / शिकायत)</label><textarea id="rqDetails" rows="3" maxlength="1000"></textarea></div>
+          </div>
+          <button class="btn btn-gold" type="submit" data-i18n="rq.submit">अनुरोध भेजिए</button>
+          <p class="ct-ok" id="rqOk" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
     <!-- ================= FOOTER ================= -->
     <footer class="site-footer">
       <div class="wrap f-cols">
@@ -903,6 +1043,7 @@
           <a href="#/testimonials" data-i18n="nav.testi">प्रशंसापत्र</a>
           <a href="#/donate" data-i18n="nav.donate">दान-सहयोग</a>
           <a href="#judiye" data-i18n="nav.cta">सदस्य बनिए · ₹21 से</a>
+          <a href="#/privacy" data-nav="privacy" data-i18n="nav.privacy">गोपनीयता सूचना</a>
         </nav>
         <div class="f-col">
           <h2 class="f-h" data-i18n="f.contact">संपर्क</h2>

@@ -126,8 +126,6 @@ footer.site-footer{background:var(--ink);color:#d9cfbb;text-align:left;border-to
 /* the bottom sticky CTA bar is gone, so the floating WhatsApp button sits at the normal corner */
 @media (max-width:860px){ #waFloat{bottom:calc(18px + env(safe-area-inset-bottom))} }
 
-/* join form — privacy line under the submit button */
-.form-privacy{margin:12px 0 0;font-size:.86rem;color:var(--ink-soft);text-align:center}
 
 /* photos added from the admin panel use the same gallery/press styles; keep the card reveal visible */
 [data-admin-media].press-card{opacity:1;transform:none}
@@ -169,3 +167,25 @@ footer.site-footer{background:var(--ink);color:#d9cfbb;text-align:left;border-to
 .ct-ok:empty{display:none}
 .ct-ok.bad{color:#b3261e}
 @media (max-width:600px){ .ct-grid{grid-template-columns:1fr} .contact-form{padding:20px} }
+
+/* ---------- DPDP: notice + consent block on forms ---------- */
+.consent{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.consent .notice-mini{margin:0 0 10px;font-size:.9rem;line-height:1.6;color:var(--ink-soft)}
+.consent .notice-mini a{color:var(--board);font-weight:700}
+.check{display:flex;gap:10px;align-items:flex-start;font-weight:600;font-size:.93rem;line-height:1.5;margin:8px 0 0;cursor:pointer}
+.check input{width:20px;height:20px;flex:none;margin:2px 0 0;accent-color:var(--saffron)}
+.consent.invalid{border-color:#b3261e}
+
+/* ---------- privacy notice page ---------- */
+html[lang="en"] .pv-hi,html:not([lang="en"]) .pv-en{display:none}
+.pv-wrap{max-width:860px}
+.privacy-sec{padding-top:40px}
+.privacy-sec h2{font-size:1.45rem;margin:34px 0 10px}
+.privacy-sec p,.privacy-sec li{line-height:1.8}
+.privacy-sec ul{padding-left:22px}
+.pv-meta{font-size:.9rem;color:var(--ink-soft);border-left:3px solid var(--saffron);padding-left:12px}
+.pv-table{width:100%;border-collapse:collapse;font-size:.92rem;margin:8px 0 14px;display:block;overflow-x:auto}
+.pv-table th,.pv-table td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top;min-width:120px}
+.pv-table th{background:var(--bg2)}
+.pv-contact{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.rights-form{margin-top:44px}

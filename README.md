@@ -40,6 +40,13 @@ Open `http://localhost:8000/admin/` — demo password **`dk@2010`** (set in `adm
 | संदेश | inbox for the website contact / volunteer form (हमारे बारे में → संदेश भेजिए), unread badge, CSV |
 | सूचनाएँ | events & notices → shown on the homepage ("कार्यक्रम व सूचनाएँ"; hidden while empty) |
 | सेटिंग्स | announcement strip at the top of the website, real social-media links, wipe demo data |
+| डेटा अनुरोध (DPDP) | privacy rights requests (30-day due date), look up / erase a person's data, retention clean-up, processing log |
+
+## Privacy / DPDP
+
+Forms show a short notice and need two unticked checkboxes (consent + 18 or older) before anything is saved.
+The full privacy notice is at `#/privacy` (link in the footer). See **[docs/DPDP-COMPLIANCE.md](docs/DPDP-COMPLIANCE.md)**
+for what is covered and what the NGO still has to do before collecting real data.
 
 **Demo limits:** all data is stored in the browser's `localStorage` (`js/store.js`).
 It is per-browser (another phone/computer sees nothing), limited to ~5 MB, and the

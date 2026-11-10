@@ -6,7 +6,10 @@
 (function(){
   "use strict";
   var KEY = { members: "dk_members", donations: "dk_donations", media: "dk_media", messages: "dk_messages",
-              notices: "dk_notices", settings: "dk_settings", seq: "dk_seq" };
+              notices: "dk_notices", settings: "dk_settings", requests: "dk_requests", log: "dk_log", seq: "dk_seq" };
+  /* DPDP: version of the privacy notice (index.html #/privacy) a person agreed to — bump when the notice changes */
+  var NOTICE_VERSION = "v1-2026-11-10";
+  function consent(){ return { at: new Date().toISOString(), notice: NOTICE_VERSION }; }
 
   function read(k, fallback){
     try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? fallback : v; }
@@ -42,19 +45,46 @@
     return write(KEY[kind], list(kind).filter(function(r){ return r.id !== id; }));
   }
 
+  /* DPDP Rule 8(3): processing log, kept at least one year — entries are never edited */
+  function log(action, detail){
+    add("log", { action: action, detail: detail || "" });
+  }
+
   window.DK_STORE = {
-    list: list, add: add, update: update, remove: remove,
+    list: list, add: add, update: update, remove: remove, log: log, NOTICE_VERSION: NOTICE_VERSION,
     /* website join form → a pending membership request; returns its member number */
     submitMembership: function(d){
       var rec = add("members", {
         member_no: nextNo("DK", "member"), name: d.name, phone: d.phone, place: d.place || "",
-        tier: d.tier || "", amount: d.amount, message: d.msg || "", lang: d.lang || "hi", status: "pending", notes: ""
+        tier: d.tier || "", amount: d.amount, message: d.msg || "", lang: d.lang || "hi", status: "pending", notes: "",
+        consent: d.viaAdmin ? null : consent()
       });
+      if(rec) log("collect", "सदस्यता अनुरोध " + rec.member_no + (d.viaAdmin ? " (कार्यालय द्वारा)" : " (वेबसाइट फ़ॉर्म, सहमति सहित)"));
       return rec ? rec.member_no : null;
     },
     /* website contact form → admin inbox */
     submitMessage: function(d){
-      return add("messages", { name: d.name, phone: d.phone, subject: d.subject, message: d.message, read: false });
+      var rec = add("messages", { name: d.name, phone: d.phone, subject: d.subject, message: d.message, read: false, consent: consent() });
+      if(rec) log("collect", "संपर्क संदेश (वेबसाइट फ़ॉर्म, सहमति सहित)");
+      return rec;
+    },
+    /* DPDP rights request (access / correction / erasure / withdraw consent / grievance / nominate) */
+    submitRequest: function(d){
+      var rec = add("requests", { type: d.type, name: d.name, phone: d.phone, details: d.details || "", status: "open", ref: nextNo("DPR", "request") });
+      if(rec) log("request", "अधिकार अनुरोध " + rec.ref + " — " + d.type);
+      return rec ? rec.ref : null;
+    },
+    /* erase a person's membership + messages by mobile number; donation records are kept
+       because accounting / tax law requires them (DPDP Rule 8 allows retention required by law) */
+    eraseByPhone: function(phone){
+      var counts = {};
+      ["members", "messages"].forEach(function(k){
+        var all = list(k), keep = all.filter(function(r){ return r.phone !== phone; });
+        counts[k] = all.length - keep.length;
+        write(KEY[k], keep);
+      });
+      log("erase", "मोबाइल …" + String(phone).slice(-4) + ": " + counts.members + " सदस्यता, " + counts.messages + " संदेश मिटाए");
+      return counts;
     },
     /* notices shown on the homepage, newest event date first */
     publishedNotices: function(){

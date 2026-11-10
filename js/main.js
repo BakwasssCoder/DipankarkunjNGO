@@ -34,7 +34,7 @@
   /* ---------- multi-page router — hash pages: #/home #/about #/story
      #/achievements #/testimonials #/donate. Plain anchors (#judiye etc.)
      still work: they open the page that contains them, then scroll. --- */
-  var PAGES = ["home", "about", "story", "achievements", "testimonials", "donate"];
+  var PAGES = ["home", "about", "story", "achievements", "testimonials", "donate", "privacy"];
   var curPage = "home";
   function showPage(name, anchor){
     if(PAGES.indexOf(name) === -1) name = "home";
@@ -77,7 +77,7 @@
   /* inner-page banner — title + breadcrumb taken from the active nav link (already in the current language) */
   function updateBanner(){
     var banner = document.getElementById("pageBanner");
-    var link = document.querySelector('#topnav nav a[data-nav="' + curPage + '"]');
+    var link = document.querySelector('a[data-nav="' + curPage + '"]'); /* header nav, or footer for #/privacy */
     banner.hidden = curPage === "home" || !link;
     if(banner.hidden) return;
     document.getElementById("bannerTitle").textContent = link.textContent;
@@ -312,7 +312,9 @@
     var name = document.getElementById("ctName").value.trim(),
         phone = document.getElementById("ctPhone").value.replace(/\D/g, "").replace(/^91(?=\d{10}$)/, ""),
         msg = document.getElementById("ctMsg").value.trim();
-    var bad = [["cName", name.length >= 2, "ctName"], ["cPhone", /^[6-9]\d{9}$/.test(phone), "ctPhone"], ["cMsg", msg.length >= 2, "ctMsg"]]
+    var consentOk = document.getElementById("cConsent").checked && document.getElementById("cAdult").checked;
+    var bad = [["cName", name.length >= 2, "ctName"], ["cPhone", /^[6-9]\d{9}$/.test(phone), "ctPhone"], ["cMsg", msg.length >= 2, "ctMsg"],
+               ["cConsentWrap", consentOk, document.getElementById("cConsent").checked ? "cAdult" : "cConsent"]]
       .map(function(f){ document.getElementById(f[0]).classList.toggle("invalid", !f[1]); return f; })
       .filter(function(f){ return !f[1]; });
     if(bad.length){ document.getElementById(bad[0][2]).focus(); return; }
@@ -323,6 +325,24 @@
       ? (curLang === "en" ? "Thank you, " + name + "! Your message has reached the institution." : "धन्यवाद, " + name + "! आपका संदेश संस्था तक पहुँच गया है।")
       : (curLang === "en" ? "Could not send. Please message us on WhatsApp: +91 78570 43185" : "संदेश नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
     if(saved) ctForm.reset();
+  });
+
+  /* DPDP rights request (privacy page) → admin → डेटा अनुरोध */
+  document.getElementById("rightsForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = document.getElementById("rqName").value.trim(),
+        phone = document.getElementById("rqPhone").value.replace(/\D/g, "").replace(/^91(?=\d{10}$)/, "");
+    var bad = [["rName", name.length >= 2, "rqName"], ["rPhone", /^[6-9]\d{9}$/.test(phone), "rqPhone"]]
+      .map(function(f){ document.getElementById(f[0]).classList.toggle("invalid", !f[1]); return f; })
+      .filter(function(f){ return !f[1]; });
+    if(bad.length){ document.getElementById(bad[0][2]).focus(); return; }
+    var ref = window.DK_STORE && DK_STORE.submitRequest({type: document.getElementById("rqType").value, name: name, phone: phone, details: document.getElementById("rqDetails").value.trim()});
+    var out = document.getElementById("rqOk");
+    out.classList.toggle("bad", !ref);
+    out.textContent = ref
+      ? (curLang === "en" ? "Request received — reference " + ref + ". We will reply within 30 days." : "अनुरोध मिल गया — क्रमांक " + ref + "। हम 30 दिनों के भीतर जवाब देंगे।")
+      : (curLang === "en" ? "Could not send. Please WhatsApp +91 78570 43185." : "अनुरोध नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
+    if(ref) e.target.reset();
   });
   document.getElementById("lb-close").addEventListener("click", closeLb);
   document.getElementById("lb-prev").addEventListener("click", function(){ idx = (idx - 1 + items.length) % items.length; render(); });
@@ -474,8 +494,11 @@
         if(badC){ customAmt.focus(); return; }
       } else { amount = parseInt(tierEl.value, 10); }
     }
+    /* DPDP: separate, unticked consent + adult confirmation before any data is stored */
+    var okConsent = setInvalid("jConsentWrap", !(document.getElementById("jConsent").checked && document.getElementById("jAdult").checked));
     if(!okName){ document.getElementById("inName").focus(); return; }
     if(!okPhone){ document.getElementById("inPhone").focus(); return; }
+    if(!okConsent){ document.getElementById(document.getElementById("jConsent").checked ? "jAdult" : "jConsent").focus(); return; }
     var now = new Date();
     /* saved as a pending membership request — visible in the admin panel (admin/) */
     var id = (window.DK_STORE && DK_STORE.submitMembership({name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, msg: document.getElementById("inMsg").value.trim(), lang: curLang}))

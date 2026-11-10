@@ -11,7 +11,7 @@
   var STATUS = { pending: "लंबित", approved: "स्वीकृत", paid: "भुगतान प्राप्त", rejected: "अस्वीकृत" };
   var MODE = { cash: "नकद", upi: "UPI", bank: "बैंक ट्रांसफ़र", cheque: "चेक", other: "अन्य" };
   var VIEWS = { dashboard: "डैशबोर्ड", members: "सदस्य", donations: "दान", media: "गैलरी व अख़बार",
-                messages: "संदेश", notices: "सूचनाएँ", settings: "सेटिंग्स" };
+                messages: "संदेश", notices: "सूचनाएँ", settings: "सेटिंग्स", privacy: "डेटा अनुरोध (DPDP)" };
 
   function esc(v){
     return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){
@@ -40,6 +40,7 @@
     e.preventDefault();
     if($("pw").value !== DEMO_PASSWORD){ $("loginErr").textContent = "पासवर्ड ग़लत है।"; $("pw").select(); return; }
     try { sessionStorage.setItem("dk_admin", "1"); } catch(err){}
+    S.log("login", "एडमिन लॉगिन");
     $("pw").value = ""; $("loginErr").textContent = "";
     showApp();
   });
@@ -82,8 +83,10 @@
     $("pendingBadge").hidden = !pending; $("pendingBadge").textContent = pending;
     var unread = S.list("messages").filter(function(m){ return !m.read; }).length;
     $("unreadBadge").hidden = !unread; $("unreadBadge").textContent = unread;
+    var openReq = S.list("requests").filter(function(r){ return r.status === "open"; }).length;
+    $("dprBadge").hidden = !openReq; $("dprBadge").textContent = openReq;
     ({ dashboard: renderDashboard, members: renderMembers, donations: renderDonations, media: renderMedia,
-       messages: renderMessages, notices: renderNotices, settings: renderSettings })[current()]();
+       messages: renderMessages, notices: renderNotices, settings: renderSettings, privacy: renderPrivacy })[current()]();
   }
 
   /* ---------- dashboard ---------- */
@@ -125,7 +128,8 @@
         return '<option value="' + k + '"' + (k === m.status ? " selected" : "") + ">" + STATUS[k] + "</option>";
       }).join("");
       return "<tr><td><b>" + esc(m.member_no) + '</b><span class="sub">' + esc(fmtDate(m.created_at)) + "</span></td>" +
-        "<td>" + esc(m.name) + '<span class="sub">' + esc(m.place) + (m.message ? " · “" + esc(m.message) + "”" : "") + "</span></td>" +
+        "<td>" + esc(m.name) + '<span class="sub">' + esc(m.place) + (m.message ? " · “" + esc(m.message) + "”" : "") + "</span>" +
+          '<span class="sub">' + (m.consent ? "✓ सहमति " + esc(fmtDate(m.consent.at)) : "कार्यालय से जोड़ा — लिखित सहमति रखें") + "</span></td>" +
         '<td><a href="tel:+91' + esc(m.phone) + '">' + esc(m.phone) + "</a></td>" +
         "<td>" + esc(m.tier) + '<span class="sub">' + esc(rupees(m.amount)) + "</span></td>" +
         '<td><select data-status="' + esc(m.id) + '" aria-label="स्थिति बदलें">' + opts + "</select></td>" +
@@ -135,11 +139,11 @@
   }
   $("mTable").addEventListener("change", function(e){
     var id = e.target.getAttribute("data-status");
-    if(id){ S.update("members", id, { status: e.target.value }); toast("स्थिति बदल दी गई"); render(); }
+    if(id){ S.update("members", id, { status: e.target.value }); S.log("update", "सदस्य स्थिति → " + e.target.value); toast("स्थिति बदल दी गई"); render(); }
   });
   $("mTable").addEventListener("click", function(e){
     var id = e.target.getAttribute("data-del-member");
-    if(id && confirm("इस सदस्य को हटाना है? यह वापस नहीं आएगा।")){ S.remove("members", id); toast("सदस्य हटा दिया गया"); render(); }
+    if(id && confirm("इस सदस्य को हटाना है? यह वापस नहीं आएगा।")){ S.remove("members", id); S.log("erase", "एक सदस्य हटाया"); toast("सदस्य हटा दिया गया"); render(); }
   });
   $("mAddBtn").addEventListener("click", function(){ $("mForm").hidden = false; $("mForm").elements.name.focus(); });
   $("mForm").addEventListener("submit", function(e){
@@ -147,7 +151,7 @@
     var f = e.target;
     if(!f.checkValidity()){ f.reportValidity(); return; }
     var no = S.submitMembership({ name: f.elements.name.value.trim(), phone: f.elements.phone.value.trim(), place: f.elements.place.value.trim(),
-      tier: "कार्यालय से जोड़ा गया", amount: parseInt(f.elements.amount.value, 10) });
+      tier: "कार्यालय से जोड़ा गया", amount: parseInt(f.elements.amount.value, 10), viaAdmin: true });
     if(!no){ toast("सेव नहीं हुआ — ब्राउज़र स्टोरेज भरा है"); return; }
     f.reset(); f.hidden = true; toast("सदस्य जोड़ा गया — " + no); render();
   });
@@ -211,6 +215,8 @@
 
   /* ---------- CSV export (UTF-8 BOM so Excel shows Hindi correctly) ---------- */
   function downloadCsv(name, cols, rows){
+    if(!confirm("इस फ़ाइल में लोगों की निजी जानकारी होगी। इसे केवल संस्था के काम के लिए, सुरक्षित जगह रखिए और किसी से साझा मत कीजिए। डाउनलोड करें?")) return;
+    S.log("export", name + " (" + rows.length + " पंक्तियाँ)");
     var cell = function(v){ v = String(v == null ? "" : v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
     var csv = "﻿" + [cols.map(function(c){ return cell(c[1]); }).join(",")].concat(rows.map(function(r){
       return cols.map(function(c){ return cell(r[c[0]]); }).join(",");
@@ -301,7 +307,7 @@
   $("msgList").addEventListener("click", function(e){
     var r = e.target.getAttribute("data-read"), d = e.target.getAttribute("data-del-msg");
     if(r){ var m = S.list("messages").filter(function(x){ return x.id === r; })[0]; if(m){ S.update("messages", r, { read: !m.read }); render(); } }
-    if(d && confirm("यह संदेश हटाना है?")){ S.remove("messages", d); toast("संदेश हटा दिया गया"); render(); }
+    if(d && confirm("यह संदेश हटाना है?")){ S.remove("messages", d); S.log("erase", "एक संदेश हटाया"); toast("संदेश हटा दिया गया"); render(); }
   });
   $("cExport").addEventListener("click", function(){
     downloadCsv("deepankar-kunj-messages", [["created_at","दिनांक"],["name","नाम"],["phone","मोबाइल"],["subject","विषय"],["message","संदेश"]], S.list("messages"));
@@ -356,11 +362,85 @@
     toast(S.saveSettings(st) ? "सेटिंग्स सेव हो गईं — वेबसाइट रीफ़्रेश करके देखिए" : "सेव नहीं हुआ");
   });
   $("wipe").addEventListener("click", function(){
-    if(!confirm("सारे सदस्य, दान, तस्वीरें, संदेश, सूचनाएँ और सेटिंग्स मिट जाएँगी। पक्का?")) return;
-    ["dk_members","dk_donations","dk_media","dk_messages","dk_notices","dk_settings","dk_seq"].forEach(function(k){
+    if(!confirm("सारे सदस्य, दान, तस्वीरें, संदेश, सूचनाएँ, अनुरोध और सेटिंग्स मिट जाएँगी (कामकाज का लॉग नहीं)। पक्का?")) return;
+    /* the processing log (dk_log) is kept on purpose — DPDP Rule 8(3) */
+    ["dk_members","dk_donations","dk_media","dk_messages","dk_notices","dk_settings","dk_requests","dk_seq"].forEach(function(k){
       try { localStorage.removeItem(k); } catch(err){}
     });
+    S.log("erase", "सारा डेमो डेटा मिटाया (लॉग सुरक्षित)");
     toast("डेमो डेटा मिटा दिया गया"); render();
+  });
+
+  /* ---------- DPDP: rights requests, lookup / erasure, retention, log ---------- */
+  var DAY = 864e5;
+  function renderPrivacy(){
+    var reqs = S.list("requests");
+    var head = "<thead><tr><th>क्रमांक</th><th>प्रकार</th><th>व्यक्ति</th><th>जवाब की अंतिम तिथि</th><th>स्थिति</th><th></th></tr></thead>";
+    $("rTable").innerHTML = head + "<tbody>" + (reqs.length ? reqs.map(function(r){
+      var due = new Date(new Date(r.created_at).getTime() + 30 * DAY), late = r.status === "open" && Date.now() > due;
+      return "<tr><td><b>" + esc(r.ref) + '</b><span class="sub">' + esc(fmtDate(r.created_at)) + "</span></td>" +
+        "<td>" + esc(r.type) + '<span class="sub">' + esc(r.details) + "</span></td>" +
+        "<td>" + esc(r.name) + '<span class="sub">' + esc(r.phone) + "</span></td>" +
+        "<td" + (late ? ' class="late"' : "") + ">" + esc(fmtDate(due)) + (late ? " — समय निकल गया" : "") + "</td>" +
+        '<td><span class="status ' + (r.status === "open" ? "st-pending" : "st-paid") + '">' + (r.status === "open" ? "खुला" : "पूरा") + "</span></td>" +
+        '<td><div class="actions"><button type="button" class="btn btn-sm" data-lookup="' + esc(r.phone) + '">डेटा</button>' +
+        '<button type="button" class="btn btn-sm" data-rdone="' + esc(r.id) + '">' + (r.status === "open" ? "पूरा हुआ" : "फिर खोलें") + "</button></div></td></tr>";
+    }).join("") : '<tr><td colspan="6" class="empty">कोई अनुरोध नहीं। वेबसाइट की गोपनीयता सूचना के नीचे के फ़ॉर्म से अनुरोध यहाँ आते हैं।</td></tr>') + "</tbody>";
+    var logs = S.list("log").slice(0, 200);
+    $("logTable").innerHTML = "<thead><tr><th>समय</th><th>काम</th><th>विवरण</th></tr></thead><tbody>" + (logs.length ? logs.map(function(l){
+      return "<tr><td>" + esc(new Date(l.created_at).toLocaleString("hi-IN")) + "</td><td>" + esc(l.action) + "</td><td>" + esc(l.detail) + "</td></tr>";
+    }).join("") : '<tr><td colspan="3" class="empty">अभी कोई प्रविष्टि नहीं।</td></tr>') + "</tbody>";
+  }
+  $("rTable").addEventListener("click", function(e){
+    var ph = e.target.getAttribute("data-lookup"), dn = e.target.getAttribute("data-rdone");
+    if(ph){ $("lookupForm").elements.phone.value = ph; showPerson(ph); $("lookupForm").scrollIntoView({ behavior: "smooth" }); }
+    if(dn){
+      var r = S.list("requests").filter(function(x){ return x.id === dn; })[0];
+      if(r){ S.update("requests", dn, { status: r.status === "open" ? "done" : "open", closed_at: new Date().toISOString() });
+        S.log("request", r.ref + (r.status === "open" ? " पूरा किया" : " फिर खोला")); render(); }
+    }
+  });
+  function showPerson(phone){
+    var pick = function(k){ return S.list(k).filter(function(r){ return r.phone === phone; }); };
+    var m = pick("members"), c = pick("messages"), d = pick("donations"), q = pick("requests");
+    S.log("access", "मोबाइल …" + phone.slice(-4) + " का डेटा देखा");
+    var block = function(title, rows, fmt){
+      return "<h3>" + esc(title) + " (" + rows.length + ")</h3>" + (rows.length ? "<ul>" + rows.map(function(r){ return "<li>" + fmt(r) + "</li>"; }).join("") + "</ul>" : '<p class="muted">कुछ नहीं</p>');
+    };
+    $("lookupOut").innerHTML = '<div class="person">' +
+      block("सदस्यता", m, function(r){ return esc(r.member_no) + " · " + esc(r.name) + " · " + esc(r.place) + " · " + esc(rupees(r.amount)) + " · " + esc(STATUS[r.status]) + (r.consent ? " · सहमति " + esc(fmtDate(r.consent.at)) : ""); }) +
+      block("संदेश", c, function(r){ return esc(fmtDate(r.created_at)) + " · " + esc(r.subject) + " · “" + esc(r.message) + "”"; }) +
+      block("दान (क़ानूनन रखा जाता है)", d, function(r){ return esc(r.receipt_no) + " · " + esc(r.donor_name) + " · " + esc(rupees(r.amount)); }) +
+      block("अधिकार अनुरोध", q, function(r){ return esc(r.ref) + " · " + esc(r.type); }) +
+      ((m.length || c.length) ? '<div class="form-actions"><button type="button" class="btn btn-danger" data-erase="' + esc(phone) + '">सदस्यता व संदेश मिटाएँ</button></div>' : "") +
+      "</div>";
+  }
+  $("lookupForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var f = e.target;
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    showPerson(f.elements.phone.value.trim());
+  });
+  $("lookupOut").addEventListener("click", function(e){
+    var ph = e.target.getAttribute("data-erase");
+    if(!ph || !confirm("मोबाइल " + ph + " की सारी सदस्यता और संदेश हमेशा के लिए मिट जाएँगे। (व्यक्ति के कहे बिना मिटा रहे हैं तो उसे 48 घंटे पहले सूचित करें।) आगे बढ़ें?")) return;
+    var n = S.eraseByPhone(ph);
+    toast(n.members + " सदस्यता, " + n.messages + " संदेश मिटाए गए");
+    showPerson(ph); render();
+  });
+  $("purgeOld").addEventListener("click", function(){
+    var cutoff = Date.now() - 365 * DAY, old = function(r, f){ return new Date(r[f] || r.created_at).getTime() < cutoff; };
+    var msgs = S.list("messages").filter(function(m){ return m.read && old(m, "created_at"); });
+    var reqs = S.list("requests").filter(function(r){ return r.status !== "open" && old(r, "closed_at"); });
+    if(!msgs.length && !reqs.length){ toast("1 वर्ष से पुराना कोई रिकॉर्ड नहीं"); return; }
+    if(!confirm(msgs.length + " संदेश और " + reqs.length + " पूरे अनुरोध मिटाए जाएँगे। आगे बढ़ें?")) return;
+    msgs.forEach(function(m){ S.remove("messages", m.id); });
+    reqs.forEach(function(r){ S.remove("requests", r.id); });
+    S.log("erase", "रिटेंशन: " + msgs.length + " संदेश, " + reqs.length + " अनुरोध (1 वर्ष से पुराने)");
+    toast("पुराने रिकॉर्ड मिटा दिए गए"); render();
+  });
+  $("logExport").addEventListener("click", function(){
+    downloadCsv("deepankar-kunj-processing-log", [["created_at","समय"],["action","काम"],["detail","विवरण"]], S.list("log"));
   });
 
   showApp();
