@@ -5,7 +5,8 @@
    to a real backend (Supabase / server) before collecting real member data. */
 (function(){
   "use strict";
-  var KEY = { members: "dk_members", donations: "dk_donations", media: "dk_media", seq: "dk_seq" };
+  var KEY = { members: "dk_members", donations: "dk_donations", media: "dk_media", messages: "dk_messages",
+              notices: "dk_notices", settings: "dk_settings", seq: "dk_seq" };
 
   function read(k, fallback){
     try { var v = JSON.parse(localStorage.getItem(k)); return v == null ? fallback : v; }
@@ -51,6 +52,18 @@
       });
       return rec ? rec.member_no : null;
     },
+    /* website contact form → admin inbox */
+    submitMessage: function(d){
+      return add("messages", { name: d.name, phone: d.phone, subject: d.subject, message: d.message, read: false });
+    },
+    /* notices shown on the homepage, newest event date first */
+    publishedNotices: function(){
+      return list("notices").filter(function(n){ return n.published; })
+        .sort(function(a, b){ return (b.date || "").localeCompare(a.date || ""); });
+    },
+    /* site settings: social links + announcement strip */
+    getSettings: function(){ return read(KEY.settings, {}); },
+    saveSettings: function(obj){ return write(KEY.settings, obj); },
     newReceiptNo: function(){ return nextNo("DKD", "donation"); },
     publishedMedia: function(kind){
       return list("media").filter(function(m){ return m.published && m.kind === kind; })

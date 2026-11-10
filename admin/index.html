@@ -38,6 +38,9 @@
           <a href="#members" data-view="members"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4zM8 12a3 3 0 1 0-3-3 3 3 0 0 0 3 3zM16 13c-2.7 0-8 1.3-8 4v3h16v-3c0-2.7-5.3-4-8-4zM8 14c-.3 0-.7 0-1.1.1A4.6 4.6 0 0 1 9 17v3H1v-2.5C1 15.3 5.6 14 8 14z"/></svg>सदस्य<span class="sb-badge" id="pendingBadge" hidden></span></a>
           <a href="#donations" data-view="donations"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h11v2h-4.3a5 5 0 0 1 1.1 2H18v2h-3.2A5.5 5.5 0 0 1 10 14.9L16 21h-2.8l-6-6.2V13h2.5a3.5 3.5 0 0 0 3.2-3H7V8h5.7A3.5 3.5 0 0 0 9.7 6H7z"/></svg>दान</a>
           <a href="#media" data-view="media"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5z"/></svg>गैलरी व अख़बार</a>
+          <a href="#messages" data-view="messages"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg>संदेश<span class="sb-badge" id="unreadBadge" hidden></span></a>
+          <a href="#notices" data-view="notices"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 11v2h4v-2zm-2 6.6 3.2 2.4 1.2-1.6-3.2-2.4zM20.4 5.6 19.2 4 16 6.4l1.2 1.6zM4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1v4h2v-4h1l5 3V6L8 9zm11.5 3A4.5 4.5 0 0 0 14 8.6v6.8a4.5 4.5 0 0 0 1.5-3.4z"/></svg>सूचनाएँ</a>
+          <a href="#settings" data-view="settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.5 7.5 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.6 7.6 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.6 7.6 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.5 7.5 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.6 7.6 0 0 0 1.7 1L11 21h4l.4-2.7a7.6 7.6 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 3.5-3.5 3.5 3.5 0 0 1-3.5 3.5z"/></svg>सेटिंग्स</a>
         </nav>
         <div class="sb-foot">
           <a href="../index.html" target="_blank" rel="noopener">वेबसाइट देखें ↗</a>
@@ -137,6 +140,56 @@
             <div class="form-actions"><button class="btn btn-primary" type="submit">अपलोड करें</button></div>
           </form>
           <div class="media-grid" id="mediaGrid"></div>
+        </section>
+
+        <!-- MESSAGES -->
+        <section class="view" data-view="messages">
+          <div class="toolbar">
+            <input type="search" id="cSearch" placeholder="नाम, मोबाइल या संदेश में खोजें" aria-label="संदेश खोजें" />
+            <button type="button" class="btn" id="cExport">CSV डाउनलोड</button>
+          </div>
+          <div class="msg-list" id="msgList"></div>
+        </section>
+
+        <!-- NOTICES -->
+        <section class="view" data-view="notices">
+          <form class="panel inline-form" id="nForm">
+            <h2>नई सूचना / कार्यक्रम</h2>
+            <p class="muted">प्रकाशित सूचनाएँ वेबसाइट के मुख्य पृष्ठ पर “कार्यक्रम व सूचनाएँ” में दिखती हैं।</p>
+            <div class="fields">
+              <label class="wide">शीर्षक (हिंदी) *<input name="title" required maxlength="140" placeholder="जैसे — संस्कृत दिवस समारोह" /></label>
+              <label>दिनांक *<input name="date" type="date" required /></label>
+              <label>Title (English)<input name="title_en" maxlength="140" /></label>
+              <label class="wide">विवरण (हिंदी)<input name="text" maxlength="400" placeholder="समय, स्थान, कौन आ सकता है…" /></label>
+              <label class="wide">Details (English)<input name="text_en" maxlength="400" /></label>
+            </div>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">प्रकाशित करें</button></div>
+          </form>
+          <div class="panel table-wrap"><table class="tbl" id="nTable"></table></div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="view" data-view="settings">
+          <form class="panel inline-form" id="sForm">
+            <h2>सूचना पट्टी</h2>
+            <p class="muted">यहाँ लिखा संदेश वेबसाइट के सबसे ऊपर नारंगी पट्टी में दिखेगा। खाली छोड़ें तो पट्टी नहीं दिखेगी।</p>
+            <div class="fields"><label class="wide">संदेश<input name="announcement" maxlength="160" placeholder="जैसे — 15 अगस्त को परिसर में ध्वजारोहण, सभी आमंत्रित हैं" /></label></div>
+            <h2 style="margin-top:22px">सोशल मीडिया लिंक</h2>
+            <p class="muted">संस्था के असली खातों के पूरे लिंक (https:// से शुरू) डालिए। जो खाली रहेगा, वहाँ अभी वाला अस्थायी लिंक ही रहेगा।</p>
+            <div class="fields">
+              <label>Instagram<input name="instagram" type="url" placeholder="https://www.instagram.com/…" /></label>
+              <label>Facebook<input name="facebook" type="url" placeholder="https://www.facebook.com/…" /></label>
+              <label>YouTube<input name="youtube" type="url" placeholder="https://www.youtube.com/@…" /></label>
+              <label>X (Twitter)<input name="x" type="url" placeholder="https://x.com/…" /></label>
+            </div>
+            <p class="err" id="sErr" role="alert"></p>
+            <div class="form-actions"><button class="btn btn-primary" type="submit">सेव करें</button></div>
+          </form>
+          <div class="panel">
+            <h2>डेमो डेटा</h2>
+            <p class="muted">सारा डेटा इसी ब्राउज़र में है। बैकअप के लिए हर सेक्शन से CSV डाउनलोड करते रहिए।</p>
+            <div class="form-actions"><button type="button" class="btn btn-danger" id="wipe">सारा डेमो डेटा मिटाएँ</button></div>
+          </div>
         </section>
       </div>
     </div>

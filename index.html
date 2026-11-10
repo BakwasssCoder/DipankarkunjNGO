@@ -53,6 +53,9 @@
 
     <div id="progress" aria-hidden="true"></div>
 
+    <a class="skip-link" href="#main" data-i18n="skip">मुख्य सामग्री पर जाएँ</a>
+    <!-- announcement strip — text set from admin → सेटिंग्स -->
+    <div class="announce" id="announce" role="note" hidden></div>
     <!-- ================= SITE CHROME: info bar + header (css/14-site-chrome.css) ================= -->
     <div class="topbar">
       <div class="wrap topbar-in">
@@ -410,6 +413,17 @@
     </section>
 
     <!-- ================= GALLERY ================= -->
+    <!-- notices & events — managed from admin → सूचनाएँ; hidden while empty -->
+    <section class="sec notices-sec is-empty" id="suchna" data-page="home">
+      <div class="wrap">
+        <div class="sec-head rv">
+          <div class="sec-kicker" data-i18n="nt.kicker">सूचनाएँ</div>
+          <h2 data-i18n="nt.h2">कार्यक्रम व सूचनाएँ</h2>
+        </div>
+        <ul class="notice-list" id="noticeList"></ul>
+      </div>
+    </section>
+
     <section class="sec" id="gallery" style="padding-top:20px" data-page="home">
       <div class="wrap">
         <div class="sec-head rv">
@@ -518,31 +532,51 @@
             <span class="num">+91 78570 43185</span>
             <span class="soc-live" data-i18n="soc.wa.tag">अभी बात कीजिए</span>
           </a>
-          <a class="soc-card demo rv" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
+          <a class="soc-card demo rv" data-social="instagram" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5"/><circle cx="12" cy="12" r="4.4"/><circle cx="17.6" cy="6.4" r="1.15" fill="currentColor" stroke="none"/></svg>
             <b>Instagram</b>
             <span data-i18n="soc.demo.note">आधिकारिक खाता बन रहा है</span>
             <span class="soc-demo" data-i18n="soc.demo">अस्थायी डेमो लिंक</span>
           </a>
-          <a class="soc-card demo rv" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
+          <a class="soc-card demo rv" data-social="facebook" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.4 22v-8.2h2.76l.41-3.2H13.4V8.55c0-.93.26-1.56 1.58-1.56h1.7V4.14c-.3-.04-1.31-.13-2.49-.13-2.46 0-4.14 1.5-4.14 4.26v2.33H7.28v3.2h2.77V22h3.35z"/></svg>
             <b>Facebook</b>
             <span data-i18n="soc.demo.note">आधिकारिक खाता बन रहा है</span>
             <span class="soc-demo" data-i18n="soc.demo">अस्थायी डेमो लिंक</span>
           </a>
-          <a class="soc-card demo rv" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
+          <a class="soc-card demo rv" data-social="youtube" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
             <svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22.12 7.2a2.78 2.78 0 0 0-1.95-1.97C18.45 4.75 12 4.75 12 4.75s-6.45 0-8.17.48A2.78 2.78 0 0 0 1.88 7.2 29.1 29.1 0 0 0 1.4 12a29.1 29.1 0 0 0 .48 4.8 2.78 2.78 0 0 0 1.95 1.97c1.72.48 8.17.48 8.17.48s6.45 0 8.17-.48a2.78 2.78 0 0 0 1.95-1.97A29.1 29.1 0 0 0 22.6 12a29.1 29.1 0 0 0-.48-4.8zM9.9 15.35V8.65l5.9 3.35-5.9 3.35z"/></svg>
             <b>YouTube</b>
             <span data-i18n="soc.demo.note">आधिकारिक खाता बन रहा है</span>
             <span class="soc-demo" data-i18n="soc.demo">अस्थायी डेमो लिंक</span>
           </a>
-          <a class="soc-card demo rv" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
+          <a class="soc-card demo rv" data-social="x" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">
             <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.77 7.74L23.2 22h-6.24l-4.89-6.4L6.47 22H3.34l7.24-8.28L2.4 2h6.4l4.42 5.85L18.9 2zm-1.1 18h1.73L7.7 3.9H5.85L17.8 20z"/></svg>
             <b>X (Twitter)</b>
             <span data-i18n="soc.demo.note">आधिकारिक खाता बन रहा है</span>
             <span class="soc-demo" data-i18n="soc.demo">अस्थायी डेमो लिंक</span>
           </a>
         </div>
+        <form class="contact-form rv" id="contactForm" novalidate>
+          <h3 class="serif" data-i18n="ct.h">संदेश भेजिए</h3>
+          <p class="ct-sub" data-i18n="ct.p">सवाल हो, स्वयंसेवक बनना हो या कोई सुझाव — लिखिए, संस्था आपसे संपर्क करेगी।</p>
+          <div class="ct-grid">
+            <div class="field" id="cName"><label for="ctName" data-i18n="ct.name">आपका नाम *</label><input id="ctName" autocomplete="name" maxlength="100" required /><span class="err" data-i18n="f.name.err">कृपया अपना नाम लिखिए।</span></div>
+            <div class="field" id="cPhone"><label for="ctPhone" data-i18n="ct.phone">मोबाइल नंबर *</label><input id="ctPhone" type="tel" inputmode="numeric" autocomplete="tel" maxlength="14" required /><span class="err" data-i18n="f.phone.err">कृपया सही 10 अंकों का मोबाइल नंबर लिखिए।</span></div>
+            <div class="field wide"><label for="ctSubject" data-i18n="ct.subject">विषय</label>
+              <select id="ctSubject">
+                <option value="जानकारी" data-i18n="ct.s1">सामान्य जानकारी</option>
+                <option value="स्वयंसेवक" data-i18n="ct.s2">स्वयंसेवक (Volunteer) बनना है</option>
+                <option value="दान" data-i18n="ct.s3">दान / सहयोग के बारे में</option>
+                <option value="सुझाव" data-i18n="ct.s4">सुझाव / अन्य</option>
+              </select>
+            </div>
+            <div class="field wide" id="cMsg"><label for="ctMsg" data-i18n="ct.msg">संदेश *</label><textarea id="ctMsg" rows="4" maxlength="1000" required></textarea><span class="err" data-i18n="ct.msg.err">कृपया अपना संदेश लिखिए।</span></div>
+          </div>
+          <button class="btn btn-gold" type="submit" data-i18n="ct.submit">संदेश भेजिए</button>
+          <p class="ct-ok" id="ctOk" role="status" aria-live="polite"></p>
+          <p class="form-privacy" data-i18n="form.privacy">आपका नाम और मोबाइल नंबर केवल संस्था के पास रहेगा — इसे किसी और के साथ साझा नहीं किया जाएगा।</p>
+        </form>
       </div>
     </section>
 
@@ -874,7 +908,7 @@
           <h2 class="f-h" data-i18n="f.contact">संपर्क</h2>
           <p data-i18n="lh.addr">अमरपुर, बांका [बिहार], भारत · पिनकोड – 813101</p>
           <p class="wa-line"><span data-i18n="f.wa">सदस्यता व जानकारी के लिए WhatsApp कीजिए — </span><a href="https://wa.me/917857043185" target="_blank" rel="noopener">+91 78570 43185</a></p>
-          <div class="f-social"><span data-i18n="f.soc">सोशल मीडिया:</span> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Instagram · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Facebook · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">YouTube · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">X · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a></div>
+          <div class="f-social"><span data-i18n="f.soc">सोशल मीडिया:</span> <a class="f-soc-chip" data-social="instagram" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Instagram · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" data-social="facebook" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Facebook · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" data-social="youtube" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">YouTube · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" data-social="x" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">X · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a></div>
         </div>
         <div class="f-col">
           <h2 class="f-h" data-i18n="f.college">महाविद्यालय</h2>
@@ -903,6 +937,8 @@
       <div id="lb-cap"></div>
       <button class="lb-btn" id="lb-next" aria-label="अगली तस्वीर" data-i18n-aria="lb.next">›</button>
     </div>
+
+    <button type="button" id="toTop" aria-label="ऊपर जाएँ" data-i18n-aria="totop"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 
     <!-- floating WhatsApp -->
     <a id="waFloat" href="https://wa.me/917857043185?text=%E0%A4%A8%E0%A4%AE%E0%A4%B8%E0%A5%8D%E0%A4%A4%E0%A5%87%2C%20%E0%A4%AE%E0%A5%88%E0%A4%82%20%E0%A4%A6%E0%A5%80%E0%A4%AA%E0%A4%BE%E0%A4%82%E0%A4%95%E0%A4%B0-%E0%A4%95%E0%A5%81%E0%A4%82%E0%A4%9C%20%E0%A4%B8%E0%A5%87%20%E0%A4%9C%E0%A5%81%E0%A4%A1%E0%A4%BC%E0%A4%A8%E0%A4%BE%20%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%A4%E0%A4%BE/%E0%A4%9A%E0%A4%BE%E0%A4%B9%E0%A4%A4%E0%A5%80%20%E0%A4%B9%E0%A5%82%E0%A4%81%E0%A5%A4%20%E0%A4%95%E0%A5%83%E0%A4%AA%E0%A4%AF%E0%A4%BE%20%E0%A4%B8%E0%A4%A6%E0%A4%B8%E0%A5%8D%E0%A4%AF%E0%A4%AA%E0%A4%BE%20%E0%A4%95%E0%A5%80%20%E0%A4%9C%E0%A4%BE%E0%A4%A8%E0%A4%95%E0%A4%BE%E0%A4%B0%E0%A5%80%20%E0%A4%A6%E0%A5%80%E0%A4%9C%E0%A4%BF%E0%A4%8F%E0%A5%A4" target="_blank" rel="noopener" aria-label="WhatsApp पर दीपांकर-कुंज से जुड़िए — +91 78570 43185" data-i18n-aria="wa.aria">

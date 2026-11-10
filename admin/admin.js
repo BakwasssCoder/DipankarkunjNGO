@@ -10,7 +10,8 @@
 
   var STATUS = { pending: "लंबित", approved: "स्वीकृत", paid: "भुगतान प्राप्त", rejected: "अस्वीकृत" };
   var MODE = { cash: "नकद", upi: "UPI", bank: "बैंक ट्रांसफ़र", cheque: "चेक", other: "अन्य" };
-  var VIEWS = { dashboard: "डैशबोर्ड", members: "सदस्य", donations: "दान", media: "गैलरी व अख़बार" };
+  var VIEWS = { dashboard: "डैशबोर्ड", members: "सदस्य", donations: "दान", media: "गैलरी व अख़बार",
+                messages: "संदेश", notices: "सूचनाएँ", settings: "सेटिंग्स" };
 
   function esc(v){
     return String(v == null ? "" : v).replace(/[&<>"']/g, function(c){
@@ -79,7 +80,10 @@
   function render(){
     var pending = S.list("members").filter(function(m){ return m.status === "pending"; }).length;
     $("pendingBadge").hidden = !pending; $("pendingBadge").textContent = pending;
-    ({ dashboard: renderDashboard, members: renderMembers, donations: renderDonations, media: renderMedia })[current()]();
+    var unread = S.list("messages").filter(function(m){ return !m.read; }).length;
+    $("unreadBadge").hidden = !unread; $("unreadBadge").textContent = unread;
+    ({ dashboard: renderDashboard, members: renderMembers, donations: renderDonations, media: renderMedia,
+       messages: renderMessages, notices: renderNotices, settings: renderSettings })[current()]();
   }
 
   /* ---------- dashboard ---------- */
@@ -168,7 +172,7 @@
   }
   $("dAddBtn").addEventListener("click", function(){
     var f = $("dForm"); f.hidden = false;
-    f.elements.donated_on.value = new Date().toISOString().slice(0, 10);
+    f.elements.donated_on.value = today(); /* local date, not UTC */
     f.elements.donor_name.focus();
   });
   $("dForm").addEventListener("submit", function(e){
@@ -275,6 +279,88 @@
       if(m){ S.update("media", t, { published: !m.published }); toast(m.published ? "तस्वीर छिपा दी गई" : "तस्वीर वेबसाइट पर दिख रही है"); render(); }
     }
     if(d && confirm("यह तस्वीर हटानी है?")){ S.remove("media", d); toast("तस्वीर हटा दी गई"); render(); }
+  });
+
+  /* ---------- messages (website contact form) ---------- */
+  $("cSearch").addEventListener("input", renderMessages);
+  function renderMessages(){
+    var q = $("cSearch").value.trim().toLowerCase();
+    var rows = S.list("messages").filter(function(m){
+      return !q || [m.name, m.phone, m.subject, m.message].join(" ").toLowerCase().indexOf(q) !== -1;
+    });
+    $("msgList").innerHTML = rows.length ? rows.map(function(m){
+      return '<article class="panel msg' + (m.read ? "" : " unread") + '"><div class="msg-head"><div><b>' + esc(m.name) + "</b> " +
+        '<span class="status st-' + (m.subject === "स्वयंसेवक" ? "approved" : "pending") + '">' + esc(m.subject) + "</span>" +
+        '<span class="sub muted">' + esc(m.phone) + " · " + esc(fmtDate(m.created_at)) + "</span></div>" +
+        '<div class="actions"><a class="btn btn-sm" target="_blank" rel="noopener" href="https://wa.me/91' + esc(m.phone) + '">WhatsApp</a>' +
+        '<button type="button" class="btn btn-sm" data-read="' + esc(m.id) + '">' + (m.read ? "अपठित करें" : "पढ़ लिया") + "</button>" +
+        '<button type="button" class="btn btn-sm btn-danger" data-del-msg="' + esc(m.id) + '">हटाएँ</button></div></div>' +
+        '<p class="msg-body">' + esc(m.message) + "</p></article>";
+    }).join("") : '<p class="empty panel">अभी कोई संदेश नहीं। वेबसाइट के “हमारे बारे में → संदेश भेजिए” फ़ॉर्म से संदेश यहाँ आएँगे।</p>';
+  }
+  $("msgList").addEventListener("click", function(e){
+    var r = e.target.getAttribute("data-read"), d = e.target.getAttribute("data-del-msg");
+    if(r){ var m = S.list("messages").filter(function(x){ return x.id === r; })[0]; if(m){ S.update("messages", r, { read: !m.read }); render(); } }
+    if(d && confirm("यह संदेश हटाना है?")){ S.remove("messages", d); toast("संदेश हटा दिया गया"); render(); }
+  });
+  $("cExport").addEventListener("click", function(){
+    downloadCsv("deepankar-kunj-messages", [["created_at","दिनांक"],["name","नाम"],["phone","मोबाइल"],["subject","विषय"],["message","संदेश"]], S.list("messages"));
+  });
+
+  /* ---------- notices ---------- */
+  function renderNotices(){
+    var rows = S.list("notices").slice().sort(function(a, b){ return (b.date || "").localeCompare(a.date || ""); });
+    var head = "<thead><tr><th>दिनांक</th><th>सूचना</th><th>स्थिति</th><th></th></tr></thead>";
+    if(!rows.length){ $("nTable").innerHTML = head + '<tbody><tr><td colspan="4" class="empty">अभी कोई सूचना नहीं।</td></tr></tbody>'; return; }
+    $("nTable").innerHTML = head + "<tbody>" + rows.map(function(n){
+      return "<tr><td><b>" + esc(fmtDate(n.date + "T00:00")) + "</b></td><td>" + esc(n.title) + '<span class="sub">' + esc(n.text) + "</span></td>" +
+        '<td><span class="status ' + (n.published ? "st-paid" : "st-rejected") + '">' + (n.published ? "प्रकाशित" : "छिपी हुई") + "</span></td>" +
+        '<td><div class="actions"><button type="button" class="btn btn-sm" data-ntoggle="' + esc(n.id) + '">' + (n.published ? "छिपाएँ" : "दिखाएँ") + "</button>" +
+        '<button type="button" class="btn btn-sm btn-danger" data-del-notice="' + esc(n.id) + '">हटाएँ</button></div></td></tr>';
+    }).join("") + "</tbody>";
+  }
+  function today(){ var d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+  $("nForm").elements.date.value = today();
+  $("nForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var f = e.target;
+    if(!f.checkValidity()){ f.reportValidity(); return; }
+    var rec = S.add("notices", { title: f.elements.title.value.trim(), title_en: f.elements.title_en.value.trim(), date: f.elements.date.value,
+      text: f.elements.text.value.trim(), text_en: f.elements.text_en.value.trim(), published: true });
+    if(!rec){ toast("सेव नहीं हुआ — ब्राउज़र स्टोरेज भरा है"); return; }
+    f.reset(); f.elements.date.value = today();
+    toast("सूचना प्रकाशित — वेबसाइट पर दिख रही है"); render();
+  });
+  $("nTable").addEventListener("click", function(e){
+    var t = e.target.getAttribute("data-ntoggle"), d = e.target.getAttribute("data-del-notice");
+    if(t){ var n = S.list("notices").filter(function(x){ return x.id === t; })[0]; if(n){ S.update("notices", t, { published: !n.published }); render(); } }
+    if(d && confirm("यह सूचना हटानी है?")){ S.remove("notices", d); toast("सूचना हटा दी गई"); render(); }
+  });
+
+  /* ---------- settings ---------- */
+  var SOCIAL = ["instagram", "facebook", "youtube", "x"];
+  function renderSettings(){
+    var st = S.getSettings(), f = $("sForm");
+    f.elements.announcement.value = st.announcement || "";
+    SOCIAL.forEach(function(k){ f.elements[k].value = st[k] || ""; });
+  }
+  $("sForm").addEventListener("submit", function(e){
+    e.preventDefault();
+    var f = e.target, st = { announcement: f.elements.announcement.value.trim() };
+    $("sErr").textContent = "";
+    for(var i = 0; i < SOCIAL.length; i++){
+      var v = f.elements[SOCIAL[i]].value.trim();
+      if(v && !/^https:\/\/\S+\.\S+/.test(v)){ $("sErr").textContent = "लिंक https:// से शुरू होना चाहिए।"; f.elements[SOCIAL[i]].focus(); return; }
+      st[SOCIAL[i]] = v;
+    }
+    toast(S.saveSettings(st) ? "सेटिंग्स सेव हो गईं — वेबसाइट रीफ़्रेश करके देखिए" : "सेव नहीं हुआ");
+  });
+  $("wipe").addEventListener("click", function(){
+    if(!confirm("सारे सदस्य, दान, तस्वीरें, संदेश, सूचनाएँ और सेटिंग्स मिट जाएँगी। पक्का?")) return;
+    ["dk_members","dk_donations","dk_media","dk_messages","dk_notices","dk_settings","dk_seq"].forEach(function(k){
+      try { localStorage.removeItem(k); } catch(err){}
+    });
+    toast("डेमो डेटा मिटा दिया गया"); render();
   });
 
   showApp();

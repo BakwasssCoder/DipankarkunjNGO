@@ -135,3 +135,12 @@ label{display:flex;flex-direction:column;gap:4px;font-weight:600;font-size:.92re
 @media (max-width:520px){ .stats{grid-template-columns:1fr 1fr;gap:10px} .stat b{font-size:1.5rem} .demo-pill{display:none} }
 @media (prefers-reduced-motion:reduce){ .sidebar,.toast{transition:none} }
 @media print{ .sidebar,.topbar,.toolbar,.toast{display:none !important} .main{margin:0} }
+
+/* ---------- messages ---------- */
+.msg-list{display:flex;flex-direction:column;gap:12px}
+.msg{border-left:4px solid var(--line-strong)}
+.msg.unread{border-left-color:var(--rani);background:#fffaf6}
+.msg-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.msg-head .sub{display:block;font-size:.86rem;margin-top:2px}
+.msg-head .actions{display:flex;gap:6px;flex-wrap:wrap}
+.msg-body{margin:10px 0 0;white-space:pre-wrap;line-height:1.6}

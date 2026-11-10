@@ -37,6 +37,9 @@ Open `http://localhost:8000/admin/` — demo password **`dk@2010`** (set in `adm
 | सदस्य | requests from the website "सदस्य बनिए" form — search, filter, change status, WhatsApp, CSV export, add manually |
 | दान | record donations, print receipt, CSV export |
 | गैलरी व अख़बार | upload photos → they appear in the website gallery / press section; hide or delete |
+| संदेश | inbox for the website contact / volunteer form (हमारे बारे में → संदेश भेजिए), unread badge, CSV |
+| सूचनाएँ | events & notices → shown on the homepage ("कार्यक्रम व सूचनाएँ"; hidden while empty) |
+| सेटिंग्स | announcement strip at the top of the website, real social-media links, wipe demo data |
 
 **Demo limits:** all data is stored in the browser's `localStorage` (`js/store.js`).
 It is per-browser (another phone/computer sees nothing), limited to ~5 MB, and the

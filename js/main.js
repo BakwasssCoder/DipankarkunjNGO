@@ -133,7 +133,7 @@
     var lbEl = document.getElementById("lightbox"), zb = document.getElementById("lb-zoom");
     if(zb && lbEl && !lbEl.classList.contains("zoomed")) zb.textContent = lang === "en" ? "Read in large size" : "बड़ा करके पढ़ें";
     updateBanner();
-    if(typeof renderAdminMedia === "function") renderAdminMedia();
+    if(typeof renderAdminMedia === "function"){ renderAdminMedia(); renderNotices(); applySettings(); }
   }
   document.querySelectorAll(".lang-toggle button").forEach(function(b){
     b.addEventListener("click", function(){ applyLang(b.getAttribute("data-lang")); });
@@ -174,6 +174,7 @@
     var h = document.documentElement.scrollHeight - window.innerHeight;
     progress.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
     topnav.classList.toggle("scrolled", y > 40);
+    document.getElementById("toTop").classList.toggle("show", y > 700);
     if(tl && tlFill){
       var r = tl.getBoundingClientRect();
       var filled = Math.min(Math.max(window.innerHeight * 0.72 - r.top, 0), r.height);
@@ -249,6 +250,80 @@
     });
   }
   renderAdminMedia();
+
+  /* notices & events from the admin panel — homepage section stays hidden while empty */
+  function renderNotices(){
+    var sec = document.getElementById("suchna"), ul = document.getElementById("noticeList");
+    var items = window.DK_STORE ? DK_STORE.publishedNotices() : [];
+    sec.classList.toggle("is-empty", !items.length);
+    ul.textContent = "";
+    items.forEach(function(n){
+      var li = document.createElement("li"), when = document.createElement("time"), body = document.createElement("div"),
+          h = document.createElement("h3"), p = document.createElement("p");
+      if(n.date){
+        when.dateTime = n.date;
+        when.textContent = new Date(n.date + "T00:00").toLocaleDateString(curLang === "en" ? "en-IN" : "hi-IN", {day: "numeric", month: "long", year: "numeric"});
+      }
+      h.textContent = (curLang === "en" && n.title_en) ? n.title_en : n.title;
+      p.textContent = (curLang === "en" && n.text_en) ? n.text_en : (n.text || "");
+      body.appendChild(h); if(p.textContent) body.appendChild(p);
+      li.appendChild(when); li.appendChild(body); ul.appendChild(li);
+    });
+  }
+  renderNotices();
+
+  /* site settings from the admin panel: real social links + announcement strip */
+  function applySettings(){
+    var st = window.DK_STORE ? DK_STORE.getSettings() : {};
+    document.querySelectorAll("[data-social]").forEach(function(a){
+      var url = st[a.getAttribute("data-social")];
+      if(!/^https:\/\//.test(url || "")) return; /* keep the demo link until a real https URL is set */
+      a.href = url;
+      a.classList.remove("demo");
+      a.querySelectorAll(".soc-demo, i").forEach(function(x){ x.remove(); });
+      a.querySelectorAll('[data-i18n="soc.demo.note"]').forEach(function(x){ x.removeAttribute("data-i18n"); x.classList.add("soc-follow"); });
+      a.querySelectorAll(".soc-follow").forEach(function(x){ x.textContent = curLang === "en" ? "Follow us" : "हमसे जुड़िए"; });
+      a.childNodes.forEach(function(n){ if(n.nodeType === 3) n.textContent = n.textContent.replace(/\s*·\s*$/, " "); });
+    });
+    var ann = document.getElementById("announce");
+    ann.textContent = st.announcement || "";
+    ann.hidden = !st.announcement;
+  }
+  applySettings();
+
+  /* skip link — focus the first visible content block without changing the route */
+  document.querySelector(".skip-link").addEventListener("click", function(e){
+    e.preventDefault();
+    var t = document.querySelector(curPage === "home" ? "header.hero" : "#pageBanner");
+    if(t){ t.setAttribute("tabindex", "-1"); t.focus(); t.scrollIntoView(); }
+  });
+
+  /* back to top */
+  var toTop = document.getElementById("toTop");
+  toTop.addEventListener("click", function(){
+    window.scrollTo({top: 0, behavior: reduceMotion ? "auto" : "smooth"});
+    var brand = document.querySelector("#topnav .brand"); if(brand) brand.focus({preventScroll: true});
+  });
+
+  /* contact form → admin inbox (संदेश) */
+  var ctForm = document.getElementById("contactForm");
+  ctForm.addEventListener("submit", function(e){
+    e.preventDefault();
+    var name = document.getElementById("ctName").value.trim(),
+        phone = document.getElementById("ctPhone").value.replace(/\D/g, "").replace(/^91(?=\d{10}$)/, ""),
+        msg = document.getElementById("ctMsg").value.trim();
+    var bad = [["cName", name.length >= 2, "ctName"], ["cPhone", /^[6-9]\d{9}$/.test(phone), "ctPhone"], ["cMsg", msg.length >= 2, "ctMsg"]]
+      .map(function(f){ document.getElementById(f[0]).classList.toggle("invalid", !f[1]); return f; })
+      .filter(function(f){ return !f[1]; });
+    if(bad.length){ document.getElementById(bad[0][2]).focus(); return; }
+    var saved = window.DK_STORE && DK_STORE.submitMessage({name: name, phone: phone, subject: document.getElementById("ctSubject").value, message: msg});
+    var out = document.getElementById("ctOk");
+    out.classList.toggle("bad", !saved);
+    out.textContent = saved
+      ? (curLang === "en" ? "Thank you, " + name + "! Your message has reached the institution." : "धन्यवाद, " + name + "! आपका संदेश संस्था तक पहुँच गया है।")
+      : (curLang === "en" ? "Could not send. Please message us on WhatsApp: +91 78570 43185" : "संदेश नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
+    if(saved) ctForm.reset();
+  });
   document.getElementById("lb-close").addEventListener("click", closeLb);
   document.getElementById("lb-prev").addEventListener("click", function(){ idx = (idx - 1 + items.length) % items.length; render(); });
   document.getElementById("lb-next").addEventListener("click", function(){ idx = (idx + 1) % items.length; render(); });
