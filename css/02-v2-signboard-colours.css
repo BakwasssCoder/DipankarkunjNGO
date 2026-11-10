@@ -1,0 +1,194 @@
+/* ============ V2 DESIGN — signboard blue · kesariya · rani pink ============
+   Palette taken from the college's own painted signboard and the NGO logo:
+   royal blue board, saffron ribbon, magenta diya. Crisp white base, bold
+   poster-style components with hard offset shadows — no washed pastels. */
+:root{
+  --bg:#ffffff; --bg2:#edf1fe; --card:#ffffff; --ink:#1b2140; --ink-soft:#49517a;
+  --line:#ccd5f5; --maroon:#1e40c9; --maroon-deep:#14235f; --gold:#f06400; --gold-2:#ffb400;
+  --saffron:#ff6a00; --rani:#d81b60; --leaf:#128c4b; --wa:#1faa55; --wa-deep:#128c4b;
+  --night:#0e1434; --night-2:#161e4a; --cream:#fdf3dc; --cream-soft:#c6cdf2;
+  --shadow:0 14px 30px rgba(18,28,86,.16);
+  --hard:6px 6px 0 rgba(20,35,95,.9);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0d1230; --bg2:#121840; --card:#171f4d; --ink:#eef0ff; --ink-soft:#aab3dd;
+    --line:#2c3772; --maroon:#8fa5ff; --maroon-deep:#0a0f2c; --gold:#ff8a2a; --gold-2:#ffc233;
+    --night:#070a22; --night-2:#0d1332; --cream-soft:#9aa5d8;
+    --shadow:0 14px 30px rgba(0,0,0,.55);
+    --hard:6px 6px 0 rgba(0,0,0,.55);
+  }
+}
+body{background:var(--bg)}
+h1,h2,h3,.serif{font-family:'Baloo 2','Tiro Devanagari Hindi',sans-serif;font-weight:700;letter-spacing:.01em}
+::selection{background:var(--gold-2);color:#231300}
+
+/* progress + top nav */
+#progress{height:4px;background:linear-gradient(90deg,var(--saffron),var(--rani),var(--gold-2))}
+#topnav{background:rgba(10,15,44,.92);border-bottom:3px solid var(--saffron)}
+#topnav .nav-cta{background:var(--saffron);box-shadow:4px 4px 0 rgba(0,0,0,.45)}
+
+/* ---------- HERO ---------- */
+.hero-shade{background:linear-gradient(180deg,rgba(10,16,52,.55) 0%,rgba(10,16,52,.15) 32%,rgba(14,20,56,.62) 66%,rgba(8,11,34,.97) 100%)}
+.hero-logo{border-color:#fff;box-shadow:0 0 0 5px var(--saffron),0 18px 38px rgba(0,0,0,.55)}
+.hero-where{color:var(--gold-2)}
+.hero h1{color:#fff;text-shadow:0 5px 0 rgba(216,27,96,.55),0 12px 34px rgba(0,0,0,.6)}
+.hero-line em{color:var(--gold-2);border-bottom:3px solid var(--rani)}
+.hero-sticker{position:absolute;top:96px;right:22px;z-index:3;background:var(--gold-2);color:#2a1500;font-weight:800;
+  font-size:.86rem;line-height:1.35;text-align:center;padding:10px 14px;border-radius:14px;transform:rotate(5deg);
+  border:2px solid #2a1500;box-shadow:5px 5px 0 rgba(0,0,0,.5);max-width:190px}
+@media (max-width:640px){.hero-sticker{top:16px;right:14px;font-size:.76rem;max-width:158px;padding:8px 10px}}
+.btn{border:2px solid #141b3d;border-radius:14px;box-shadow:4px 4px 0 rgba(10,14,40,.85);transition:transform .15s ease,box-shadow .15s ease}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 rgba(10,14,40,.85)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(10,14,40,.85)}
+.btn-gold{background:var(--saffron);color:#fff;box-shadow:4px 4px 0 rgba(10,14,40,.9)}
+.btn-gold:hover{box-shadow:5px 5px 0 rgba(10,14,40,.9)}
+.btn-ghost{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.75);color:#fff;box-shadow:4px 4px 0 rgba(0,0,0,.4);backdrop-filter:blur(4px)}
+.btn-ghost:hover{background:rgba(255,255,255,.22)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-wa svg{flex:none}
+.hero-strip{background:rgba(8,11,34,.6);border-top:3px solid var(--gold-2)}
+.hero-strip b{color:var(--gold-2)}
+
+/* marquee — kesariya band */
+.marquee{background:var(--saffron);color:#fff;border-block:3px solid #141b3d}
+.marquee-track b{color:#ffe9a8}
+
+/* section headers — pill kicker badges */
+.sec-kicker{display:inline-block;background:var(--maroon);color:#fff;padding:5px 16px;border-radius:999px;
+  font-size:.82rem;letter-spacing:.1em;box-shadow:3px 3px 0 rgba(20,35,95,.35)}
+.sec-head h2{color:var(--ink)}
+@media (prefers-color-scheme: dark){.sec-kicker{background:var(--saffron);color:#fff}}
+
+/* intro statement + colourful stat tiles */
+.statement .hl{color:var(--rani);border-bottom:4px solid var(--gold-2)}
+.stat{border:2px solid #141b3d;border-radius:16px;box-shadow:var(--hard);color:#fff;padding:24px 10px 18px}
+.stat b{color:#fff !important;font-size:clamp(1.9rem,5.4vw,2.7rem)}
+.stat span{color:rgba(255,255,255,.92)}
+.stat:nth-child(1){background:#1e40c9;transform:rotate(-1deg)}
+.stat:nth-child(2){background:var(--saffron);transform:rotate(1deg)}
+.stat:nth-child(3){background:var(--rani);transform:rotate(-1deg)}
+.stat:nth-child(4){background:var(--leaf);transform:rotate(1deg)}
+
+/* story timeline */
+.story{background:var(--bg2)}
+.tl-fill{background:linear-gradient(180deg,var(--saffron),var(--rani))}
+.tl-dot{border-color:var(--saffron);border-width:4px}
+.tl-dot::after{background:var(--rani)}
+.ch-tag{background:var(--rani);color:#fff;box-shadow:3px 3px 0 rgba(20,35,95,.3);border-radius:8px}
+.chapter:nth-of-type(2) .ch-tag{background:var(--saffron)}
+.ch-year{color:var(--gold)}
+figure.shot img{border:2px solid #141b3d;border-radius:14px;box-shadow:var(--hard)}
+.chip{border:2px solid var(--line);border-left:6px solid var(--saffron);border-radius:10px;font-weight:600}
+.chip b{color:var(--maroon)}
+.chip:nth-child(2){border-left-color:var(--rani)} .chip:nth-child(3){border-left-color:var(--gold-2)}
+.chip:nth-child(4){border-left-color:var(--leaf)} .chip:nth-child(5){border-left-color:#1e40c9}
+.quote{border-left:6px solid var(--rani);background:color-mix(in srgb, var(--rani) 6%, transparent);border-radius:0 14px 14px 0;padding:14px 18px 14px 20px}
+.night{background:linear-gradient(180deg,#131a45 0%,var(--night) 60%,#0a0e2a 100%)}
+.night .tl-rail{background:#2c3772}
+.night figure.shot img{border-color:var(--gold-2);box-shadow:6px 6px 0 rgba(255,180,0,.35)}
+.resolve-list li{border:2px solid var(--line);border-radius:12px;box-shadow:4px 4px 0 rgba(20,35,95,.14)}
+.resolve-list .n{background:var(--saffron);color:#fff}
+.resolve-list li:nth-child(2) .n{background:var(--rani)} .resolve-list li:nth-child(3) .n{background:#1e40c9}
+.resolve-list li:nth-child(4) .n{background:var(--leaf)} .resolve-list li:nth-child(5) .n{background:var(--gold);color:#fff}
+
+/* press — deep blue archive wall */
+.press-sec{background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.13) 1.5px, transparent 1.6px) 0 0/26px 26px, linear-gradient(180deg,#182258,#10173c)}
+.press-sec .sec-head h2{color:#fff}
+.press-sec .sec-head p{color:#c6cdf2}
+.press-sec .sec-kicker{background:var(--gold-2);color:#2a1500}
+.press-note{color:#aab3dd}
+.press-card{border:2px solid #141b3d;box-shadow:6px 6px 0 rgba(0,0,0,.4)}
+.press-card:hover,.press-card:focus-visible{box-shadow:8px 8px 0 rgba(255,180,0,.5)}
+
+/* gallery */
+.gal button{border-radius:14px;border:2px solid #141b3d;box-shadow:4px 4px 0 rgba(20,35,95,.25)}
+@media (prefers-color-scheme: dark){.gal button{border-color:#3a4690}}
+
+/* people cards */
+.person{border:2px solid #141b3d;border-radius:18px;box-shadow:var(--hard)}
+.person .p-img{background:linear-gradient(140deg,#1e40c9,#14235f)}
+.person:nth-child(2) .p-img{background:linear-gradient(140deg,var(--rani),#7e0f3d)}
+.person .role{color:var(--rani)}
+@media (prefers-color-scheme: dark){.person .role{color:var(--gold-2)}; .person{border-color:#3a4690}}
+
+/* ---------- JOIN — deep blue stage, white form card ---------- */
+.join-sec{background:radial-gradient(circle at 1px 1px, rgba(255,255,255,.12) 1.5px, transparent 1.6px) 0 0/26px 26px, linear-gradient(180deg,#1a2566 0%,#10173c 100%);color:#eef0ff}
+.join-sec .sec-head h2{color:#fff}
+.join-sec .sec-head p{color:#c6cdf2}
+.join-sec .sec-kicker{background:var(--saffron);color:#fff}
+.join-sec h3{color:#fff}
+.steps .sn{background:var(--gold-2);color:#2a1500;border:2px solid #141b3d}
+.steps span{color:#c6cdf2}
+.honest{background:rgba(255,255,255,.08);border:2px dashed var(--gold-2);color:#dfe4ff}
+.honest b{color:#fff}
+.honest .btn{margin-top:12px}
+.join-card{background:#fff;color:#1b2140;border:3px solid #141b3d;border-radius:20px;box-shadow:10px 10px 0 rgba(255,180,0,.85)}
+.join-card h3{color:#14235f}
+.join-card>p{color:#49517a}
+.tier-card{border:2.5px solid #ccd5f5;border-radius:14px;background:#f6f8ff}
+.tier-card .amt{color:#1e40c9}
+.tier input:checked + .tier-card{border-color:var(--saffron);background:#fff3e4;box-shadow:4px 4px 0 rgba(240,100,0,.45)}
+.pop .tier-card::after{background:var(--rani);border:1.5px solid #141b3d}
+.field input,.field textarea{background:#f6f8ff;border-color:#b9c4ef;color:#1b2140}
+#receipt{background:linear-gradient(160deg,#fff8e6,#fff);border-color:var(--gold-2)}
+#receipt h4{color:#b35400}
+.btn-line{border-color:#1e40c9;color:#1e40c9;background:#fff}
+#waReceipt{display:none}
+#waReceipt.show{display:inline-flex}
+
+/* footer */
+footer{background:#080c26}
+footer .f-logo{border-color:var(--saffron)}
+footer .motto{color:var(--gold-2)}
+footer .wa-line{margin:20px auto 0;font-size:1.05rem}
+footer .wa-line a{color:#4ade80;font-weight:800;text-decoration:none;border-bottom:2px solid var(--wa)}
+footer .wa-line a:hover{color:#86efac}
+
+/* sticky CTA — split: join + WhatsApp */
+#stickyCta{gap:10px}
+#stickyCta.show{display:flex}
+#stickyCta a{flex:1;border:2px solid #141b3d;border-radius:14px;box-shadow:4px 4px 0 rgba(10,14,40,.6);padding:14px 8px}
+#stickyCta a.join-a{background:var(--saffron)}
+#stickyCta a.wa-a{background:var(--wa);flex:0 0 54px}
+#stickyCta a.wa-a svg{display:block}
+
+/* floating WhatsApp button */
+#waFloat{position:fixed;right:16px;bottom:calc(18px + env(safe-area-inset-bottom));z-index:130;width:58px;height:58px;border-radius:50%;
+  background:var(--wa);display:grid;place-items:center;border:2.5px solid #fff;box-shadow:0 10px 26px rgba(10,60,30,.45);text-decoration:none}
+#waFloat::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:2px solid rgba(31,170,85,.55);animation:waPulse 2.2s ease-out infinite}
+@keyframes waPulse{0%{transform:scale(.85);opacity:1}100%{transform:scale(1.25);opacity:0}}
+#waFloat .wa-tip{position:absolute;right:70px;top:50%;transform:translateY(-50%);background:#141b3d;color:#fff;font-weight:700;font-size:.85rem;
+  padding:7px 12px;border-radius:10px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .25s}
+#waFloat:hover .wa-tip,#waFloat:focus-visible .wa-tip{opacity:1}
+@media (max-width:860px){#waFloat{bottom:calc(84px + env(safe-area-inset-bottom))}}
+@media (prefers-reduced-motion: reduce){#waFloat::after{animation:none;opacity:0}}
+
+/* loader follows new night */
+#loader{background:radial-gradient(ellipse 90% 65% at 50% 38%,#232c6e 0%,#121840 55%,#080c26 100%)}
+.loader-logo{border-color:var(--gold-2)}
+
+/* leadership strip — founder & secretary, right in the hero */
+.hero-leaders{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:24px auto 0;max-width:780px}
+.hero-leaders .hl-item{background:rgba(8,11,34,.55);border:2px solid var(--gold-2);border-radius:14px;padding:9px 20px 11px;backdrop-filter:blur(4px);text-align:center;box-shadow:4px 4px 0 rgba(0,0,0,.35)}
+.hero-leaders .hl-role{display:block;font-size:.76rem;font-weight:700;letter-spacing:.12em;color:var(--gold-2);text-transform:uppercase}
+.hero-leaders .hl-name{display:block;font-weight:800;font-size:1.12rem;color:#fff;line-height:1.35}
+.hero-scope{margin:16px auto 0;font-weight:700;color:#ffe9a8;font-size:clamp(.98rem,3vw,1.12rem)}
+
+/* reach — Amarpur to Bihar to Bharat */
+.scope-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:980px;margin:46px auto 0}
+@media (max-width:700px){.scope-grid{grid-template-columns:1fr}}
+.scope-card{border:2px solid #141b3d;border-radius:16px;box-shadow:var(--hard);color:#fff;padding:24px 22px 20px;text-align:left}
+.scope-card:nth-child(1){background:#1e40c9;transform:rotate(-.6deg)}
+.scope-card:nth-child(2){background:var(--rani)}
+.scope-card:nth-child(3){background:var(--saffron);transform:rotate(.6deg)}
+.scope-card b{display:block;font-family:'Baloo 2',sans-serif;font-size:1.55rem;line-height:1.25;margin-bottom:4px}
+.scope-card span{font-size:.98rem;color:rgba(255,255,255,.94);line-height:1.6;display:block}
+
+/* registration certificate */
+.cert-sec{background:var(--bg2)}
+.cert-grid{grid-template-columns:1fr;max-width:600px;margin:0 auto}
+@media (max-width:900px){.cert-grid{grid-template-columns:1fr}}
+@media (max-width:600px){.cert-grid{grid-template-columns:1fr}}
+.cert-grid .press-card img{height:auto;max-height:460px;object-fit:contain;background:#fdfcf6}
+.cert-facts{justify-content:center;margin-left:auto;margin-right:auto;text-align:left}

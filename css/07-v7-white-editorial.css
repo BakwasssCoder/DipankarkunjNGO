@@ -1,0 +1,309 @@
+/* ============ V7 — WHITE MINIMAL · editorial redesign ============
+   The full colour wash is gone. One white ground, near-black ink,
+   hairline rules, and colour only where the logo itself carries it:
+   a kesariya accent, the board's blue, leaf green — used as ink,
+   never as background paint. Typography does the heavy lifting:
+   Rozha One display Devanagari for headlines, Mukta for text.
+   Each page gets its own layout character:
+   Home = magazine cover + ruled index · About = document room ·
+   Story = book chapters · Achievements = archive wall ·
+   Testimonials = pull-quotes · Donate = ledger. */
+:root{
+  --bg:#ffffff; --bg2:#faf8f4; --card:#ffffff; --ink:#1d1a16; --ink-soft:#57503f;
+  --line:#e7e1d5; --line-strong:#cfc6b2;
+  --maroon:#a31f34; --maroon-deep:#1d1a16; --gold:#b57a10; --gold-2:#e9a820;
+  --saffron:#e8700a; --saffron-deep:#c2570a; --rani:#c2245e; --board:#1e40c9; --leaf:#178a4c;
+  --night:#14110d; --night-2:#1d1a16; --cream:#ffffff; --cream-soft:#57503f;
+  --shadow:0 1px 2px rgba(29,26,22,.05),0 10px 30px rgba(29,26,22,.06);
+  --hard:0 1px 2px rgba(29,26,22,.05),0 10px 30px rgba(29,26,22,.06);
+  color-scheme:light;
+}
+/* the design is deliberately a white page — keep it white in OS dark mode too */
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#ffffff; --bg2:#faf8f4; --card:#ffffff; --ink:#1d1a16; --ink-soft:#57503f;
+    --line:#e7e1d5; --line-strong:#cfc6b2; --maroon:#a31f34; --gold:#b57a10; --gold-2:#e9a820;
+    --night:#14110d; --cream-soft:#57503f;
+    --shadow:0 1px 2px rgba(29,26,22,.05),0 10px 30px rgba(29,26,22,.06);
+    --hard:0 1px 2px rgba(29,26,22,.05),0 10px 30px rgba(29,26,22,.06);
+    color-scheme:light;
+  }
+}
+body{background:#fff;color:var(--ink);font-weight:500}
+h1,h2,h3,.serif{font-family:'Rozha One','Tiro Devanagari Hindi',serif;font-weight:400;letter-spacing:0}
+.num{font-family:'Rozha One','Tiro Devanagari Hindi',serif}
+::selection{background:#ffe1a8;color:#3a2403}
+.sec{padding:88px 0}
+
+/* ---------- chrome: progress, nav, language ---------- */
+#progress{height:3px;background:var(--saffron)}
+#topnav{background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);box-shadow:0 6px 24px rgba(29,26,22,.05)}
+#topnav a{color:var(--ink)}
+#topnav a:hover{background:#f4f0e7}
+#topnav nav a.active{background:#1d1a16;color:#fff}
+#topnav .nav-cta{background:var(--saffron);color:#fff !important;box-shadow:none;border-radius:999px}
+.lang-toggle{background:#fff;border:1.5px solid var(--line-strong);box-shadow:0 4px 14px rgba(29,26,22,.10)}
+.lang-toggle button{color:var(--ink)}
+.lang-toggle button.active{background:#1d1a16;color:#fff}
+#topnav .lang-toggle{background:#fff;border-color:var(--line-strong)}
+
+/* ---------- loader — white page, ink motto ---------- */
+#loader{background:#fff;color:var(--ink)}
+.loader-logo-wrap::before{background:radial-gradient(circle,rgba(232,112,10,.20) 0%,rgba(232,112,10,.06) 45%,transparent 70%)}
+.loader-logo{border-color:#fff;box-shadow:0 0 0 1.5px var(--line-strong),0 18px 40px rgba(29,26,22,.14)}
+.loader-quote{color:var(--ink);text-shadow:none}
+.loader-quote .w-last{color:var(--saffron-deep)}
+.loader-orn{color:var(--gold)}
+.loader-name{color:var(--ink-soft)}
+.load-line{background:#efe9db}
+.load-line i{background:var(--saffron)}
+
+/* ---------- HOME · hero as a magazine cover ---------- */
+.hero{background:#14110d}
+.hero-shade{background:linear-gradient(180deg,rgba(15,12,8,.42) 0%,rgba(15,12,8,.08) 30%,rgba(15,12,8,.55) 64%,rgba(13,10,7,.94) 100%)}
+.hero-logo{border:3px solid #fff;box-shadow:0 14px 34px rgba(0,0,0,.45)}
+.hero-where{color:#ffd9a0}
+.lh-name{color:#fff;text-shadow:0 3px 18px rgba(0,0,0,.65)}
+.lh-ngo{color:#ffb35c}
+.lh-act{color:#ffe3ae;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.lh-reg{color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.lh-addr{color:#ffedbe;text-shadow:0 2px 10px rgba(0,0,0,.7)}
+.hero h1{font-size:clamp(2.9rem,9.5vw,5.8rem);color:#fff;text-shadow:0 4px 34px rgba(0,0,0,.6)}
+.hero-motto-sub{color:#f5ead2;text-shadow:0 2px 12px rgba(0,0,0,.65)}
+.hero-leaders .hl-item{background:rgba(12,9,6,.5);border:1px solid rgba(255,255,255,.45);border-radius:12px;box-shadow:none;backdrop-filter:blur(5px)}
+.hero-leaders .hl-role{color:#ffb35c}
+.hero-leaders .hl-name{color:#fff}
+.hero-leaders .hl-desc{color:#ffe3ae}
+.hero-scope{color:#ffe3ae;text-shadow:0 2px 12px rgba(0,0,0,.7)}
+.hero-line{color:#fdf3da;text-shadow:0 2px 16px rgba(0,0,0,.6)}
+.hero-line em{color:#ffc46b;border-bottom:3px solid var(--saffron)}
+.hero-sticker{background:#fff;color:#1d1a16;border:1px solid rgba(0,0,0,.2);border-radius:4px 4px 14px 14px;box-shadow:0 10px 26px rgba(0,0,0,.35);transform:rotate(3deg)}
+.hero-strip{background:rgba(10,8,5,.5);border-top:1px solid rgba(255,255,255,.35)}
+.hero-strip b{color:#ffb35c;font-family:'Rozha One',serif}
+.hero-strip span{color:#f5ead2}
+.scroll-hint{color:#e8d9b8}
+.scroll-hint i{border-color:rgba(245,234,210,.55)}
+.scroll-hint i::after{background:#ffb35c}
+
+.btn{border:1.5px solid #1d1a16;border-radius:999px;box-shadow:none;font-weight:700}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(29,26,22,.14)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn-gold{background:var(--saffron);border-color:var(--saffron);color:#fff;box-shadow:none}
+.btn-gold:hover{box-shadow:0 10px 24px rgba(232,112,10,.35)}
+.btn-ghost{background:rgba(15,12,8,.3);border-color:rgba(255,255,255,.8);color:#fff;box-shadow:none}
+.btn-ghost:hover{background:rgba(255,255,255,.16);box-shadow:none}
+.btn-wa{background:#1faa55;border-color:#1faa55;color:#fff;box-shadow:none}
+.btn-line{background:transparent;border-color:#1d1a16;color:#1d1a16}
+
+/* marquee becomes a ruled index line, not a colour band */
+.marquee{background:#fff;color:var(--ink);border-block:1px solid var(--line)}
+.marquee-track{font-family:'Mukta',sans-serif;font-weight:600;font-size:.98rem}
+.marquee-track b{color:var(--saffron-deep)}
+
+/* ---------- section heads — typographic, no badges ---------- */
+.sec-kicker{display:inline-block;background:none;color:var(--saffron-deep);border:0;box-shadow:none;border-radius:0;
+  padding:0;font-size:.85rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase}
+.sec-kicker::after{content:"";display:block;width:44px;height:3px;background:var(--saffron);margin:10px auto 0;border-radius:2px}
+.sec-head{text-align:center}
+.sec-head h2{font-size:clamp(2.1rem,5.6vw,3.2rem);color:var(--ink);margin:.3em 0 .35em}
+.sec-head p{color:var(--ink-soft)}
+.flame-div::before,.flame-div::after{background:var(--line-strong)}
+
+/* ---------- HOME · statement, ruled stat index, scope index ---------- */
+.statement{font-family:'Rozha One','Tiro Devanagari Hindi',serif;font-size:clamp(1.45rem,4.6vw,2.15rem);line-height:1.6}
+.statement .hl{color:var(--ink);border-bottom:3px solid var(--gold-2)}
+.stats{border-block:1.5px solid #1d1a16;gap:0;max-width:1020px}
+.stat{background:none;border:0;border-radius:0;box-shadow:none;transform:none !important;padding:26px 8px 20px;color:var(--ink)}
+.stat:nth-child(1),.stat:nth-child(2),.stat:nth-child(3),.stat:nth-child(4){background:none}
+.stat + .stat{border-left:1px solid var(--line)}
+.stat b{color:var(--ink) !important;font-family:'Rozha One',serif;font-size:clamp(1.9rem,5.4vw,2.8rem)}
+.stat span{color:var(--ink-soft)}
+@media (max-width:640px){.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+.scope-grid{gap:0;border:1.5px solid #1d1a16;border-radius:18px;overflow:hidden;max-width:1020px}
+.scope-card{background:#fff !important;border:0;border-radius:0;box-shadow:none;transform:none !important;color:var(--ink);padding:28px 26px 24px}
+.scope-card + .scope-card{border-left:1px solid var(--line)}
+@media (max-width:700px){.scope-card + .scope-card{border-left:0;border-top:1px solid var(--line)}}
+.scope-card b{font-family:'Rozha One',serif;color:var(--ink);font-size:1.6rem}
+.scope-card b::before{content:"";display:block;width:34px;height:4px;border-radius:2px;background:var(--board);margin-bottom:14px}
+.scope-card:nth-child(2) b::before{background:var(--saffron)}
+.scope-card:nth-child(3) b::before{background:var(--leaf)}
+.scope-card span{color:var(--ink-soft)}
+
+/* mantra band — a quiet typographic divider on white */
+.mantra-band{background:#fff;border-block:1px solid var(--line);color:var(--ink);padding:58px 20px}
+.mantra-band .mb-motto{font-family:'Rozha One',serif;color:var(--ink)}
+.mantra-band .mb-sub{color:var(--ink-soft)}
+
+/* ---------- OUR WORK — numbered index rows, not a card grid ---------- */
+.karya-sec{background:#fff}
+.karya-grid{grid-template-columns:1fr;gap:0;max-width:860px;border-top:1.5px solid #1d1a16}
+.karya-card{background:#fff;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;padding:26px 6px 24px 76px;position:relative}
+.karya-card .karya-ico{position:absolute;left:6px;top:26px;width:52px;height:52px;border-radius:50%;background:#fdf6ec;border:1px solid var(--line-strong);color:var(--saffron-deep);margin:0}
+.karya-card h3{font-size:1.45rem}
+.karya-card p{color:var(--ink-soft)}
+.karya-cta{background:#1d1a16;color:#fff;border-radius:16px;padding:30px 28px 26px;margin-top:26px;box-shadow:none}
+.karya-cta h3{color:#fff}
+.karya-cta p{color:#d8d2c4}
+@media (max-width:560px){.karya-card{padding-left:6px;padding-top:86px}.karya-card .karya-ico{top:22px}}
+
+/* ---------- HOME · gallery — clean photo grid ---------- */
+.gal{gap:10px}
+.gal button{border:1px solid var(--line);border-radius:10px;box-shadow:none}
+
+/* ---------- HOME · join — white page, ledger form ---------- */
+.join-sec{background:#fff;color:var(--ink)}
+.join-sec .sec-head h2{color:var(--ink)}
+.join-sec .sec-head p{color:var(--ink-soft)}
+.join-sec .sec-kicker{background:none;color:var(--saffron-deep);border:0}
+.join-sec h3{color:var(--ink)}
+.steps .sn{background:#1d1a16;color:#fff;border:0;font-family:'Rozha One',serif}
+.steps b{color:var(--ink)}
+.steps span{color:var(--ink-soft)}
+.honest{background:var(--bg2);border:1.5px dashed var(--line-strong);color:var(--ink-soft)}
+.honest b{color:var(--ink)}
+.join-card{background:#fff;color:var(--ink);border:1.5px solid #1d1a16;border-radius:18px;box-shadow:10px 10px 0 #f1ead9}
+.join-card h3{color:var(--ink)}
+.join-card>p{color:var(--ink-soft)}
+.tier-card{border:1.5px solid var(--line-strong);border-radius:12px;background:#fff}
+.tier-card .amt{color:var(--ink);font-family:'Rozha One',serif}
+.tier-card .tdesc{color:var(--ink-soft)}
+.tier input:checked + .tier-card{border-color:var(--saffron);background:#fff8ef;box-shadow:inset 0 0 0 1px var(--saffron)}
+.pop .tier-card::after{background:var(--saffron);border:0;color:#fff;content:"सबसे लोकप्रिय"}
+html[lang="en"] .pop .tier-card::after{content:"Most Popular"}
+.field input,.field textarea{background:#fff;border-color:var(--line-strong);color:var(--ink)}
+.field input:focus,.field textarea:focus{outline:3px solid rgba(232,112,10,.28);border-color:var(--saffron)}
+#receipt{background:#fffdf6;border:1.5px solid var(--gold);border-radius:16px}
+#receipt h4{color:var(--ink)}
+.faq-sec{background:#fff}
+.faq-item{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:none}
+.faq-item summary{font-family:'Rozha One',serif}
+.faq-item summary::after{color:var(--saffron-deep);font-family:'Mukta',sans-serif;font-weight:700}
+.faq-item .faq-a{color:var(--ink-soft)}
+.faq-item .faq-a a{color:var(--saffron-deep)}
+
+/* ---------- STORY — book chapters on white ---------- */
+.story{background:#fff}
+.tl-rail{background:var(--line)}
+.tl-fill{background:var(--saffron)}
+.tl-dot{background:#fff;border-color:var(--saffron)}
+.tl-dot::after{background:#1d1a16}
+.ch-tag{background:none;color:var(--saffron-deep);border:1.5px solid currentColor;box-shadow:none;border-radius:999px;font-weight:800}
+.chapter:nth-of-type(2) .ch-tag{background:none;color:var(--board)}
+.ch-year{color:var(--ink-soft);font-family:'Rozha One',serif}
+.chapter h3{font-size:clamp(1.8rem,5vw,2.6rem)}
+.chapter p{color:var(--ink-soft)}
+.chapter p strong{color:var(--ink)}
+figure.shot img{border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+figure.shot figcaption{color:var(--ink-soft)}
+.news-card{background:#fdfaf1;border:1px solid var(--line);box-shadow:var(--shadow)}
+.chip{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold-2);border-radius:8px;box-shadow:none;font-weight:600}
+.chip b{color:var(--ink)}
+.quote{border-left:4px solid var(--saffron);background:#fffaf2;border-radius:0 12px 12px 0}
+.quote p{font-family:'Rozha One',serif}
+/* chapter 3 — the silence: a hushed grey room, still light */
+.night{background:#f3f0e9;color:var(--ink)}
+.night .chapter p{color:var(--ink-soft)}
+.night .chapter p strong{color:var(--ink)}
+.night figure.shot img{border-color:var(--line);box-shadow:var(--shadow)}
+.night figure.shot figcaption{color:var(--ink-soft)}
+.resolve-list li{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:none}
+.resolve-list .n{background:#1d1a16;color:#fff;font-family:'Rozha One',serif}
+.resolve-list li:nth-child(2) .n{background:var(--saffron);color:#fff}
+.resolve-list li:nth-child(3) .n{background:var(--board);color:#fff}
+.resolve-list li:nth-child(4) .n{background:var(--leaf);color:#fff}
+.resolve-list li:nth-child(5) .n{background:var(--rani);color:#fff}
+
+/* ---------- ABOUT — the document room ---------- */
+.cert-sec{background:#fff}
+.cert-grid{max-width:680px}
+.cert-grid .press-card{background:#fff;border:1.5px solid #1d1a16;border-radius:8px;box-shadow:12px 12px 0 #f1ead9;padding:18px}
+.cert-grid .press-card img{max-height:520px;background:#fff;border:1px solid var(--line);border-radius:4px}
+.cert-grid .pc-paper{font-size:1.05rem;margin-top:14px}
+.cert-facts .chip{border-left-color:var(--board)}
+
+.person{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.person .p-img{background:#fff}
+.person:nth-child(2) .p-img{background:#fff}
+.person .role{color:var(--saffron-deep)}
+.person h3{font-size:1.7rem}
+.person p{color:var(--ink-soft)}
+
+.soc-card{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:none}
+.soc-card svg{color:var(--ink)}
+.soc-card span{color:var(--ink-soft)}
+.soc-card .soc-live{background:#1faa55;color:#fff}
+.soc-card .soc-demo{background:#f1ead9;color:#6d5c33}
+
+/* ---------- ACHIEVEMENTS — milestone ledger + archive wall ---------- */
+.ach-list{gap:0;border-top:1.5px solid #1d1a16;max-width:900px}
+.ach-item{background:#fff;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;padding:24px 4px;align-items:baseline}
+.ach-year{background:none;color:var(--ink);font-family:'Rozha One',serif;font-size:1.7rem;min-width:104px;text-align:left;padding:0;border-radius:0}
+.ach-item h3{font-size:1.35rem}
+.ach-item p{color:var(--ink-soft)}
+@media (max-width:560px){.ach-item{flex-direction:column;gap:2px}.ach-year{min-width:0}}
+.press-sec{background:#fff}
+.press-sec .sec-head h2{color:var(--ink)}
+.press-sec .sec-head p{color:var(--ink-soft)}
+.press-sec .sec-kicker{background:none;color:var(--saffron-deep);border:0}
+.press-note{color:var(--ink-soft)}
+.press-card{background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:none;color:var(--ink);transform:none !important;padding:10px 10px 14px}
+.press-card:hover,.press-card:focus-visible{transform:translateY(-3px) !important;box-shadow:0 14px 30px rgba(29,26,22,.12);border-color:var(--line-strong)}
+.press-card img{border:1px solid var(--line);border-radius:4px}
+.pc-paper{color:var(--ink);font-weight:800}
+.pc-date{color:var(--saffron-deep);font-weight:700}
+.pc-head{color:var(--ink-soft);font-weight:600}
+
+/* ---------- TESTIMONIALS — pull-quotes, minimal furniture ---------- */
+#prashansa{background:#fff !important}
+.testi-grid{gap:44px 56px}
+.testi-card{background:none;border:0;border-top:3px solid #1d1a16;border-radius:0;box-shadow:none;padding:20px 2px 0}
+.testi-card blockquote{font-family:'Rozha One',serif;font-size:clamp(1.45rem,3.6vw,1.8rem);line-height:1.45;color:var(--ink)}
+.testi-badge{background:none;border:1.5px solid var(--line-strong);color:var(--ink-soft)}
+.testi-src{color:var(--ink-soft)}
+.testi-src b{color:var(--ink)}
+.testi-soon{border:1.5px dashed var(--line-strong);border-radius:14px;padding:24px}
+.supp-grid{gap:44px 40px}
+.supp-card{background:none;border:0;border-top:3px solid var(--gold-2);border-radius:0;box-shadow:none;padding:18px 2px 0}
+.supp-card p{color:var(--ink-soft)}
+.supp-badge{border-color:var(--line-strong);color:var(--ink-soft)}
+
+/* ---------- DONATE — the ledger page ---------- */
+.meter-card{background:#fff;border:1.5px solid #1d1a16;border-radius:16px;box-shadow:10px 10px 0 #f1ead9;padding:34px 30px}
+.meter-label{color:var(--ink-soft)}
+.meter-val{color:var(--ink);font-family:'Rozha One',serif}
+.meter-goal{color:var(--ink)}
+.meter-track{border:0;background:#f0ead9;height:22px}
+.meter-fill{background:linear-gradient(90deg,var(--saffron),var(--gold-2))}
+.meter-pct-row{color:var(--ink-soft)}
+.meter-pct-row .num{color:var(--ink);font-family:'Rozha One',serif}
+.meter-note{color:var(--ink-soft)}
+.fu-grid{gap:0;border-top:1.5px solid #1d1a16;max-width:900px}
+.fu-card{background:#fff;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;padding:20px 6px 16px}
+.fu-card h3{font-size:1.2rem}
+.fu-card p{color:var(--ink-soft)}
+.dn-tier{background:#fff;border:1.5px solid var(--line-strong);border-radius:12px;box-shadow:none}
+.dn-tier .amt{color:var(--ink);font-family:'Rozha One',serif}
+.dn-tier .tdesc{color:var(--ink-soft)}
+
+/* ---------- footer — white, ruled, quiet ---------- */
+footer{background:#fff;color:var(--ink-soft);border-top:1.5px solid #1d1a16;padding:60px 0 110px}
+footer .f-logo{border:1.5px solid var(--line-strong)}
+footer h2{color:var(--ink);font-size:2rem}
+footer .motto{color:var(--saffron-deep);font-family:'Rozha One',serif}
+footer .f-letter{color:var(--ink-soft)}
+footer .f-people{color:var(--ink-soft)}
+footer .f-people b{color:var(--ink)}
+footer .f-facts{color:var(--ink-soft)}
+footer .f-facts b{color:var(--ink)}
+footer .wa-line a{color:#128c4b;border-bottom-color:#1faa55}
+footer .wa-line a:hover{color:#0d6b38}
+.f-soc-chip{border-color:var(--line-strong);color:var(--ink)}
+.f-soc-chip i{color:var(--ink-soft)}
+footer .end{color:var(--ink-soft);opacity:1}
+
+/* sticky CTA + floating WhatsApp */
+#stickyCta a{border:0;box-shadow:0 12px 28px rgba(29,26,22,.22);border-radius:14px}
+#stickyCta a.join-a{background:var(--saffron);color:#fff}
+#waFloat{border-color:#fff;box-shadow:0 10px 26px rgba(10,60,30,.35)}
+#waFloat .wa-tip{background:#1d1a16}
+#lb-cap{color:#f5ead2}

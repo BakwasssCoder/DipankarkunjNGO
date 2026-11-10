@@ -1,0 +1,60 @@
+/* ============ V4 — bolder typography, stronger contrast + Hindi/English toggle ============
+   Feedback: type was washing out against several backgrounds. Fixes: darker
+   soft-ink, heavier body weight, no opacity-dimmed text, brighter text on
+   every dark band (night chapter, press wall, join stage, footer). */
+:root{ --ink-soft:#54381b; }
+@media (prefers-color-scheme: dark){ :root{ --ink-soft:#dec08a; } }
+body{font-weight:500;font-size:1.08rem}
+.btn{font-weight:800}
+.sec-head p,.chapter p,.person p,.karya-card p,.faq-item .faq-a,.press-note{font-weight:500}
+.ch-year{color:#8a5a06;font-weight:800}
+@media (prefers-color-scheme: dark){.ch-year{color:var(--gold-2)}}
+figure.shot figcaption{font-weight:600}
+.night .chapter p{color:#ecd3a0}
+.night figure.shot figcaption{color:#ecca94;font-weight:600}
+.hero-where{font-weight:700;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.hero-motto-sub{opacity:1;font-weight:600;text-shadow:0 2px 10px rgba(0,0,0,.6)}
+.hero-scope{text-shadow:0 2px 10px rgba(0,0,0,.65)}
+.hero-line{text-shadow:0 2px 14px rgba(0,0,0,.55)}
+.hero-strip span{opacity:1;color:#ffedbe;font-weight:600}
+.scroll-hint{color:#f2d49a;font-weight:600}
+.loader-name{color:#f2d49a;font-weight:700}
+.marquee-track{font-size:1.07rem}
+.press-sec .sec-head p{color:#f2dda6;font-weight:500}
+.press-sec .press-note{color:#eed9ac;font-weight:500}
+.pc-date{color:#75500f;font-weight:700}
+.pc-head{color:#3d2a16;font-weight:600}
+.join-sec .sec-head p{color:#f6e0ae}
+.steps span{color:#f3ddae;font-weight:500}
+.honest{color:#f7e3b6}
+.karya-cta p{color:#f2d49a}
+.join-card>p{color:#5f4125}
+.tier-card .tdesc{color:#6b4a26;font-weight:600}
+.faq-item summary{font-weight:700}
+#lb-cap{font-weight:600;font-size:1.05rem}
+footer{color:#ecd3a0}
+footer .end{opacity:.92}
+
+/* language toggle — top of the page (hero) + inside the sticky nav */
+.lang-toggle{display:inline-flex;background:rgba(20,7,2,.78);border:2px solid var(--gold-2);border-radius:999px;padding:3px;gap:2px;backdrop-filter:blur(6px);box-shadow:0 8px 22px rgba(0,0,0,.35)}
+.lang-toggle button{border:0;background:transparent;color:#ffe9bd;font-family:'Mukta',sans-serif;font-weight:700;font-size:.93rem;padding:6px 16px;border-radius:999px;cursor:pointer;line-height:1.25}
+.lang-toggle button.active{background:var(--gold-2);color:#431f00}
+.lang-toggle button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+#heroLang{position:absolute;top:16px;left:16px;z-index:6}
+#topnav{flex-wrap:wrap}
+#topnav .lang-toggle{background:rgba(255,233,189,.1);border-width:1.5px;padding:2px;box-shadow:none}
+#topnav .lang-toggle button{font-size:.85rem;padding:5px 12px}
+@media (max-width:640px){#heroLang{top:12px;left:12px}.lang-toggle button{font-size:.86rem;padding:5px 12px}}
+html[lang="en"] .pop .tier-card::after{content:"Most Popular"}
+
+/* client letterhead format — hero masthead + footer */
+.letterhead{text-align:center;margin-bottom:6px}
+.lh-name{font-family:'Tiro Devanagari Hindi',serif;font-size:clamp(1.55rem,5.4vw,2.2rem);color:#fff3da;line-height:1.3;text-shadow:0 3px 16px rgba(0,0,0,.6)}
+.lh-ngo{color:var(--gold-2);font-size:.58em;letter-spacing:.1em;font-family:'Mukta',sans-serif;font-weight:800;vertical-align:.35em}
+.lh-act{font-weight:700;font-size:clamp(.92rem,3vw,1.05rem);color:#ffe9a8;letter-spacing:.04em;text-shadow:0 2px 8px rgba(0,0,0,.65);margin-top:2px}
+.lh-reg{font-weight:700;font-size:clamp(.9rem,2.8vw,1rem);color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.65)}
+.lh-addr{font-weight:600;font-size:clamp(.9rem,2.8vw,1rem);color:#ffedbe;text-shadow:0 2px 8px rgba(0,0,0,.65)}
+.hero-leaders .hl-desc{display:block;font-size:.84rem;font-weight:700;color:#ffe9a8;line-height:1.4}
+footer .f-letter{margin:16px auto 0;max-width:680px;font-size:1rem;line-height:1.85;font-weight:600}
+footer .f-people{margin-top:8px;color:var(--cream)}
+footer .f-people b{color:var(--gold-2)}

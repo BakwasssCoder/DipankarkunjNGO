@@ -1,0 +1,39 @@
+/* ============ V10 — homepage intro: story-style scroll sequence ============
+   Between the hero and the mantra band, the intro now unfolds like the
+   Story page: statement, figures and cards reveal one by one as you
+   scroll (staggered), and the campus-ruins photographs appear in a
+   numbered sequence — ground, arches, classroom, gate, name board —
+   each tappable into the same lightbox as the gallery. */
+.stats .stat:nth-child(2){transition-delay:.1s}
+.stats .stat:nth-child(3){transition-delay:.2s}
+.stats .stat:nth-child(4){transition-delay:.3s}
+.scope-grid .scope-card:nth-child(2){transition-delay:.12s}
+.scope-grid .scope-card:nth-child(3){transition-delay:.24s}
+
+.ruins-seq{max-width:800px;margin:58px auto 6px;position:relative}
+.ruins-seq::before{content:"";position:absolute;left:15px;top:52px;bottom:26px;width:2px;
+  background:linear-gradient(180deg,var(--gold-2),var(--line));border-radius:2px}
+.seq-head{font-family:'Rozha One','Tiro Devanagari Hindi',serif;font-size:clamp(1.35rem,4.4vw,1.8rem);
+  text-align:center;margin:0 0 34px;color:var(--ink)}
+.ruins-seq figure.shot{margin:0 0 40px 48px;max-width:none;position:relative}
+.ruins-seq figure.shot:last-child{margin-bottom:6px}
+.ruins-seq figure.shot button{display:block;width:100%;aspect-ratio:4/3;padding:0;border:0;background:none;cursor:pointer;border-radius:12px}
+.ruins-seq figure.shot button:focus-visible{outline:3px solid rgba(30,64,201,.6);outline-offset:3px}
+.ruins-seq figure.shot img{width:100%;height:auto}
+.ruins-seq figcaption{display:flex;gap:12px;align-items:flex-start;margin-top:12px;
+  font-size:1rem;font-weight:600;font-style:normal;color:var(--ink);line-height:1.55}
+.seq-n{flex:none;width:32px;height:32px;border-radius:50%;background:#1d1a16;color:#fff;
+  display:grid;place-items:center;font-size:.98rem;margin-left:-48px;margin-top:-1px;
+  box-shadow:0 0 0 5px #fff;position:relative;z-index:1}
+.ruins-seq figure:nth-of-type(2) .seq-n{background:var(--saffron-deep)}
+.ruins-seq figure:nth-of-type(3) .seq-n{background:var(--board)}
+.ruins-seq figure:nth-of-type(4) .seq-n{background:var(--rani)}
+.ruins-seq figure:nth-of-type(5) .seq-n{background:var(--leaf)}
+@media (max-width:560px){
+  .ruins-seq figure.shot{margin-left:40px}
+  .seq-n{margin-left:-40px;width:28px;height:28px;font-size:.9rem}
+  .ruins-seq::before{left:13px}
+}
+@media (prefers-reduced-motion: reduce){
+  .stats .stat,.scope-grid .scope-card{transition-delay:0s}
+}

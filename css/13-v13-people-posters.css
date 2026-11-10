@@ -1,0 +1,38 @@
+/* ============ V13 — President cum Mentor + all three posters everywhere ============
+   Dr. Jitendra Kumar Singh's designation is "President cum Mentor"
+   (अध्यक्ष सह मार्गदर्शक) everywhere on the site. All three people —
+   Founder, Director and President cum Mentor — use their full 1:1
+   posters, shown whole (contain, never cropped) in the loader, the
+   hero name-click lightbox, the "Hamare Log" cards and the
+   supporters. The people grid now holds all three cards. */
+.person .p-img.poster-11{aspect-ratio:1/1;width:100%;background:#fff;line-height:0;overflow:hidden}
+.person .p-img.poster-11 img{width:100%;height:100%;aspect-ratio:1/1;object-fit:contain;object-position:center;display:block;background:#fff}
+.people{grid-template-columns:repeat(3,1fr);max-width:1180px}
+@media (max-width:1020px){
+  .people{grid-template-columns:1fr 1fr}
+  .people .person:last-child{grid-column:1/-1;max-width:520px;width:100%;margin:0 auto}
+}
+@media (max-width:700px){
+  .people{grid-template-columns:1fr}
+  .people .person:last-child{max-width:none}
+}
+.hero-leaders{max-width:980px}
+.loader-person{width:104px}
+.loader-person img{width:104px;height:104px;object-fit:contain}
+.loader-role{font-size:.64rem;letter-spacing:.13em;text-indent:.13em}
+@media (max-width:480px){
+  .loader-person{width:78px}
+  .loader-person img{width:78px;height:78px}
+}
+@media (max-height:640px){
+  .loader-person{width:64px}
+  .loader-person img{width:64px;height:64px}
+}
+.supp-photo{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:10px;display:block;margin:0 0 14px}
+/* homepage people cards — photo and name both open the poster preview */
+.p-img-btn{display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer;line-height:0}
+.p-img-btn:focus-visible{outline:3px solid rgba(30,64,201,.55);outline-offset:-3px}
+.p-name-btn{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;display:inline-flex;align-items:center;text-align:left}
+.p-name-btn span{border-bottom:2px solid var(--gold-2)}
+.p-name-btn .hl-ico{margin-left:8px}
+.p-name-btn:focus-visible{outline:3px solid rgba(30,64,201,.55);outline-offset:3px;border-radius:4px}

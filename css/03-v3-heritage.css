@@ -1,0 +1,170 @@
+/* ============ V3 — AWGP-inspired temple-heritage storyline design ============
+   Reference: awgp.org (All World Gayatri Pariwar, Shantikunj) — the family
+   Deepankar-Kunj itself worked with in the Jan 2014 Yuva Jagruti Shivir.
+   World: sanctum maroon · kesariya saffron · temple gold · sandstone cream,
+   with the ruined building's own brick arches (mehraab) as the shape language.
+   Classical Tiro Devanagari headings, soft warm shadows, gold rules — a proper
+   NGO storyline site, calmer and richer than the reference. */
+:root{
+  --bg:#fff8ea; --bg2:#f6e8c9; --card:#fffdf5; --ink:#2e1c0d; --ink-soft:#6f5136;
+  --line:#e2cb9c; --maroon:#8a1f1f; --maroon-deep:#571111; --gold:#b57a10; --gold-2:#f2b63c;
+  --saffron:#e8700a; --rani:#a12653; --leaf:#1e7a46; --wa:#1faa55; --wa-deep:#128c4b;
+  --night:#230c07; --night-2:#38130a; --cream:#fdeed0; --cream-soft:#dbbd8d;
+  --shadow:0 16px 36px rgba(94,40,5,.16);
+  --hard:0 6px 0 rgba(87,17,17,.85);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#1c1107; --bg2:#281806; --card:#2d1c0c; --ink:#f6e7c8; --ink-soft:#cda972;
+    --line:#4c3317; --maroon:#eda08d; --maroon-deep:#170a05; --gold:#e2aa3c; --gold-2:#f4c95d;
+    --night:#120805; --night-2:#1e0d07; --cream-soft:#b08d55;
+    --shadow:0 16px 36px rgba(0,0,0,.55);
+    --hard:0 6px 0 rgba(0,0,0,.6);
+  }
+}
+body{background:var(--bg)}
+h1,h2,h3,.serif{font-family:'Tiro Devanagari Hindi',serif;font-weight:400;letter-spacing:0}
+::selection{background:var(--gold-2);color:#3a2005}
+
+#progress{background:linear-gradient(90deg,var(--saffron),var(--gold-2),var(--maroon))}
+#topnav{background:rgba(35,10,5,.93);border-bottom:3px solid var(--gold-2)}
+#topnav .nav-cta{background:linear-gradient(135deg,var(--saffron),#c85e04);box-shadow:0 5px 0 rgba(0,0,0,.4)}
+
+/* hero — deep sanctum shade, gold-lit title */
+.hero-shade{background:linear-gradient(180deg,rgba(38,12,4,.55) 0%,rgba(38,12,4,.16) 32%,rgba(46,15,5,.64) 66%,rgba(26,8,3,.97) 100%)}
+.hero-logo{border:3px solid var(--gold-2);box-shadow:0 0 0 6px rgba(242,182,60,.25),0 18px 38px rgba(0,0,0,.55)}
+.hero h1{color:#fff6df;text-shadow:0 3px 0 rgba(138,31,31,.65),0 14px 38px rgba(0,0,0,.65)}
+.hero-line em{color:var(--gold-2);border-bottom:3px solid var(--saffron)}
+.hero-sticker{background:var(--gold-2);color:#431f00;border:2px solid var(--maroon-deep);box-shadow:5px 5px 0 rgba(60,15,2,.55);border-radius:6px 6px 16px 16px}
+.hero-leaders .hl-item{border-color:var(--gold-2);background:rgba(30,9,3,.55);box-shadow:0 8px 22px rgba(0,0,0,.4)}
+.hero-strip{border-top:3px solid var(--gold-2);background:rgba(26,8,3,.55)}
+
+.btn{border:2px solid var(--maroon-deep);border-radius:999px;box-shadow:0 5px 0 rgba(87,17,17,.85)}
+.btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 rgba(87,17,17,.85)}
+.btn:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(87,17,17,.85)}
+.btn-gold{background:linear-gradient(135deg,#f07f10,var(--gold));color:#fff8ea;box-shadow:0 5px 0 rgba(87,17,17,.9)}
+.btn-gold:hover{box-shadow:0 7px 0 rgba(87,17,17,.9)}
+.btn-ghost{background:rgba(35,12,4,.35);border-color:rgba(255,232,170,.7);color:#ffedbe;box-shadow:0 5px 0 rgba(0,0,0,.35)}
+.btn-ghost:hover{background:rgba(242,182,60,.25)}
+.btn-wa{box-shadow:0 5px 0 rgba(9,60,30,.8)}
+
+.marquee{background:linear-gradient(90deg,var(--maroon-deep),var(--maroon) 50%,var(--maroon-deep));border-block:2px solid var(--gold-2);color:#ffe9bd}
+.marquee-track b{color:var(--gold-2)}
+
+.sec-kicker{background:var(--maroon);color:#ffedd0;box-shadow:none;border-radius:999px;padding:5px 18px;border:1px solid var(--gold-2)}
+@media (prefers-color-scheme: dark){.sec-kicker{background:var(--maroon);color:#2a0d05}}
+
+.statement .hl{color:var(--maroon);border-bottom:3px solid var(--gold-2)}
+@media (prefers-color-scheme: dark){.statement .hl{color:var(--gold-2)}}
+
+/* stat + scope tiles — mehraab arch tops, temple colours */
+.stat{border:2px solid var(--maroon-deep);border-radius:64px 64px 14px 14px;box-shadow:var(--shadow);transform:none !important;padding:30px 10px 18px}
+.stat:nth-child(1){background:linear-gradient(180deg,#9c2626,var(--maroon-deep))}
+.stat:nth-child(2){background:linear-gradient(180deg,#f07f10,#b35400)}
+.stat:nth-child(3){background:linear-gradient(180deg,#c98f14,#8a5f06)}
+.stat:nth-child(4){background:linear-gradient(180deg,#259654,#145c31)}
+.scope-card{border:2px solid var(--maroon-deep);border-radius:56px 56px 14px 14px;box-shadow:var(--shadow);transform:none !important;padding:32px 24px 22px}
+.scope-card:nth-child(1){background:linear-gradient(180deg,#9c2626,var(--maroon-deep))}
+.scope-card:nth-child(2){background:linear-gradient(180deg,#f07f10,#b35400)}
+.scope-card:nth-child(3){background:linear-gradient(180deg,#259654,#145c31)}
+
+/* story */
+.story{background:radial-gradient(circle at 1px 1px, rgba(181,122,16,.14) 1.5px, transparent 1.6px) 0 0/26px 26px, linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)}
+.tl-fill{background:linear-gradient(180deg,var(--saffron),var(--maroon))}
+.tl-dot{border-color:var(--gold)}
+.tl-dot::after{background:var(--maroon)}
+.ch-tag{background:var(--maroon);border-radius:999px;box-shadow:none;color:#ffedd0}
+.chapter:nth-of-type(2) .ch-tag{background:var(--saffron);color:#fff}
+.ch-year{color:var(--gold)}
+figure.shot img{border:1px solid var(--line);border-radius:52px 52px 14px 14px;box-shadow:var(--shadow)}
+.chip{border:1px solid var(--line);border-left:5px solid var(--gold)}
+.chip b{color:var(--maroon)}
+@media (prefers-color-scheme: dark){.chip b{color:var(--gold-2)}}
+.quote{border-left:5px solid var(--gold);background:color-mix(in srgb, var(--gold-2) 9%, transparent)}
+.night{background:linear-gradient(180deg,#341106 0%,var(--night) 60%,#180805 100%)}
+.night .tl-rail{background:#4c2412}
+.night figure.shot img{border-color:#5c3418;box-shadow:var(--shadow)}
+.resolve-list li{border:1px solid var(--line);box-shadow:0 8px 20px rgba(94,40,5,.1)}
+.resolve-list .n{background:var(--maroon);color:#ffedd0}
+.resolve-list li:nth-child(2) .n{background:var(--saffron);color:#fff}
+.resolve-list li:nth-child(3) .n{background:var(--gold);color:#fff}
+.resolve-list li:nth-child(4) .n{background:var(--leaf);color:#fff}
+.resolve-list li:nth-child(5) .n{background:#7a3b8f;color:#fff}
+
+/* mantra band — the sanctum divider */
+.mantra-band{background:linear-gradient(90deg,var(--maroon-deep),var(--maroon) 50%,var(--maroon-deep));color:#ffe9bd;text-align:center;padding:52px 20px;border-block:3px solid var(--gold-2)}
+.mantra-band .mb-motto{font-family:'Tiro Devanagari Hindi',serif;font-size:clamp(1.7rem,5.6vw,2.6rem);color:#ffedbe;margin:0}
+.mantra-band .mb-sub{margin:8px 0 0;color:var(--cream-soft);font-size:1rem}
+@media (prefers-color-scheme: dark){.mantra-band .mb-sub{color:#d9b77e}}
+
+/* seva kshetra — activity cards in the AWGP manner, done richer */
+.karya-sec{background:var(--bg2)}
+.karya-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;max-width:1060px;margin:0 auto}
+@media (max-width:900px){.karya-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:580px){.karya-grid{grid-template-columns:1fr}}
+.karya-card{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--maroon);border-radius:14px;padding:26px 24px 22px;box-shadow:var(--shadow);text-align:left}
+.karya-card:nth-child(2){border-top-color:var(--saffron)} .karya-card:nth-child(3){border-top-color:var(--gold)}
+.karya-card:nth-child(4){border-top-color:var(--rani)} .karya-card:nth-child(5){border-top-color:var(--leaf)}
+.karya-ico{width:58px;height:58px;border-radius:50% 50% 12px 12px;background:color-mix(in srgb, var(--gold-2) 18%, var(--card));border:1.5px solid var(--gold);display:grid;place-items:center;color:var(--maroon);margin-bottom:14px}
+@media (prefers-color-scheme: dark){.karya-ico{color:var(--gold-2)}}
+.karya-card h3{font-size:1.32rem;margin:0 0 6px}
+.karya-card p{color:var(--ink-soft);margin:0;font-size:.99rem;line-height:1.65}
+.karya-card p b{color:var(--ink)}
+.karya-cta{background:linear-gradient(150deg,var(--maroon),var(--maroon-deep));color:#ffe9bd;border-radius:14px;padding:26px 24px 22px;box-shadow:var(--shadow);display:flex;flex-direction:column;justify-content:center}
+.karya-cta h3{color:#ffedbe;font-size:1.32rem;margin:0 0 6px}
+.karya-cta p{color:var(--cream-soft);margin:0 0 16px;font-size:.99rem;line-height:1.65}
+@media (prefers-color-scheme: dark){.karya-cta p{color:#d9b77e}}
+
+/* press — warm archive wall */
+.press-sec{background:radial-gradient(circle at 1px 1px, rgba(242,182,60,.16) 1.5px, transparent 1.6px) 0 0/26px 26px, linear-gradient(180deg,#3d1408,#22100a)}
+.press-sec .sec-kicker{background:var(--gold-2);color:#431f00;border-color:#431f00}
+.press-card{border:1px solid #d9c08a;box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.press-card:hover,.press-card:focus-visible{box-shadow:0 20px 38px rgba(0,0,0,.45)}
+
+.cert-sec{background:var(--bg)}
+.gal button{border:1px solid var(--line);box-shadow:0 10px 24px rgba(94,40,5,.14)}
+
+.person{border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow)}
+.person .p-img{background:var(--card)}
+.person:nth-child(2) .p-img{background:var(--card)}
+.person .role{color:var(--maroon)}
+@media (prefers-color-scheme: dark){.person .role{color:var(--gold-2)}; .person{border-color:var(--line)}}
+
+/* join — maroon sanctum stage */
+.join-sec{background:radial-gradient(circle at 1px 1px, rgba(242,182,60,.15) 1.5px, transparent 1.6px) 0 0/26px 26px, linear-gradient(180deg,#701616 0%,#420d0d 100%);color:#fdeed0}
+.join-sec .sec-head p{color:#eccfa0}
+.join-sec .sec-kicker{background:var(--gold-2);color:#431f00;border-color:#431f00}
+.steps .sn{background:var(--gold-2);color:#431f00;border:2px solid #431f00}
+.steps span{color:#eccfa0}
+.honest{background:rgba(255,248,234,.07);border-color:var(--gold-2);color:#f3ddb2}
+.join-card{background:#fffdf5;color:#2e1c0d;border:3px solid var(--gold-2);border-radius:20px;box-shadow:12px 12px 0 rgba(20,4,0,.45)}
+.join-card h3{color:var(--maroon-deep)}
+.join-card>p{color:#6f5136}
+.tier-card{border-color:#e2cb9c;background:#fff8ea}
+.tier-card .amt{color:var(--maroon)}
+.tier input:checked + .tier-card{border-color:var(--saffron);background:#ffedd6;box-shadow:0 5px 0 rgba(232,112,10,.4)}
+.pop .tier-card::after{background:var(--maroon);border-color:var(--maroon-deep)}
+.field input,.field textarea{background:#fffdf5;border-color:#d9bd85;color:#2e1c0d}
+#receipt h4{color:var(--maroon)}
+.btn-line{border-color:var(--maroon);color:var(--maroon);background:transparent}
+
+/* FAQ — sawal-jawab */
+.faq-sec{background:var(--bg)}
+.faq-list{max-width:820px;margin:0 auto;display:grid;gap:12px}
+.faq-item{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 22px rgba(94,40,5,.08);overflow:hidden}
+.faq-item summary{cursor:pointer;list-style:none;padding:18px 22px;font-family:'Tiro Devanagari Hindi',serif;font-size:1.14rem;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"+";font-family:'Baloo 2',sans-serif;font-size:1.5rem;color:var(--gold);line-height:1;flex:none}
+.faq-item[open ] summary::after{content:"–"}
+.faq-item .faq-a{padding:0 22px 20px;color:var(--ink-soft)}
+.faq-item .faq-a b{color:var(--ink)}
+.faq-item .faq-a a{color:var(--maroon);font-weight:700}
+@media (prefers-color-scheme: dark){.faq-item .faq-a a{color:var(--gold-2)}}
+
+footer{background:#180805}
+footer .f-logo{border-color:var(--gold-2)}
+#waFloat{border-color:#fff}
+#waFloat .wa-tip{background:var(--maroon-deep)}
+#stickyCta a{border-color:var(--maroon-deep)}
+#stickyCta a.join-a{background:linear-gradient(135deg,#f07f10,var(--gold));color:#fff8ea}
+#loader{background:radial-gradient(ellipse 90% 65% at 50% 38%,#571111 0%,#2a0d05 55%,#150603 100%)}
