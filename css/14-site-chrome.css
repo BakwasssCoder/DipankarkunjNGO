@@ -1,0 +1,127 @@
+/* ============ 14 — SITE CHROME: classic website header, page banner, footer ============
+   Loaded last. Replaces the app-style chrome (header that slid in only after
+   the hero, pill nav, bottom sticky CTA bar) with what visitors expect from
+   a website: an info bar, a permanent header with the logo, text-link nav
+   (hamburger menu on small screens), a banner + breadcrumb on inner pages,
+   and a multi-column footer. Colour tokens come from 07-v7-white-editorial.css. */
+
+:root{ --hdr-h:76px; }
+section,[id]{scroll-margin-top:calc(var(--hdr-h) + 12px)}
+
+/* ---------- info bar ---------- */
+.topbar{background:var(--ink);color:#efe7d6;font-size:.86rem;font-weight:500}
+.topbar-in{display:flex;align-items:center;gap:18px;min-height:40px}
+.topbar .tb-addr{opacity:.8}
+.topbar .tb-wa{margin-left:auto;color:#fff;text-decoration:none;font-weight:700}
+.topbar .tb-wa:hover{text-decoration:underline}
+.topbar .lang-toggle{background:transparent;border:1px solid rgba(255,255,255,.35);box-shadow:none;padding:2px}
+.topbar .lang-toggle button{color:#efe7d6;font-size:.82rem;padding:3px 12px;min-height:30px}
+.topbar .lang-toggle button.active{background:#fff;color:var(--ink)}
+
+/* ---------- header: always visible, sticks to the top ---------- */
+#topnav{
+  position:sticky;top:0;left:auto;right:auto;z-index:110;display:block;padding:0;
+  transform:none;transition:box-shadow .2s ease;
+  background:#fff;backdrop-filter:none;border-bottom:1px solid var(--line);box-shadow:none;
+}
+#topnav.scrolled{box-shadow:0 4px 18px rgba(29,26,22,.08)}
+#topnav .hdr{display:flex;align-items:center;gap:20px;min-height:var(--hdr-h)}
+
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+#topnav .brand{padding:0;border-radius:0;background:none}
+#topnav .brand:hover{background:none}
+.brand img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid var(--line-strong);flex:none}
+.brand-txt{display:flex;flex-direction:column;line-height:1.15}
+.brand-txt b{font-family:'Rozha One','Tiro Devanagari Hindi',serif;font-weight:400;font-size:1.35rem;color:var(--ink)}
+.brand-txt small{font-family:'Tiro Devanagari Hindi',serif;font-size:.9rem;color:var(--saffron-deep)}
+
+#topnav nav{display:flex;align-items:center;gap:2px;flex-wrap:nowrap;margin-left:auto}
+#topnav nav a{
+  display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:0;
+  font-size:.98rem;font-weight:600;color:var(--ink);text-decoration:none;background:none;
+  box-shadow:inset 0 -2px 0 transparent;transition:box-shadow .15s ease,color .15s ease;
+}
+#topnav nav a:hover{background:none;color:var(--saffron-deep)}
+#topnav nav a.active{background:none;color:var(--saffron-deep);box-shadow:inset 0 -3px 0 var(--saffron)}
+#topnav nav a.nav-cta{
+  margin-left:10px;padding:0 18px;border-radius:6px;background:var(--saffron);color:#fff !important;box-shadow:none;font-weight:700;
+}
+#topnav nav a.nav-cta:hover{background:var(--saffron-deep)}
+
+.menu-btn{display:none}
+
+@media (max-width:1080px){ #topnav nav a{padding:0 9px;font-size:.92rem} }
+
+/* small screens — hamburger + dropdown panel */
+@media (max-width:960px){
+  :root{ --hdr-h:66px; }
+  .brand img{width:42px;height:42px}
+  .brand-txt b{font-size:1.15rem}
+  .brand-txt small{font-size:.8rem}
+  .menu-btn{
+    display:inline-flex;align-items:center;gap:8px;margin-left:auto;min-height:44px;padding:0 14px;
+    background:#fff;border:1.5px solid var(--line-strong);border-radius:6px;font:inherit;font-weight:700;color:var(--ink);cursor:pointer;
+  }
+  .menu-ico,.menu-ico::before,.menu-ico::after{display:block;width:18px;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+  .menu-ico{position:relative}
+  .menu-ico::before,.menu-ico::after{content:"";position:absolute;left:0}
+  .menu-ico::before{top:-6px}
+  .menu-ico::after{top:6px}
+  .menu-open .menu-ico{background:transparent}
+  .menu-open .menu-ico::before{transform:translateY(6px) rotate(45deg)}
+  .menu-open .menu-ico::after{transform:translateY(-6px) rotate(-45deg)}
+
+  #topnav nav{
+    display:none;position:absolute;left:0;right:0;top:100%;margin:0;
+    flex-direction:column;align-items:stretch;gap:0;padding:6px 20px 18px;
+    background:#fff;border-bottom:1px solid var(--line);box-shadow:0 14px 28px rgba(29,26,22,.12);
+    max-height:calc(100vh - var(--hdr-h));overflow-y:auto;
+  }
+  #topnav.menu-open nav{display:flex}
+  #topnav nav a{min-height:50px;padding:0 4px;font-size:1.05rem;border-bottom:1px solid var(--line)}
+  #topnav nav a.active{box-shadow:inset 3px 0 0 var(--saffron);padding-left:12px}
+  #topnav nav a.nav-cta{margin:14px 0 0;justify-content:center;border-bottom:0}
+}
+@media (max-width:640px){
+  .topbar .tb-reg,.topbar .tb-addr{display:none}
+  .topbar-in{gap:10px}
+}
+
+/* ---------- inner-page banner + breadcrumb ---------- */
+.page-banner{background:var(--bg2);border-bottom:1px solid var(--line);padding:34px 0 30px}
+.page-banner[hidden]{display:none}
+.page-banner .crumbs{margin:0 0 6px;font-size:.92rem;color:var(--ink-soft)}
+.page-banner .crumbs a{color:var(--board);text-decoration:none;font-weight:600}
+.page-banner .crumbs a:hover{text-decoration:underline}
+.page-banner .crumbs span[aria-hidden]{margin:0 6px;opacity:.6}
+.page-banner h1{margin:0;font-size:clamp(2rem,5vw,3rem);line-height:1.15;color:var(--ink)}
+
+/* ---------- footer: four columns + bottom bar ---------- */
+footer.site-footer{background:var(--ink);color:#d9cfbb;text-align:left;border-top:4px solid var(--saffron);padding:56px 0 0}
+.f-cols{display:grid;grid-template-columns:1.4fr 1fr 1.1fr 1.3fr;gap:36px}
+.site-footer .f-col{display:flex;flex-direction:column;gap:10px;font-size:.95rem;line-height:1.7}
+.site-footer .f-col p{margin:0}
+.site-footer h2.f-h{margin:0 0 4px;font-size:1.2rem;color:#fff}
+.site-footer .brand{color:#fff}
+.site-footer .brand img,.site-footer .f-logo{width:56px;height:56px;margin:0;border:2px solid var(--saffron);background:#fff}
+.site-footer .brand-txt b{color:#fff}
+.site-footer .brand-txt small{color:var(--gold-2)}
+.site-footer .f-letter,.site-footer .f-people,.site-footer .f-facts{color:#d9cfbb;margin:0;max-width:none;font-size:.92rem;line-height:1.75}
+.site-footer .f-people b,.site-footer .f-facts b{color:#fff}
+.site-footer nav.f-col a{color:#d9cfbb;text-decoration:none;min-height:30px;display:inline-flex;align-items:center}
+.site-footer nav.f-col a:hover{color:#fff;text-decoration:underline}
+.site-footer .wa-line{margin:0;font-size:.95rem}
+.site-footer .wa-line a{color:#6ee7a0;border-bottom-color:#1faa55}
+.site-footer .wa-line a:hover{color:#a7f3c8}
+.site-footer .f-social{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0}
+.site-footer .f-soc-chip{color:#fff;border-color:rgba(255,255,255,.3)}
+.site-footer .f-soc-chip i{color:#bfb39c}
+.f-bottom{margin-top:44px;border-top:1px solid rgba(255,255,255,.12);padding:18px 0 22px;font-size:.86rem;color:#bfb39c}
+.f-bottom .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+.site-footer .end{margin:0;color:#bfb39c;opacity:1;font-size:.86rem}
+
+@media (max-width:960px){ .f-cols{grid-template-columns:1fr 1fr} }
+@media (max-width:600px){ .f-cols{grid-template-columns:1fr;gap:28px} footer.site-footer{padding-top:44px} }
+
+/* the bottom sticky CTA bar is gone, so the floating WhatsApp button sits at the normal corner */
+@media (max-width:860px){ #waFloat{bottom:calc(18px + env(safe-area-inset-bottom))} }

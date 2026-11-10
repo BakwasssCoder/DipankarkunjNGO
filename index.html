@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="css/11-v11-founder-poster.css" />
     <link rel="stylesheet" href="css/12-v12-press-carousel.css" />
     <link rel="stylesheet" href="css/13-v13-people-posters.css" />
+    <link rel="stylesheet" href="css/14-site-chrome.css" />
   </head>
   <body class="loading">
     <!-- loading intro — the real Deepankar-Kunj logo -->
@@ -41,23 +42,46 @@
 
     <div id="progress" aria-hidden="true"></div>
 
-    <div id="topnav" aria-hidden="true">
-      <nav>
-        <a href="#/home" data-nav="home" data-i18n="nav.home">मुख्य पृष्ठ</a>
-        <a href="#/about" data-nav="about" data-i18n="nav.about">हमारे बारे में</a>
-        <a href="#/story" data-nav="story" data-i18n="nav.story">कहानी</a>
-        <a href="#/achievements" data-nav="achievements" data-i18n="nav.ach">उपलब्धियाँ</a>
-        <a href="#/testimonials" data-nav="testimonials" data-i18n="nav.testi">प्रशंसापत्र</a>
-        <a href="#/donate" data-nav="donate" data-i18n="nav.donate">दान-सहयोग</a>
-      </nav>
-      <div class="lang-toggle" role="group" aria-label="भाषा चुनिए / Choose language"><button type="button" data-lang="hi" class="active">हिंदी</button><button type="button" data-lang="en">English</button></div>
-      <a class="nav-cta" href="#judiye" data-i18n="nav.cta">सदस्य बनिए · ₹21 से</a>
+    <!-- ================= SITE CHROME: info bar + header (css/14-site-chrome.css) ================= -->
+    <div class="topbar">
+      <div class="wrap topbar-in">
+        <span class="tb-reg" data-i18n="lh.reg">पंजी. – 849 · वर्ष – 2010-11</span>
+        <span class="tb-addr" data-i18n="tb.addr">अमरपुर, बांका (बिहार)</span>
+        <a class="tb-wa" href="https://wa.me/917857043185" target="_blank" rel="noopener">WhatsApp: +91 78570 43185</a>
+        <div class="lang-toggle" role="group" aria-label="भाषा चुनिए / Choose language"><button type="button" data-lang="hi" class="active">हिंदी</button><button type="button" data-lang="en">English</button></div>
+      </div>
+    </div>
+
+    <header id="topnav" class="site-header">
+      <div class="wrap hdr">
+        <a class="brand" href="#/home">
+          <img src="assets/logo.jpg" width="48" height="48" alt="" />
+          <span class="brand-txt"><b data-i18n="f.name">दीपांकर-कुंज [NGO]</b><small>तमसो मा ज्योतिर्गमय</small></span>
+        </a>
+        <button type="button" class="menu-btn" aria-expanded="false" aria-controls="siteNav"><span class="menu-ico" aria-hidden="true"></span><span data-i18n="nav.menu">मेनू</span></button>
+        <nav id="siteNav" aria-label="मुख्य मेनू" data-i18n-aria="nav.aria">
+          <a href="#/home" data-nav="home" data-i18n="nav.home">मुख्य पृष्ठ</a>
+          <a href="#/about" data-nav="about" data-i18n="nav.about">हमारे बारे में</a>
+          <a href="#/story" data-nav="story" data-i18n="nav.story">कहानी</a>
+          <a href="#/achievements" data-nav="achievements" data-i18n="nav.ach">उपलब्धियाँ</a>
+          <a href="#/testimonials" data-nav="testimonials" data-i18n="nav.testi">प्रशंसापत्र</a>
+          <a href="#/donate" data-nav="donate" data-i18n="nav.donate">दान-सहयोग</a>
+          <a class="nav-cta" href="#judiye" data-i18n="nav.cta">सदस्य बनिए · ₹21 से</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- inner-page banner: title + breadcrumb, filled by showPage() in js/main.js -->
+    <div class="page-banner" id="pageBanner" hidden>
+      <div class="wrap">
+        <p class="crumbs"><a href="#/home" data-i18n="nav.home">मुख्य पृष्ठ</a> <span aria-hidden="true">/</span> <span id="crumbHere"></span></p>
+        <h1 id="bannerTitle" class="serif"></h1>
+      </div>
     </div>
 
     <!-- ================= HERO ================= -->
     <header class="hero" id="top" data-page="home">
       <div class="hero-sticker" data-i18n="hero.sticker">बिहार का एकमात्र मान्यता प्राप्त<br />महिला संस्कृत महाविद्यालय</div>
-      <div id="heroLang"><div class="lang-toggle" role="group" aria-label="भाषा चुनिए / Choose language"><button type="button" data-lang="hi" class="active">हिंदी</button><button type="button" data-lang="en">English</button></div></div>
       <div class="hero-in">
         <img class="hero-logo" src="assets/logo.jpg" alt="दीपांकर-कुंज का प्रतीक चिह्न — खुली किताब पर जलता दीप" data-i18n-alt="hero.logo.alt" />
         <div class="letterhead">
@@ -814,25 +838,46 @@
     </section>
 
     <!-- ================= FOOTER ================= -->
-    <footer>
-      <div class="wrap">
-        <img class="f-logo" src="assets/logo.jpg" alt="दीपांकर-कुंज प्रतीक चिह्न" loading="lazy" />
-        <h2 class="serif" data-i18n="f.name">दीपांकर-कुंज [NGO]</h2>
-        <div class="motto">॥ तमसो मा ज्योतिर्गमय ॥</div>
-        <div class="f-letter">
-          <div data-i18n="lh.act">सोसाइटीज़ रजिस्ट्रेशन एक्ट 21, 1860</div>
-          <div data-i18n="lh.reg">पंजी. – 849 · वर्ष – 2010-11</div>
-          <div data-i18n="lh.addr">अमरपुर, बांका [बिहार], भारत · पिनकोड – 813101</div>
+    <footer class="site-footer">
+      <div class="wrap f-cols">
+        <div class="f-col f-about">
+          <a class="brand" href="#/home"><img class="f-logo" src="assets/logo.jpg" width="56" height="56" alt="" loading="lazy" /><span class="brand-txt"><b data-i18n="f.name">दीपांकर-कुंज [NGO]</b><small>॥ तमसो मा ज्योतिर्गमय ॥</small></span></a>
+          <div class="f-letter">
+            <div data-i18n="lh.act">सोसाइटीज़ रजिस्ट्रेशन एक्ट 21, 1860</div>
+            <div data-i18n="lh.reg">पंजी. – 849 · वर्ष – 2010-11</div>
+          </div>
           <div class="f-people" data-i18n="f.people"><b>संस्थापक:</b> डॉ. सीताराम शर्मा — शिक्षाविद् व समाजसेवी &nbsp;·&nbsp; <b>सचिव सह निदेशक:</b> डॉ. राजीव कुमार &nbsp;·&nbsp; <b>अध्यक्ष सह मार्गदर्शक:</b> पद्मश्री डॉ. जितेंद्र कुमार सिंह</div>
         </div>
-        <div class="f-facts" data-i18n="f.facts">
-          <b>महिला संस्कृत महाविद्यालय</b> — स्थापना 1985 · संस्थापक: डॉ. सीताराम शर्मा · भूमिदाता: दीप नारायण शर्मा<br />
-          <b>कार्यक्षेत्र:</b> अमरपुर से शुरुआत — सेवा पूरे बिहार की, संकल्प पूरे भारत का<br />
-          कामेश्वर सिंह दरभंगा संस्कृत विश्वविद्यालय से संबद्ध महाविद्यालय
+        <nav class="f-col" aria-label="फ़ुटर मेनू" data-i18n-aria="f.nav.aria">
+          <h2 class="f-h" data-i18n="f.links">पृष्ठ</h2>
+          <a href="#/home" data-i18n="nav.home">मुख्य पृष्ठ</a>
+          <a href="#/about" data-i18n="nav.about">हमारे बारे में</a>
+          <a href="#/story" data-i18n="nav.story">कहानी</a>
+          <a href="#/achievements" data-i18n="nav.ach">उपलब्धियाँ</a>
+          <a href="#/testimonials" data-i18n="nav.testi">प्रशंसापत्र</a>
+          <a href="#/donate" data-i18n="nav.donate">दान-सहयोग</a>
+          <a href="#judiye" data-i18n="nav.cta">सदस्य बनिए · ₹21 से</a>
+        </nav>
+        <div class="f-col">
+          <h2 class="f-h" data-i18n="f.contact">संपर्क</h2>
+          <p data-i18n="lh.addr">अमरपुर, बांका [बिहार], भारत · पिनकोड – 813101</p>
+          <p class="wa-line"><span data-i18n="f.wa">सदस्यता व जानकारी के लिए WhatsApp कीजिए — </span><a href="https://wa.me/917857043185" target="_blank" rel="noopener">+91 78570 43185</a></p>
+          <div class="f-social"><span data-i18n="f.soc">सोशल मीडिया:</span> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Instagram · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Facebook · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">YouTube · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">X · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a></div>
         </div>
-        <p class="wa-line"><span data-i18n="f.wa">सदस्यता व जानकारी के लिए WhatsApp कीजिए — </span><a href="https://wa.me/917857043185" target="_blank" rel="noopener">+91 78570 43185</a></p>
-        <div class="f-social"><span data-i18n="f.soc">सोशल मीडिया:</span> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Instagram · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">Facebook · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">YouTube · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a> <a class="f-soc-chip" href="https://www.instagram.com/founder.aniket" target="_blank" rel="noopener">X · <i data-i18n="f.soon">अस्थायी डेमो लिंक</i></a></div>
-        <div class="end" data-i18n="f.end">यह वेबसाइट संस्था की कहानी और पुनर्जन्म के संकल्प को समर्पित है। ॥ दीपो ज्योतिः परब्रह्म ॥</div>
+        <div class="f-col">
+          <h2 class="f-h" data-i18n="f.college">महाविद्यालय</h2>
+          <div class="f-facts" data-i18n="f.facts">
+            <b>महिला संस्कृत महाविद्यालय</b> — स्थापना 1985 · संस्थापक: डॉ. सीताराम शर्मा · भूमिदाता: दीप नारायण शर्मा<br />
+            <b>कार्यक्षेत्र:</b> अमरपुर से शुरुआत — सेवा पूरे बिहार की, संकल्प पूरे भारत का<br />
+            कामेश्वर सिंह दरभंगा संस्कृत विश्वविद्यालय से संबद्ध महाविद्यालय
+        </div>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <div class="wrap">
+          <span>© 2010–<span id="fYear">2026</span> <span data-i18n="f.name">दीपांकर-कुंज [NGO]</span></span>
+          <span class="end" data-i18n="f.end">यह वेबसाइट संस्था की कहानी और पुनर्जन्म के संकल्प को समर्पित है। ॥ दीपो ज्योतिः परब्रह्म ॥</span>
+        </div>
       </div>
     </footer>
 
@@ -852,9 +897,6 @@
       <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg>
       <span class="wa-tip" data-i18n="wa.tip">WhatsApp पर जुड़िए</span>
     </a>
-
-    <!-- sticky mobile CTA -->
-    <div id="stickyCta"><a class="join-a" href="#judiye" data-i18n="sticky.join">🪔 सदस्य बनिए — ₹21 से शुरू</a><a class="wa-a" href="https://wa.me/917857043185" target="_blank" rel="noopener" aria-label="WhatsApp पर जुड़िए" data-i18n-aria="sticky.wa.aria"><svg width="24" height="24" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/></svg></a></div>
 
     <script src="js/translations.js"></script>
     <script src="js/main.js"></script>

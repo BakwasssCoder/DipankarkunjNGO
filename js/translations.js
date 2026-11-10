@@ -201,6 +201,8 @@ window.DK_EN = {
     "lb.aria": "View the picture enlarged", "lb.close": "Close", "lb.zoom.aria": "Read in large size", "lb.prev": "Previous picture", "lb.next": "Next picture",
     "wa.aria": "Join Deepankar Kunj on WhatsApp — +91 78570 43185", "wa.tip": "Join on WhatsApp",
     "sticky.join": "🪔 Become a Member — from ₹21", "sticky.wa.aria": "Join on WhatsApp",
+    "nav.menu": "Menu", "nav.aria": "Main menu", "tb.addr": "Amarpur, Banka (Bihar)",
+    "f.links": "Pages", "f.contact": "Contact", "f.college": "The College", "f.nav.aria": "Footer menu",
     "nav.home": "Home", "nav.about": "About Us", "nav.ach": "Achievements", "nav.testi": "Testimonials", "nav.donate": "Donate & Support",
     "about.kicker": "About Us", "about.h2": "Who We Are",
     "about.p": "The registration certificate above is our identity — Deepankar Kunj is a duly registered social institution of Amarpur, Banka (Bihar), through which the Women's Sanskrit College was run.",

@@ -2,8 +2,9 @@
   "use strict";
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* loader: keep the logo intro briefly, then reveal the site */
-  var loader = document.getElementById("loader"), loaderDone = false, loadStart = Date.now();
+  /* loader: the logo intro plays once per browser session, then the site opens straight away */
+  var loader = document.getElementById("loader"), loaderDone = false, loadStart = Date.now(), introSeen = false;
+  try { introSeen = sessionStorage.getItem("dk-intro") === "1"; sessionStorage.setItem("dk-intro", "1"); } catch(e){}
   function dismissLoader(){
     if(loaderDone) return; loaderDone = true;
     loader.classList.add("done");
@@ -11,10 +12,11 @@
     setTimeout(function(){ if(loader.parentNode) loader.parentNode.removeChild(loader); }, 750);
   }
   window.addEventListener("load", function(){
-    var wait = Math.max(0, 4000 - (Date.now() - loadStart));
+    var wait = Math.max(0, 2600 - (Date.now() - loadStart));
     setTimeout(dismissLoader, reduceMotion ? 0 : wait);
   });
-  setTimeout(dismissLoader, 4900); /* never trap the visitor behind the intro */
+  if(introSeen) dismissLoader();
+  setTimeout(dismissLoader, 3600); /* never trap the visitor behind the intro */
 
   /* self-heal: if an image request hiccups on a slow connection, retry it once */
   document.addEventListener("error", function(e){
@@ -45,14 +47,8 @@
     document.querySelectorAll("#topnav nav a[data-nav]").forEach(function(a){
       a.classList.toggle("active", a.getAttribute("data-nav") === name);
     });
-    var navEl = document.getElementById("topnav");
-    if(name !== "home"){
-      navEl.classList.add("show");
-      navEl.setAttribute("aria-hidden", "false");
-      document.body.style.paddingTop = navEl.offsetHeight + "px";
-    } else {
-      document.body.style.paddingTop = "";
-    }
+    setMenu(false);
+    updateBanner();
     if(anchor){
       var t = document.getElementById(anchor);
       if(t){ t.scrollIntoView(); if(typeof onScroll === "function") onScroll(); return; }
@@ -77,12 +73,29 @@
     showPage("home", null);
   }
   window.addEventListener("hashchange", routeFromHash);
-  window.addEventListener("resize", function(){
-    if(curPage !== "home") document.body.style.paddingTop = document.getElementById("topnav").offsetHeight + "px";
+
+  /* inner-page banner — title + breadcrumb taken from the active nav link (already in the current language) */
+  function updateBanner(){
+    var banner = document.getElementById("pageBanner");
+    var link = document.querySelector('#topnav nav a[data-nav="' + curPage + '"]');
+    banner.hidden = curPage === "home" || !link;
+    if(banner.hidden) return;
+    document.getElementById("bannerTitle").textContent = link.textContent;
+    document.getElementById("crumbHere").textContent = link.textContent;
+  }
+
+  /* mobile menu (hamburger) — below 961px the nav collapses into a dropdown */
+  var menuBtn = document.querySelector("#topnav .menu-btn");
+  function setMenu(open){
+    menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    document.getElementById("topnav").classList.toggle("menu-open", open);
+  }
+  menuBtn.addEventListener("click", function(){ setMenu(menuBtn.getAttribute("aria-expanded") !== "true"); });
+  document.getElementById("siteNav").addEventListener("click", function(e){ if(e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && menuBtn.getAttribute("aria-expanded") === "true"){ setMenu(false); menuBtn.focus(); }
   });
-  window.addEventListener("load", function(){
-    if(curPage !== "home") document.body.style.paddingTop = document.getElementById("topnav").offsetHeight + "px";
-  });
+  document.getElementById("fYear").textContent = new Date().getFullYear();
 
   /* ---------- bilingual Hindi / English — every content string ---------- */
   var HI_TITLE = document.title;
@@ -119,6 +132,7 @@
     });
     var lbEl = document.getElementById("lightbox"), zb = document.getElementById("lb-zoom");
     if(zb && lbEl && !lbEl.classList.contains("zoomed")) zb.textContent = lang === "en" ? "Read in large size" : "बड़ा करके पढ़ें";
+    updateBanner();
   }
   document.querySelectorAll(".lang-toggle button").forEach(function(b){
     b.addEventListener("click", function(){ applyLang(b.getAttribute("data-lang")); });
@@ -148,26 +162,17 @@
   }, {threshold: 0.6});
   document.querySelectorAll("[data-count]").forEach(function(el){ cio.observe(el); });
 
-  /* scroll-driven: progress bar, top nav, timeline fill */
+  /* scroll-driven: progress bar, header shadow, timeline fill */
   var progress = document.getElementById("progress"),
       topnav = document.getElementById("topnav"),
       tl = document.getElementById("timeline"),
       tlFill = document.getElementById("tlFill"),
-      sticky = document.getElementById("stickyCta"),
-      joinSec = document.getElementById("judiye"),
-      joinVisible = false, ticking = false;
-  var jio = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){ joinVisible = e.isIntersecting; });
-  }, {threshold: 0.08});
-  jio.observe(joinSec);
+      ticking = false;
   function onScroll(){
     var y = window.scrollY || 0;
     var h = document.documentElement.scrollHeight - window.innerHeight;
     progress.style.width = (h > 0 ? (y / h) * 100 : 0) + "%";
-    var past = curPage !== "home" || y > window.innerHeight * 0.82;
-    topnav.classList.toggle("show", past);
-    topnav.setAttribute("aria-hidden", past ? "false" : "true");
-    sticky.classList.toggle("show", past && !joinVisible);
+    topnav.classList.toggle("scrolled", y > 40);
     if(tl && tlFill){
       var r = tl.getBoundingClientRect();
       var filled = Math.min(Math.max(window.innerHeight * 0.72 - r.top, 0), r.height);
