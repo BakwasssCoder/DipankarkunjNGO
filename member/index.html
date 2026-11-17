@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>सदस्य-पोर्टल — दीपांकर-कुंज</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../admin/admin.css" />
+    <link rel="stylesheet" href="member.css" />
+  </head>
+  <body>
+    <!-- ================= LOGIN / ACTIVATE ================= -->
+    <main id="gate" class="login" hidden>
+      <div class="login-card gate-card">
+        <img src="../assets/logo.jpg" width="72" height="72" alt="" />
+        <h1>सदस्य-पोर्टल</h1>
+        <p class="muted">दीपांकर-कुंज [NGO] · अमरपुर, बांका</p>
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" id="tabLogin" aria-selected="true" aria-controls="loginForm">लॉगिन</button>
+          <button type="button" role="tab" id="tabAct" aria-selected="false" aria-controls="actForm">पहली बार / नया पासवर्ड</button>
+        </div>
+
+        <form id="loginForm" novalidate>
+          <label for="lNo">सदस्य क्रमांक</label>
+          <input id="lNo" autocomplete="username" placeholder="जैसे DK-2026-1001" required />
+          <label for="lPw">पासवर्ड</label>
+          <input id="lPw" type="password" autocomplete="current-password" required />
+          <p class="err" id="lErr" role="alert"></p>
+          <button class="btn btn-primary" type="submit">लॉगिन करें</button>
+        </form>
+
+        <form id="actForm" novalidate hidden>
+          <p class="muted">संस्था से WhatsApp पर मिला 6 अंकों का कोड डालिए और अपना पासवर्ड बनाइए।</p>
+          <label for="aNo">सदस्य क्रमांक</label>
+          <input id="aNo" placeholder="जैसे DK-2026-1001" required />
+          <label for="aCode">लॉगिन कोड</label>
+          <input id="aCode" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" required />
+          <label for="aPw">नया पासवर्ड (कम से कम 8 अक्षर)</label>
+          <input id="aPw" type="password" autocomplete="new-password" minlength="8" required />
+          <label for="aPw2">पासवर्ड दोबारा</label>
+          <input id="aPw2" type="password" autocomplete="new-password" minlength="8" required />
+          <p class="err" id="aErr" role="alert"></p>
+          <button class="btn btn-primary" type="submit">पासवर्ड बनाइए</button>
+        </form>
+        <p class="demo-note">कोड नहीं मिला? WhatsApp कीजिए: <a href="https://wa.me/917857043185">+91 78570 43185</a></p>
+        <p class="demo-note"><a href="../index.html">← वेबसाइट पर लौटें</a></p>
+      </div>
+    </main>
+
+    <!-- ================= DASHBOARD ================= -->
+    <div id="home" class="portal" hidden>
+      <header class="p-top">
+        <a class="p-brand" href="../index.html"><img src="../assets/logo.jpg" width="40" height="40" alt="" /><span><b>दीपांकर-कुंज</b><small>सदस्य-पोर्टल</small></span></a>
+        <button type="button" class="btn btn-sm" id="logout">लॉग आउट</button>
+      </header>
+      <main class="p-main">
+        <section class="p-hello">
+          <h1 id="hello"></h1>
+          <p class="muted" id="helloSub"></p>
+          <div class="p-stats" id="pStats"></div>
+        </section>
+
+        <section class="panel p-card">
+          <div class="panel-head"><h2>मेरा सदस्यता पत्र</h2><button type="button" class="btn btn-sm btn-primary" id="cardDl">डाउनलोड करें</button></div>
+          <div class="card-preview" id="cardPreview"><p class="muted">कार्ड बन रहा है…</p></div>
+        </section>
+
+        <div class="p-grid">
+          <section class="panel">
+            <div class="panel-head"><h2>सूचनाएँ</h2></div>
+            <div id="nList"></div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>मेरे कार्य</h2></div>
+            <div id="tList"></div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <div class="panel-head"><h2>मेरी उपलब्धियाँ</h2></div>
+          <div class="ach-grid" id="aList"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/member-card.js"></script>
+    <script src="member.js"></script>
+  </body>
+</html>

@@ -26,10 +26,11 @@ The NGO is the **Data Fiduciary** for everything collected through this site.
 
 ## Still to do by the NGO (cannot be done in code)
 
-1. **Real backend before real data.** The current admin is a demo: data sits in one browser's `localStorage`,
-   the password is in `admin/admin.js`. That does **not** meet Rule 6 (reasonable security safeguards).
-   Before collecting real member data: move `js/store.js` to a server/Supabase with real logins,
-   per-user access, encryption in transit (HTTPS) and at rest, backups, and access logs.
+1. **Backend security (done in code, keep it up).** Data is now in Supabase (`supabase/schema.sql`):
+   real admin logins, Row Level Security (visitors can only submit, members see only their own rows),
+   HTTPS, encryption at rest and an append-only processing log. The NGO still has to: keep admin
+   passwords strong and private, rotate the Supabase secret key if it was ever shared, turn on backups
+   (Supabase plan) and download monthly CSV backups.
 2. **Name the Grievance Officer.** The notice says “Secretary” with the WhatsApp number. Confirm the person,
    add an email address, and update section 7 of the notice (Hindi and English).
 3. **Breach procedure.** Write down who does what if data leaks: inform affected people without delay and the

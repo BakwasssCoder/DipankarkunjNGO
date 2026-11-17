@@ -20,42 +20,60 @@ css/
   14-site-chrome.css       site header, mobile menu, page banner, footer (website look)
 js/
   translations.js      English strings (window.DK_EN) — Hindi is the text in index.html
-  store.js             DK_STORE — demo data layer (localStorage) shared with the admin panel
+  supabase-config.js   Supabase URL + publishable key
+  store.js             DK_STORE — data layer (Supabase) shared by website, admin and member portal
+  member-card.js       membership card renderer (admin + member portal)
   main.js              loader, router, language toggle, lightbox, carousel, join form, receipt
-admin/                 admin panel (index.html, admin.css, admin.js) — open /admin/
+admin/                 admin panel — open /admin/
+member/                member portal — open /member/
+supabase/schema.sql    database tables, security rules and functions
 assets/                photos (all images used by the site)
 robots.txt             keeps /admin/ out of search engines
 ```
 
-## Admin panel (demo)
+## Backend — Supabase
 
-Open `http://localhost:8000/admin/` — demo password **`dk@2010`** (set in `admin/admin.js`).
+Data lives in Supabase (project `zwhfquywbjzrgljfodpc`). `js/supabase-config.js` holds the URL and the
+**publishable** key — safe in the browser because every permission is enforced by Row Level Security in
+`supabase/schema.sql`. Never put the secret (`sb_secret_…`) key in any file in this repo.
+
+### One-time setup
+
+1. Supabase → **SQL Editor** → paste all of `supabase/schema.sql` → **Run** (safe to re-run).
+2. **Authentication → Sign In / Providers → Email**: turn **"Confirm email" OFF**
+   (member portal logins use member number + password, not real email addresses).
+3. **Authentication → Users → Add user**: admin email + password, tick **Auto Confirm User**.
+4. SQL Editor: `insert into public.admins (email) values ('<admin email, lowercase>');`
+5. Open `/admin/` and log in with that email + password.
+
+### Who can do what
+
+| Who | Can |
+|---|---|
+| Website visitor (publishable key) | submit membership / contact / privacy forms (via database functions), read published notices, photos, settings, count visits |
+| Member (portal login) | read only their own membership, notifications, tasks, achievements; tick their own tasks done |
+| Admin (email in `admins`) | everything below |
+
+## Admin panel — `/admin/`
 
 | Sidebar | What it does |
 |---|---|
-| डैशबोर्ड | totals: members, pending requests, donations, this month |
-| सदस्य | requests from the website "सदस्य बनिए" form — search, filter, change status, WhatsApp, CSV export, add manually |
-| दान | record donations, print receipt, CSV export |
-| गैलरी व अख़बार | upload photos → they appear in the website gallery / press section; hide or delete |
-| संदेश | inbox for the website contact / volunteer form (हमारे बारे में → संदेश भेजिए), unread badge, CSV |
-| सूचनाएँ | events & notices → shown on the homepage ("कार्यक्रम व सूचनाएँ"; hidden while empty) |
-| सेटिंग्स | announcement strip at the top of the website, real social-media links, wipe demo data |
-| डेटा अनुरोध (DPDP) | privacy rights requests (30-day due date), look up / erase a person's data, retention clean-up, processing log |
+| डैशबोर्ड | members, paid members, pending, outstanding pledges, money received (total / this month), portal users, website visitors |
+| सदस्य | member cards — search, filter, sort; **भुगतान दर्ज** (mark paid → automatically adds a receipt in दान), undo payment, status, membership card (PNG), member-portal login code (sent on WhatsApp), CSV |
+| दान | all money received (membership fees + other donations), add donation, print receipt, CSV |
+| सदस्य-संपर्क | send notifications (one member / all), assign tasks (one / all), award achievements |
+| गैलरी व अख़बार | upload photos to Supabase Storage → shown on the website; hide or delete |
+| संदेश | contact / volunteer form inbox |
+| सूचनाएँ | events & notices on the homepage |
+| सेटिंग्स | announcement strip, social-media links |
+| डेटा अनुरोध (DPDP) | privacy rights requests, look up / erase a person's data, retention clean-up, processing log |
 
-## Privacy / DPDP
+## Member portal — `/member/`
 
-Forms show a short notice and need two unticked checkboxes (consent + 18 or older) before anything is saved.
-The full privacy notice is at `#/privacy` (link in the footer). See **[docs/DPDP-COMPLIANCE.md](docs/DPDP-COMPLIANCE.md)**
-for what is covered and what the NGO still has to do before collecting real data.
-
-**Demo limits:** all data is stored in the browser's `localStorage` (`js/store.js`).
-It is per-browser (another phone/computer sees nothing), limited to ~5 MB, and the
-password is visible in the source. Website and admin must be opened on the same
-address (both `localhost:8000`, or both on the same Netlify domain).
-
-**Going live:** replace the functions in `js/store.js` with calls to a real backend
-(e.g. Supabase: tables `members`, `donations`, `media` + Auth for login). Website and admin
-code only talk to `DK_STORE`, so nothing else needs to change.
+Admin clicks **लॉगिन कोड** on an approved/paid member's card → a 6-digit code is sent on WhatsApp →
+the member opens `/member/` → *पहली बार / नया पासवर्ड* → member number + code → sets a password.
+After that they log in with member number + password and see their card, notifications, tasks and achievements.
+A forgotten password = admin issues a new code.
 
 ### How pages work
 

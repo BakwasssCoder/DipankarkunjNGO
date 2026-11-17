@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>लॉगिन — दीपांकर-कुंज</title>
+    <link rel="icon" type="image/jpeg" href="../assets/logo.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../admin/admin.css" />
+    <link rel="stylesheet" href="../member/member.css" />
+  </head>
+  <body>
+    <main class="login">
+      <form id="form" class="login-card gate-card" novalidate>
+        <img src="../assets/logo.jpg" width="72" height="72" alt="" />
+        <h1>लॉगिन</h1>
+        <p class="muted">दीपांकर-कुंज [NGO] · सदस्य और एडमिन</p>
+        <label for="who">सदस्य क्रमांक या एडमिन ईमेल</label>
+        <input id="who" autocomplete="username" placeholder="जैसे DK-2026-1001" required />
+        <p class="hint" id="whoHint">सदस्य: अपना सदस्य क्रमांक लिखिए · एडमिन: ईमेल</p>
+        <label for="pw">पासवर्ड</label>
+        <input id="pw" type="password" autocomplete="current-password" required />
+        <p class="err" id="err" role="alert"></p>
+        <button class="btn btn-primary" type="submit" id="btn">लॉगिन करें</button>
+        <p class="demo-note">पहली बार? संस्था से मिले कोड से <a href="../member/#activate">पासवर्ड बनाइए</a></p>
+        <p class="demo-note">कोड या पासवर्ड नहीं है? WhatsApp: <a href="https://wa.me/917857043185">+91 78570 43185</a></p>
+        <p class="demo-note"><a href="../index.html">← वेबसाइट पर लौटें</a></p>
+      </form>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+    <script src="../js/supabase-config.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

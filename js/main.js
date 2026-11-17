@@ -290,6 +290,14 @@
     ann.hidden = !st.announcement;
   }
   applySettings();
+  if(window.DK_STORE && DK_STORE.ready){
+    DK_STORE.loadPublic().then(function(){ renderAdminMedia(); renderNotices(); applySettings(); }, function(){ /* site works without it */ });
+    /* visitor counter — shown only once the real number arrives */
+    DK_STORE.visits().then(function(n){
+      document.querySelectorAll(".visit-count").forEach(function(el){ el.textContent = n.toLocaleString("en-IN"); });
+      document.querySelectorAll(".visit-pill, .f-visits").forEach(function(el){ el.hidden = false; });
+    }, function(){});
+  }
 
   /* skip link — focus the first visible content block without changing the route */
   document.querySelector(".skip-link").addEventListener("click", function(e){
@@ -318,13 +326,19 @@
       .map(function(f){ document.getElementById(f[0]).classList.toggle("invalid", !f[1]); return f; })
       .filter(function(f){ return !f[1]; });
     if(bad.length){ document.getElementById(bad[0][2]).focus(); return; }
-    var saved = window.DK_STORE && DK_STORE.submitMessage({name: name, phone: phone, subject: document.getElementById("ctSubject").value, message: msg});
-    var out = document.getElementById("ctOk");
-    out.classList.toggle("bad", !saved);
-    out.textContent = saved
-      ? (curLang === "en" ? "Thank you, " + name + "! Your message has reached the institution." : "धन्यवाद, " + name + "! आपका संदेश संस्था तक पहुँच गया है।")
-      : (curLang === "en" ? "Could not send. Please message us on WhatsApp: +91 78570 43185" : "संदेश नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
-    if(saved) ctForm.reset();
+    var out = document.getElementById("ctOk"), btn = ctForm.querySelector('[type="submit"]');
+    function done(saved){
+      btn.disabled = false;
+      out.classList.toggle("bad", !saved);
+      out.textContent = saved
+        ? (curLang === "en" ? "Thank you, " + name + "! Your message has reached the institution." : "धन्यवाद, " + name + "! आपका संदेश संस्था तक पहुँच गया है।")
+        : (curLang === "en" ? "Could not send. Please message us on WhatsApp: +91 78570 43185" : "संदेश नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
+      if(saved) ctForm.reset();
+    }
+    if(!window.DK_STORE || !DK_STORE.ready){ done(false); return; }
+    btn.disabled = true;
+    DK_STORE.submitMessage({name: name, phone: phone, subject: document.getElementById("ctSubject").value, message: msg})
+      .then(function(){ done(true); }, function(){ done(false); });
   });
 
   /* DPDP rights request (privacy page) → admin → डेटा अनुरोध */
@@ -336,13 +350,17 @@
       .map(function(f){ document.getElementById(f[0]).classList.toggle("invalid", !f[1]); return f; })
       .filter(function(f){ return !f[1]; });
     if(bad.length){ document.getElementById(bad[0][2]).focus(); return; }
-    var ref = window.DK_STORE && DK_STORE.submitRequest({type: document.getElementById("rqType").value, name: name, phone: phone, details: document.getElementById("rqDetails").value.trim()});
-    var out = document.getElementById("rqOk");
-    out.classList.toggle("bad", !ref);
-    out.textContent = ref
-      ? (curLang === "en" ? "Request received — reference " + ref + ". We will reply within 30 days." : "अनुरोध मिल गया — क्रमांक " + ref + "। हम 30 दिनों के भीतर जवाब देंगे।")
-      : (curLang === "en" ? "Could not send. Please WhatsApp +91 78570 43185." : "अनुरोध नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
-    if(ref) e.target.reset();
+    var form = e.target, out = document.getElementById("rqOk");
+    function done(ref){
+      out.classList.toggle("bad", !ref);
+      out.textContent = ref
+        ? (curLang === "en" ? "Request received — reference " + ref + ". We will reply within 30 days." : "अनुरोध मिल गया — क्रमांक " + ref + "। हम 30 दिनों के भीतर जवाब देंगे।")
+        : (curLang === "en" ? "Could not send. Please WhatsApp +91 78570 43185." : "अनुरोध नहीं जा सका। कृपया WhatsApp करें: +91 78570 43185");
+      if(ref) form.reset();
+    }
+    if(!window.DK_STORE || !DK_STORE.ready){ done(null); return; }
+    DK_STORE.submitRequest({type: document.getElementById("rqType").value, name: name, phone: phone, details: document.getElementById("rqDetails").value.trim()})
+      .then(done, function(){ done(null); });
   });
   document.getElementById("lb-close").addEventListener("click", closeLb);
   document.getElementById("lb-prev").addEventListener("click", function(){ idx = (idx - 1 + items.length) % items.length; render(); });
@@ -499,10 +517,18 @@
     if(!okName){ document.getElementById("inName").focus(); return; }
     if(!okPhone){ document.getElementById("inPhone").focus(); return; }
     if(!okConsent){ document.getElementById(document.getElementById("jConsent").checked ? "jAdult" : "jConsent").focus(); return; }
-    var now = new Date();
+    var now = new Date(), errEl = document.getElementById("joinErr"), subBtn = form.querySelector('[type="submit"]');
+    errEl.textContent = "";
+    function fail(){
+      subBtn.disabled = false;
+      errEl.textContent = curLang === "en" ? "Could not save your pledge. Please try again, or WhatsApp +91 78570 43185." : "संकल्प सेव नहीं हो सका। दोबारा कोशिश कीजिए, या WhatsApp करें: +91 78570 43185";
+    }
+    if(!window.DK_STORE || !DK_STORE.ready){ fail(); return; }
+    subBtn.disabled = true;
     /* saved as a pending membership request — visible in the admin panel (admin/) */
-    var id = (window.DK_STORE && DK_STORE.submitMembership({name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, msg: document.getElementById("inMsg").value.trim(), lang: curLang}))
-      || "DK-" + now.getFullYear() + "-" + String(Math.floor(1000 + Math.random() * 9000));
+    DK_STORE.submitMembership({name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, msg: document.getElementById("inMsg").value.trim(), lang: curLang})
+      .then(function(id){ subBtn.disabled = false; showReceipt(id); }, fail);
+    function showReceipt(id){
     var dateStr = now.toLocaleDateString(curLang === "en" ? "en-IN" : "hi-IN", {day: "numeric", month: "long", year: "numeric"});
     receiptData = {id: id, name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, date: dateStr, msg: document.getElementById("inMsg").value.trim()};
     var waText = curLang === "en" ?
@@ -528,6 +554,7 @@
     document.getElementById("rDate").textContent = dateStr;
     receipt.classList.add("show");
     receipt.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "center"});
+    }
   });
   document.getElementById("resetForm").addEventListener("click", function(){
     form.reset();
