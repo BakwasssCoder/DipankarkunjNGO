@@ -1,0 +1,146 @@
+/* ============ V15 — home refresh ============
+   Bigger logos, a family-tree hero (Founder at the root with his poster,
+   Secretary + Mentor branching below, every card opens its poster),
+   a coloured marquee band and a smaller, bold, framed intro statement.
+   Colours are the logo's own: board blue, kesariya, rani, gold. */
+
+/* ---------- logos ---------- */
+#topnav .brand img{width:64px;height:64px}
+.hero .hero-logo{width:150px;height:150px}
+@media (max-width:960px){ #topnav .brand img{width:52px;height:52px} }
+@media (max-width:640px){ .hero .hero-logo{width:128px;height:128px} }
+
+/* ---------- hero leaders as a tree ---------- */
+.hero .hero-leaders{display:grid;grid-template-columns:1fr 1fr;gap:56px 24px;max-width:760px;margin:36px auto 0}
+.hero .hero-leaders .hl-item{position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:14px 14px 16px;border:2px solid var(--board);border-top-width:6px;border-radius:16px;background:#fff}
+.hero .hero-leaders .hl-item:nth-child(1){grid-column:1/-1;justify-self:center;width:min(380px,100%)}
+.hero .hero-leaders .hl-item:nth-child(2){border-color:var(--saffron)}
+.hero .hero-leaders .hl-item:nth-child(3){border-color:var(--rani)}
+.hero .hero-leaders .hl-item:nth-child(3) .hl-role{color:var(--rani)}
+
+/* photo on its own row, name + zoom icon together on the row below */
+.hero .hero-leaders .hl-link{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 0;padding:0;border-radius:10px}
+.hero .hero-leaders .hl-photo{flex:0 0 100%}
+/* letter-spacing splits Devanagari conjuncts, so none here */
+.hero .hero-leaders .hl-role{letter-spacing:0;font-size:.95rem;font-weight:800;text-transform:none}
+.hero .hero-leaders .hl-link:focus-visible{outline:3px solid var(--saffron);outline-offset:4px}
+.hero .hero-leaders .hl-photo{width:100%;height:auto;aspect-ratio:1/1;object-fit:contain;display:block;
+  border-radius:10px;background:#fff;border:1px solid var(--line);cursor:zoom-in}
+.hero .hero-leaders .hl-item:nth-child(3) .hl-link>span{text-decoration-color:var(--rani)}
+.hero .hero-leaders .hl-item:nth-child(3) .hl-ico{color:var(--rani)}
+
+/* connectors (56px row gap): Founder stem 0–28px, bar at 28–31px, branch stems 28–56px.
+   Offsets add the border widths because abs. children sit in the padding box (2px sides/bottom, 6px top). */
+.hero .hero-leaders .hl-item:nth-child(1)::after,
+.hero .hero-leaders .hl-item:nth-child(n+2)::before{content:"";position:absolute;left:50%;width:3px;height:28px;
+  transform:translateX(-50%);background:var(--board)}
+.hero .hero-leaders .hl-item:nth-child(1)::after{top:calc(100% + 2px)}
+.hero .hero-leaders .hl-item:nth-child(n+2)::before{bottom:calc(100% + 6px)}
+.hero .hero-leaders .hl-item:nth-child(2)::before{background:var(--saffron)}
+.hero .hero-leaders .hl-item:nth-child(3)::before{background:var(--rani)}
+.hero .hero-leaders .hl-item:nth-child(n+2)::after{content:"";position:absolute;bottom:calc(100% + 31px);height:3px;
+  background:var(--board)}
+.hero .hero-leaders .hl-item:nth-child(2)::after{left:calc(50% - 1.5px);right:-14px}
+.hero .hero-leaders .hl-item:nth-child(3)::after{left:-14px;right:calc(50% - 1.5px)}
+
+/* phones: the two name cards stay side by side under the Founder, just tighter */
+@media (max-width:640px){
+  .hero .hero-leaders{column-gap:12px}
+  .hero .hero-leaders .hl-item:nth-child(n+2){padding:12px 8px 14px}
+  .hero .hero-leaders .hl-item:nth-child(n+2) .hl-name{font-size:1.05rem}
+  .hero .hero-leaders .hl-item:nth-child(n+2) .hl-role{font-size:.82rem}
+  .hero .hero-leaders .hl-item:nth-child(2)::after{right:-8px}
+  .hero .hero-leaders .hl-item:nth-child(3)::after{left:-8px}
+}
+
+/* ---------- marquee: coloured band ---------- */
+.marquee{background:#fff8ec;border-top:3px solid var(--board);border-bottom:3px solid var(--saffron);padding:12px 0}
+.marquee-track{font-weight:700;color:var(--ink)}
+.marquee-track b{color:var(--saffron-deep);padding:0 6px}
+.marquee-track b:nth-of-type(odd){color:var(--rani)}
+
+/* ---------- intro statement: smaller, bold, framed ---------- */
+.statement{position:relative;overflow:hidden;max-width:760px;margin:0 auto;padding:30px 28px 24px;
+  font-family:'Mukta',sans-serif;font-weight:700;font-size:clamp(1rem,2.4vw,1.2rem);line-height:1.8;color:var(--ink);
+  background:#fffaf2;border:2px solid var(--gold-2);border-radius:16px}
+.statement::before{content:"";position:absolute;inset:0 0 auto 0;height:6px;
+  background:linear-gradient(90deg,var(--board) 0 33.3%,var(--saffron) 33.3% 66.6%,var(--rani) 66.6% 100%)}
+.statement .hl{color:var(--maroon);border-bottom:0;padding:0 3px;
+  background:linear-gradient(transparent 55%,rgba(233,168,32,.45) 55%)}
+@media (max-width:640px){ .statement{padding:26px 18px 20px} }
+
+/* ---------- सेवा-संकल्प (#karya): one logo colour per field ----------
+   --kc draws borders/markers, --kt is the darker text shade of it (≥4.5:1 on white). */
+.karya-grid{border-top:0;gap:16px}
+.karya-card{--kc:var(--board);--kt:#1e40c9;border:1.5px solid var(--line);border-left:6px solid var(--kc);
+  border-radius:14px;background:#fff;padding-right:22px}
+.karya-card:nth-child(2){--kc:var(--saffron);--kt:#a84a06}
+.karya-card:nth-child(3){--kc:var(--gold-2);--kt:#8a5c08}
+.karya-card:nth-child(4){--kc:var(--rani);--kt:#b01f55}
+.karya-card:nth-child(5){--kc:var(--leaf);--kt:#12703d}
+.karya-card .karya-ico{border:2px solid var(--kc);color:var(--kt);background:#fff}
+.karya-card h3{margin:0 0 8px}
+.karya-card .karya-sub{display:inline-block;margin:0 0 10px;padding:3px 12px;border-radius:999px;
+  background:color-mix(in srgb,var(--kc) 14%,#fff);color:var(--kt);font-weight:800;font-size:.92rem}
+.karya-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.karya-list li{position:relative;padding-left:22px;color:var(--ink-soft);font-weight:500;line-height:1.7}
+.karya-list li::before{content:"";position:absolute;left:3px;top:.7em;width:8px;height:8px;rotate:45deg;background:var(--kc)}
+.karya-list b{color:var(--ink);font-weight:800}
+.karya-src{display:inline-flex;align-items:center;gap:7px;margin-top:14px;padding:6px 14px;border-radius:999px;
+  border:1.5px dashed var(--kc);color:var(--kt);font-weight:700;font-size:.9rem;text-decoration:none}
+.karya-src:hover{background:color-mix(in srgb,var(--kc) 10%,#fff)}
+.karya-src:focus-visible{outline:3px solid var(--kc);outline-offset:3px}
+.sec-head .karya-note{display:flex;align-items:center;gap:8px;width:fit-content;max-width:100%;margin:14px auto 0;padding:8px 16px;
+  border:1.5px solid var(--board);border-radius:999px;background:#f3f6ff;color:var(--board);font-weight:700;font-size:.93rem}
+.karya-note svg{flex:none}
+@media (max-width:560px){ .karya-card{padding-right:14px} .sec-head .karya-note{border-radius:14px;text-align:left} }
+
+/* ---------- "परिसर की आज की सच्चाई": grid on desktop/tablet, numbered timeline stays on phones ---------- */
+@media (min-width:700px){
+  .ruins-seq{max-width:none;display:grid;grid-template-columns:repeat(6,1fr);gap:30px 22px}
+  .ruins-seq::before{display:none}
+  .ruins-seq .seq-head{grid-column:1/-1;margin-bottom:4px}
+  .ruins-seq figure.shot,.ruins-seq figure.shot:last-child{margin:0;grid-column:span 2}
+  .ruins-seq figure.shot:nth-of-type(-n+2){grid-column:span 3}   /* ground + arches lead, big */
+  .ruins-seq figure.shot img{height:100%;object-fit:cover}
+  .ruins-seq figcaption{font-size:.95rem}
+  .ruins-seq .seq-n{margin-left:0;box-shadow:none}
+}
+
+/* ---------- gallery: even grid, any number of photos (admin can add more) ---------- */
+.gal{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:auto;gap:18px;column-count:auto}  /* 01-base fixed rows at 150px */
+.gal button{display:flex;flex-direction:column;margin:0;height:100%;border-top:4px solid var(--board)}
+.gal button:nth-child(4n+2){border-top-color:var(--saffron)}
+.gal button:nth-child(4n+3){border-top-color:var(--rani)}
+.gal button:nth-child(4n+4){border-top-color:var(--leaf)}
+.gal .gal-ph{aspect-ratio:4/3;flex:none}
+/* tiles crop; the lightbox shows the full photo. 30% keeps faces in portrait shots */
+.gal img{height:100%;object-fit:cover;object-position:center 30%}
+.gal-cap{flex:1;font-size:.92rem;padding:11px 13px 13px}
+.gal button:focus-visible{outline:3px solid var(--saffron);outline-offset:3px}
+@media (max-width:1000px){ .gal{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:680px){
+  .gal{grid-template-columns:repeat(2,1fr);grid-auto-rows:auto;gap:12px}
+  .gal button{margin:0;border-radius:12px}
+  .gal .gal-ph{aspect-ratio:1/1}
+  .gal-cap{font-size:.82rem;line-height:1.45;padding:8px 10px 10px}
+  .gal-zoom{top:6px;right:6px;width:28px;height:28px}
+}
+
+/* ---------- प्रशंसापत्र page: framed, colour-coded cards ---------- */
+.testi-card,.supp-card{--kc:var(--board);background:#fff;border:1.5px solid var(--line);border-top:6px solid var(--kc);
+  border-radius:14px;padding:22px 22px 20px;box-shadow:0 6px 18px rgba(29,26,22,.06)}
+.testi-card:nth-child(5n+2),.supp-card:nth-child(3n+2){--kc:var(--saffron)}
+.testi-card:nth-child(5n+3),.supp-card:nth-child(3n+3){--kc:var(--rani)}
+.testi-card:nth-child(5n+4){--kc:var(--leaf)}
+.testi-card:nth-child(5n+5){--kc:var(--gold-2)}
+.testi-grid{gap:20px}
+.supp-grid{gap:20px;align-items:start}
+.testi-card blockquote{font-size:clamp(1.2rem,2.6vw,1.5rem)}
+.testi-badge,.supp-badge{border:1.5px solid var(--kc);color:var(--ink);background:color-mix(in srgb,var(--kc) 8%,#fff)}
+.testi-card.testi-soon{border:2px dashed var(--leaf);border-top-width:2px;background:#f6fbf8;box-shadow:none}
+/* the height="1000" attribute was applying because nothing set height:auto */
+.supp-photo{height:auto;max-width:320px;margin-inline:auto}
+@media (min-width:560px) and (max-width:820px){ .supp-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width:560px){ .testi-card,.supp-card{padding:18px 16px 16px} }

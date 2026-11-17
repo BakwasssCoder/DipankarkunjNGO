@@ -539,52 +539,128 @@
     document.getElementById("judiye").scrollIntoView({behavior: "smooth"});
   });
 
-  /* downloadable receipt (canvas PNG) */
-  document.getElementById("dlReceipt").addEventListener("click", function(){
-    if(!receiptData) return;
-    var c = document.createElement("canvas"); c.width = 1000; c.height = 620;
-    var x = c.getContext("2d");
-    var g = x.createLinearGradient(0, 0, 1000, 620);
-    g.addColorStop(0, "#fffdf7"); g.addColorStop(1, "#f7e8c8");
-    x.fillStyle = g; x.fillRect(0, 0, 1000, 620);
-    x.strokeStyle = "#7c1d1d"; x.lineWidth = 6; x.strokeRect(18, 18, 964, 584);
-    x.strokeStyle = "#c8862a"; x.lineWidth = 2; x.strokeRect(32, 32, 936, 556);
-    var ENC = curLang === "en";
-    x.textAlign = "center"; x.fillStyle = "#7c1d1d";
-    x.font = "700 44px 'Tiro Devanagari Hindi', serif";
-    x.fillText(ENC ? "Deepankar Kunj" : "दीपांकर-कुंज", 500, 105);
-    x.font = "20px 'Mukta', sans-serif"; x.fillStyle = "#6b4e35";
-    x.fillText(ENC ? "Amarpur, Banka (Bihar) · तमसो मा ज्योतिर्गमय" : "अमरपुर, बांका (बिहार) · ॥ तमसो मा ज्योतिर्गमय ॥", 500, 142);
-    x.strokeStyle = "#e6b354"; x.beginPath(); x.moveTo(120, 168); x.lineTo(880, 168); x.stroke();
-    x.fillStyle = "#2c1a10"; x.font = "700 30px 'Mukta', sans-serif";
-    x.fillText(ENC ? "Membership Pledge Receipt" : "सदस्यता संकल्प रसीद", 500, 218);
-    x.textAlign = "left"; x.font = "24px 'Mukta', sans-serif"; x.fillStyle = "#2c1a10";
-    var rows = ENC ? [
-      ["Member No.", receiptData.id],
-      ["Name", receiptData.name],
-      ["Membership", receiptData.tier],
-      ["Amount", "₹" + receiptData.amount.toLocaleString("en-IN") + " (" + englishWords(receiptData.amount) + " Rupees)"],
-      ["Date", receiptData.date]
-    ] : [
-      ["सदस्य क्रमांक", receiptData.id],
-      ["नाम", receiptData.name],
-      ["सदस्यता", receiptData.tier],
-      ["राशि", "₹" + receiptData.amount.toLocaleString("en-IN") + " (" + hindiWords(receiptData.amount) + " रुपये)"],
-      ["दिनांक", receiptData.date]
+  /* downloadable receipt (canvas PNG, portrait, letterhead style) */
+  function drawReceipt(logo){
+    /* रसीद-बही style: counterfoil stub + perforation, fill-in dotted lines, ruled amount box, rubber stamp */
+    var d = receiptData, ENC = curLang === "en";
+    var rows = [
+      [ENC ? "Name" : "नाम", d.name],
+      [ENC ? "Mobile" : "मोबाइल", "+91 " + d.phone.slice(0, 5) + " " + d.phone.slice(5)]
     ];
-    if(receiptData.place) rows.push([ENC ? "Village / City" : "गाँव / शहर", receiptData.place]);
+    if(d.place) rows.push([ENC ? "Village / City" : "गाँव / शहर", d.place]);
+    rows.push([ENC ? "Membership" : "सदस्यता श्रेणी", d.tier]);
+    var W = 1200, RY = 540, RH = 84, AY = RY + rows.length * RH + 20, H = AY + 420;
+    var c = document.createElement("canvas"); c.width = W; c.height = H;
+    var x = c.getContext("2d");
+    var BLUE = "#1e40c9", SAF = "#e8700a", SAFD = "#b8520a", RANI = "#c2245e", INK = "#1d1a16", SOFT = "#57503f", RULE = "#b9b0a0";
+    var MX = 290, MR = W - 72;
+    function font(f){ x.font = f; }
+    function txt(t, px, y, f, col, align, maxW){
+      x.textAlign = align || "left"; x.fillStyle = col;
+      var size = +f.match(/(\d+)px/)[1]; font(f);
+      while(maxW && x.measureText(t).width > maxW && size > 14){ size -= 1; font(f.replace(/\d+px/, size + "px")); }
+      x.fillText(t, px, y);
+      return x.measureText(t).width;
+    }
+    function dots(x1, x2, y){ x.save(); x.strokeStyle = RULE; x.lineWidth = 2; x.setLineDash([2, 7]); x.lineCap = "round";
+      x.beginPath(); x.moveTo(x1, y); x.lineTo(x2, y); x.stroke(); x.restore(); }
+    function line(x1, y1, x2, y2, col, w){ x.strokeStyle = col; x.lineWidth = w; x.beginPath(); x.moveTo(x1, y1); x.lineTo(x2, y2); x.stroke(); }
+
+    /* paper, frame, colour bands */
+    x.fillStyle = "#fff"; x.fillRect(0, 0, W, H);
+    x.fillStyle = BLUE; x.fillRect(0, 0, W * .52, 14); x.fillRect(0, H - 14, W * .52, 14);
+    x.fillStyle = SAF; x.fillRect(W * .52, 0, W * .48, 14); x.fillRect(W * .52, H - 14, W * .48, 14);
+    x.strokeStyle = BLUE; x.lineWidth = 3; x.strokeRect(26, 34, W - 52, H - 68);
+    x.lineWidth = 1; x.strokeRect(34, 42, W - 68, H - 84);
+
+    /* counterfoil stub, perforated off */
+    x.fillStyle = "#f4f6fd"; x.fillRect(35, 43, 210, H - 86);
+    x.save(); x.strokeStyle = BLUE; x.lineWidth = 2; x.setLineDash([10, 8]);
+    x.beginPath(); x.moveTo(250, 46); x.lineTo(250, H - 46); x.stroke(); x.restore();
+    for(var hy = 110; hy < H - 80; hy += 96){ x.beginPath(); x.arc(250, hy, 9, 0, Math.PI * 2); x.fillStyle = "#fff"; x.fill(); x.strokeStyle = RULE; x.lineWidth = 1.5; x.stroke(); }
+    if(logo){ x.save(); x.beginPath(); x.arc(140, 132, 52, 0, Math.PI * 2); x.clip(); x.drawImage(logo, 88, 80, 104, 104); x.restore(); }
+    x.save(); x.translate(140, (H + 200) / 2); x.rotate(-Math.PI / 2);
+    txt(ENC ? "Deepankar Kunj" : "दीपांकर-कुंज", 0, -38, "40px 'Rozha One', serif", INK, "center");
+    txt((ENC ? "Receipt No. " : "रसीद क्र. ") + d.id, 0, 10, "800 30px 'Mukta', sans-serif", BLUE, "center");
+    txt(ENC ? "Counterfoil — member's copy" : "प्रतिपर्ण — सदस्य की प्रति", 0, 52, "600 22px 'Mukta', sans-serif", SOFT, "center");
+    x.restore();
+
+    /* faint watermark */
+    if(logo){ x.save(); x.globalAlpha = .05; x.drawImage(logo, (MX + MR) / 2 - 220, RY - 60, 440, 440); x.restore(); }
+
+    /* letterhead */
+    if(logo){ x.save(); x.beginPath(); x.arc(MX + 66, 150, 66, 0, Math.PI * 2); x.clip(); x.drawImage(logo, MX, 84, 132, 132); x.restore();
+      x.beginPath(); x.arc(MX + 66, 150, 70, 0, Math.PI * 2); x.strokeStyle = SAF; x.lineWidth = 3; x.stroke(); }
+    var TX = MX + 160, TW = MR - TX;
+    var nw = txt(ENC ? "Deepankar Kunj" : "दीपांकर-कुंज", TX, 128, "54px 'Rozha One', serif", INK);
+    txt("[NGO]", TX + nw + 12, 120, "800 28px 'Mukta', sans-serif", BLUE);
+    txt(ENC ? "Societies Registration Act 21, 1860" : "सोसाइटीज़ रजिस्ट्रेशन एक्ट 21, 1860", TX, 170, "700 23px 'Mukta', sans-serif", INK, "left", TW);
+    txt(ENC ? "Regd. No. 849 · Year 2010-11" : "पंजी. – 849 · वर्ष – 2010-11", TX, 204, "800 23px 'Mukta', sans-serif", SAFD, "left", TW);
+    txt(ENC ? "Amarpur, Banka (Bihar), India · PIN 813101" : "अमरपुर, बांका [बिहार], भारत · पिनकोड – 813101", TX, 238, "600 21px 'Mukta', sans-serif", SOFT, "left", TW);
+    txt("॥ तमसो मा ज्योतिर्गमय ॥", TX, 274, "23px 'Tiro Devanagari Hindi', serif", RANI, "left", TW);
+    line(MX, 306, MR, 306, BLUE, 3); line(MX, 314, MR, 314, BLUE, 1);
+
+    /* title */
+    var CX = (MX + MR) / 2;
+    txt(ENC ? "Membership Pledge Receipt" : "सदस्यता संकल्प रसीद", CX, 378, "42px 'Rozha One', serif", INK, "center");
+    line(CX - 70, 398, CX + 70, 398, SAF, 4);
+
+    /* number + date line */
+    txt(ENC ? "No." : "क्रमांक", MX, 462, "600 23px 'Mukta', sans-serif", SOFT);
+    txt(d.id, MX + 96, 462, "800 27px 'Mukta', sans-serif", BLUE);
+    var dw = txt(d.date, MR, 462, "700 25px 'Mukta', sans-serif", INK, "right");
+    txt(ENC ? "Date" : "दिनांक", MR - dw - 14, 462, "600 23px 'Mukta', sans-serif", SOFT, "right");
+
+    /* fill-in rows */
     rows.forEach(function(r, i){
-      var y = 285 + i * 46;
-      x.fillStyle = "#6b4e35"; x.fillText(r[0], 110, y);
-      x.fillStyle = "#2c1a10"; x.font = "700 24px 'Mukta', sans-serif"; x.fillText(r[1], 340, y);
-      x.font = "24px 'Mukta', sans-serif";
+      var y = RY + i * RH;
+      txt(r[0], MX, y, "600 23px 'Mukta', sans-serif", SOFT);
+      txt(r[1], MX + 210, y - 4, "700 30px 'Mukta', sans-serif", INK, "left", MR - MX - 220);
+      dots(MX + 200, MR, y + 14);
     });
-    x.textAlign = "center"; x.fillStyle = "#6b4e35"; x.font = "19px 'Mukta', sans-serif";
-    x.fillText(ENC ? "This receipt is proof of your membership pledge. To complete your membership, WhatsApp —" : "यह रसीद आपके सदस्यता-संकल्प का प्रमाण है। सदस्यता पूर्ण करने हेतु WhatsApp कीजिए —", 500, 545);
-    x.fillText(ENC ? "Deepankar Kunj · WhatsApp: +91 78570 43185 · Thank you!" : "दीपांकर-कुंज · WhatsApp: +91 78570 43185 · धन्यवाद!", 500, 572);
+
+    /* amount box + words */
+    txt(ENC ? "Pledged amount" : "संकल्प राशि", MX, AY + 30, "600 23px 'Mukta', sans-serif", SOFT);
+    x.strokeStyle = INK; x.lineWidth = 3; x.strokeRect(MX, AY + 48, 330, 112);
+    x.lineWidth = 1; x.strokeRect(MX + 8, AY + 56, 314, 96);
+    txt("₹ " + d.amount.toLocaleString("en-IN") + "/-", MX + 165, AY + 126, "800 54px 'Mukta', sans-serif", SAFD, "center", 290);
+    txt(ENC ? "In words" : "शब्दों में", MX, AY + 214, "600 23px 'Mukta', sans-serif", SOFT);
+    txt(ENC ? englishWords(d.amount) + " Rupees only" : hindiWords(d.amount) + " रुपये मात्र", MX + 130, AY + 210, "700 27px 'Mukta', sans-serif", INK, "left", 420);
+    dots(MX + 120, MX + 560, AY + 226);
+
+    /* rubber stamp — the pledge is recorded, payment is confirmed later on WhatsApp */
+    x.save(); x.translate(MR - 150, AY + 105); x.rotate(-.21); x.globalAlpha = .88;
+    x.strokeStyle = RANI; x.lineWidth = 6; x.beginPath(); x.arc(0, 0, 118, 0, Math.PI * 2); x.stroke();
+    x.lineWidth = 2; x.beginPath(); x.arc(0, 0, 104, 0, Math.PI * 2); x.stroke();
+    line(-92, -26, 92, -26, RANI, 2); line(-92, 34, 92, 34, RANI, 2);
+    txt(ENC ? "Deepankar Kunj" : "दीपांकर-कुंज", 0, -46, "800 22px 'Mukta', sans-serif", RANI, "center", 170);
+    txt(ENC ? "PLEDGED" : "संकल्प दर्ज", 0, 20, "38px 'Rozha One', serif", RANI, "center", 186);
+    txt(String(new Date().getFullYear()), 0, 70, "800 24px 'Mukta', sans-serif", RANI, "center");
+    x.restore();
+
+    /* note + footer */
+    txt(ENC ? "This receipt records your membership pledge. Membership is complete once confirmed on WhatsApp."
+            : "यह रसीद आपके सदस्यता-संकल्प का प्रमाण है। WhatsApp पर पुष्टि होते ही सदस्यता पूर्ण होगी।",
+        MX, AY + 262, "600 22px 'Mukta', sans-serif", SOFT, "left", MR - MX);
+    line(MX, H - 120, MR, H - 120, RULE, 1.5);
+    txt("WhatsApp: +91 78570 43185", MX, H - 84, "800 27px 'Mukta', sans-serif", "#178a4c");
+    txt(ENC ? "Computer-generated · no signature needed" : "कंप्यूटर-जनित रसीद · हस्ताक्षर आवश्यक नहीं", MR, H - 84, "500 20px 'Mukta', sans-serif", SOFT, "right", 420);
+
     var a = document.createElement("a");
-    a.download = "deepankar-kunj-rasid-" + receiptData.id + ".png";
+    a.download = "deepankar-kunj-rasid-" + d.id + ".png";
     a.href = c.toDataURL("image/png");
     a.click();
+  }
+  document.getElementById("dlReceipt").addEventListener("click", function(){
+    if(!receiptData) return;
+    /* canvas needs the web fonts loaded first, or it silently falls back */
+    var fontsReady = document.fonts && document.fonts.load ? Promise.all([
+      document.fonts.load("58px 'Rozha One'"), document.fonts.load("800 30px 'Mukta'"),
+      document.fonts.load("600 23px 'Mukta'"), document.fonts.load("24px 'Tiro Devanagari Hindi'")
+    ]).catch(function(){}) : Promise.resolve();
+    var logo = new Image();
+    var logoReady = new Promise(function(res){ logo.onload = function(){ res(logo); }; logo.onerror = function(){ res(null); }; });
+    logo.src = "assets/logo.jpg";
+    Promise.all([logoReady, fontsReady]).then(function(r){ drawReceipt(r[0]); });
   });
 })();
