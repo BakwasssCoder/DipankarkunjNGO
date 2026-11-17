@@ -471,6 +471,12 @@
       if(e.target.value === "custom") customAmt.focus();
     }
   });
+  /* step 3: account fields only appear when the person asks for an account */
+  document.getElementById("acctToggle").addEventListener("change", function(){
+    document.getElementById("acctFields").hidden = !this.checked;
+    if(this.checked) document.getElementById("inEmail").focus();
+    else { setInvalid("fEmail", false); setInvalid("fPw", false); }
+  });
   function setInvalid(id, bad){ document.getElementById(id).classList.toggle("invalid", bad); return !bad; }
   var ONES = ["","एक","दो","तीन","चार","पाँच","छह","सात","आठ","नौ","दस","ग्यारह","बारह","तेरह","चौदह","पन्द्रह","सोलह","सत्रह","अठारह","उन्नीस","बीस","इक्कीस","बाईस","तेईस","चौबीस","पच्चीस","छब्बीस","सत्ताईस","अट्ठाईस","उनतीस","तीस","इकतीस","बत्तीस","तैंतीस","चौंतीस","पैंतीस","छत्तीस","सैंतीस","अड़तीस","उनतालीस","चालीस","इकतालीस","बयालीस","तैंतालीस","चवालीस","पैंतालीस","छियालीस","सैंतालीस","अड़तालीस","उनचास","पचास","इक्यावन","बावन","तिरपन","चौवन","पचपन","छप्पन","सत्तावन","अट्ठावन","उनसठ","साठ","इकसठ","बासठ","तिरसठ","चौंसठ","पैंसठ","छियासठ","सड़सठ","अड़सठ","उनहत्तर","सत्तर","इकहत्तर","बहत्तर","तिहत्तर","चौहत्तर","पचहत्तर","छिहत्तर","सतहत्तर","अठहत्तर","उनासी","अस्सी","इक्यासी","बयासी","तिरासी","चौरासी","पचासी","छियासी","सत्तासी","अट्ठासी","नवासी","नब्बे","इक्यानवे","बानवे","तिरानवे","चौरानवे","पचानवे","छियानवे","सत्तानवे","अट्ठानवे","निन्यानवे"];
   function hindiWords(n){
@@ -516,18 +522,31 @@
     var okConsent = setInvalid("jConsentWrap", !(document.getElementById("jConsent").checked && document.getElementById("jAdult").checked));
     if(!okName){ document.getElementById("inName").focus(); return; }
     if(!okPhone){ document.getElementById("inPhone").focus(); return; }
+    /* optional account: both empty → pledge without an account; anything typed → both must be valid */
+    var email = document.getElementById("inEmail").value.trim(), pw = document.getElementById("inPw").value;
+    var wantAcct = document.getElementById("acctToggle").checked;
+    var okEmail = setInvalid("fEmail", wantAcct && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email));
+    var okPw = setInvalid("fPw", wantAcct && pw.length < 8);
+    if(!okEmail){ document.getElementById("inEmail").focus(); return; }
+    if(!okPw){ document.getElementById("inPw").focus(); return; }
     if(!okConsent){ document.getElementById(document.getElementById("jConsent").checked ? "jAdult" : "jConsent").focus(); return; }
     var now = new Date(), errEl = document.getElementById("joinErr"), subBtn = form.querySelector('[type="submit"]');
     errEl.textContent = "";
-    function fail(){
+    function fail(err){
       subBtn.disabled = false;
-      errEl.textContent = curLang === "en" ? "Could not save your pledge. Please try again, or WhatsApp +91 78570 43185." : "संकल्प सेव नहीं हो सका। दोबारा कोशिश कीजिए, या WhatsApp करें: +91 78570 43185";
+      var en = curLang === "en", code = err && err.code;
+      errEl.textContent =
+        code === "email_taken" ? (en ? "This email already has an account and the password does not match. Use the right password, or leave email/password empty." : "यह ईमेल पहले से पंजीकृत है और पासवर्ड मेल नहीं खाता। सही पासवर्ड डालिए, या ईमेल/पासवर्ड खाली छोड़कर संकल्प दर्ज कीजिए।")
+        : code === "weak_password" ? (en ? "Choose a stronger password (at least 8 characters)." : "थोड़ा मज़बूत पासवर्ड चुनिए (कम से कम 8 अक्षर)।")
+        : code === "confirm_on" ? (en ? "Accounts can't be created right now — leave email/password empty to pledge, or WhatsApp +91 78570 43185." : "अभी खाता नहीं बन पा रहा — ईमेल/पासवर्ड खाली छोड़कर संकल्प दर्ज कीजिए, या WhatsApp करें: +91 78570 43185")
+        : (en ? "Could not save your pledge. Please try again, or WhatsApp +91 78570 43185." : "संकल्प सेव नहीं हो सका। दोबारा कोशिश कीजिए, या WhatsApp करें: +91 78570 43185");
     }
     if(!window.DK_STORE || !DK_STORE.ready){ fail(); return; }
     subBtn.disabled = true;
     /* saved as a pending membership request — visible in the admin panel (admin/) */
-    DK_STORE.submitMembership({name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, msg: document.getElementById("inMsg").value.trim(), lang: curLang})
-      .then(function(id){ subBtn.disabled = false; showReceipt(id); }, fail);
+    var joinData = {name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, msg: document.getElementById("inMsg").value.trim(), lang: curLang};
+    (wantAcct ? DK_STORE.joinWithAccount(email, pw, joinData) : DK_STORE.submitMembership(joinData))
+      .then(function(id){ subBtn.disabled = false; document.getElementById("inPw").value = ""; showReceipt(id); }, fail);
     function showReceipt(id){
     var dateStr = now.toLocaleDateString(curLang === "en" ? "en-IN" : "hi-IN", {day: "numeric", month: "long", year: "numeric"});
     receiptData = {id: id, name: name, phone: phone, place: document.getElementById("inPlace").value.trim(), tier: tname, amount: amount, date: dateStr, msg: document.getElementById("inMsg").value.trim()};
@@ -552,6 +571,16 @@
     document.getElementById("rTier").textContent = tname;
     document.getElementById("rAmt").textContent = "₹" + amount.toLocaleString("en-IN") + " (" + amountWords(amount) + ")";
     document.getElementById("rDate").textContent = dateStr;
+    var acctOk = document.getElementById("acctOk");
+    acctOk.hidden = !wantAcct;
+    if(wantAcct){
+      acctOk.textContent = "";
+      acctOk.append(curLang === "en"
+        ? "Your account is ready — log in with " + email + " or " + id + " and your password. "
+        : "आपका खाता बन गया — " + email + " या " + id + " और अपने पासवर्ड से लॉगिन कीजिए। ");
+      var lk = document.createElement("a"); lk.href = "member/"; lk.textContent = curLang === "en" ? "Open my account →" : "मेरा खाता खोलें →";
+      acctOk.appendChild(lk);
+    }
     receipt.classList.add("show");
     receipt.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "center"});
     }

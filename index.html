@@ -21,21 +21,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Tiro+Devanagari+Hindi:ital@0;1&family=Mukta:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="css/01-base.css" />
-    <link rel="stylesheet" href="css/02-v2-signboard-colours.css" />
-    <link rel="stylesheet" href="css/03-v3-heritage.css" />
-    <link rel="stylesheet" href="css/04-v4-typography-language.css" />
-    <link rel="stylesheet" href="css/05-v5-pages.css" />
-    <link rel="stylesheet" href="css/06-v6-supporters.css" />
-    <link rel="stylesheet" href="css/07-v7-white-editorial.css" />
-    <link rel="stylesheet" href="css/08-v8-hero-masthead.css" />
-    <link rel="stylesheet" href="css/09-v9-polish.css" />
-    <link rel="stylesheet" href="css/10-v10-home-intro.css" />
-    <link rel="stylesheet" href="css/11-v11-founder-poster.css" />
-    <link rel="stylesheet" href="css/12-v12-press-carousel.css" />
-    <link rel="stylesheet" href="css/13-v13-people-posters.css" />
-    <link rel="stylesheet" href="css/14-site-chrome.css" />
-    <link rel="stylesheet" href="css/15-home-tree-refresh.css" />
+    <link rel="stylesheet" href="css/01-base.css?v=20261117b" />
+    <link rel="stylesheet" href="css/02-v2-signboard-colours.css?v=20261117b" />
+    <link rel="stylesheet" href="css/03-v3-heritage.css?v=20261117b" />
+    <link rel="stylesheet" href="css/04-v4-typography-language.css?v=20261117b" />
+    <link rel="stylesheet" href="css/05-v5-pages.css?v=20261117b" />
+    <link rel="stylesheet" href="css/06-v6-supporters.css?v=20261117b" />
+    <link rel="stylesheet" href="css/07-v7-white-editorial.css?v=20261117b" />
+    <link rel="stylesheet" href="css/08-v8-hero-masthead.css?v=20261117b" />
+    <link rel="stylesheet" href="css/09-v9-polish.css?v=20261117b" />
+    <link rel="stylesheet" href="css/10-v10-home-intro.css?v=20261117b" />
+    <link rel="stylesheet" href="css/11-v11-founder-poster.css?v=20261117b" />
+    <link rel="stylesheet" href="css/12-v12-press-carousel.css?v=20261117b" />
+    <link rel="stylesheet" href="css/13-v13-people-posters.css?v=20261117b" />
+    <link rel="stylesheet" href="css/14-site-chrome.css?v=20261117b" />
+    <link rel="stylesheet" href="css/15-home-tree-refresh.css?v=20261117b" />
   </head>
   <body class="loading">
     <!-- loading intro — the real Deepankar-Kunj logo -->
@@ -620,6 +620,7 @@
             <h3 data-i18n="form.h">सदस्यता फ़ॉर्म</h3>
             <p data-i18n="form.p">राशि चुनकर विवरण भरिए — रसीद यहीं बनेगी।</p>
             <form id="joinForm" novalidate>
+              <p class="fstep"><span class="fs-n">1</span><b data-i18n="step.1.b">राशि चुनिए</b></p>
               <div class="tiers" role="radiogroup" aria-label="सदस्यता राशि" data-i18n-aria="form.tiers.aria">
                 <label class="tier"><input type="radio" name="tier" value="21" data-tname="सहयोग सदस्य" data-tname-en="Support Member" /><span class="tier-card"><span class="amt num">₹21</span><span class="tname" data-i18n="t21.name">सहयोग सदस्य</span><span class="tdesc" data-i18n="t21.desc">एक दीप की शुरुआत</span></span></label>
                 <label class="tier pop"><input type="radio" name="tier" value="51" data-tname="दीप सदस्य" data-tname-en="Deep Member" checked /><span class="tier-card"><span class="amt num">₹51</span><span class="tname" data-i18n="t51.name">दीप सदस्य</span><span class="tdesc" data-i18n="t51.desc">शगुन की राशि, बड़ा संकल्प</span></span></label>
@@ -632,6 +633,8 @@
                 <input id="customAmt" type="number" min="1" max="1000000" inputmode="numeric" placeholder="जैसे 251" data-i18n-ph="f.custom.ph" />
                 <div class="err" data-i18n="f.custom.err">कृपया सही राशि लिखिए।</div>
               </div>
+              <p class="fstep"><span class="fs-n">2</span><b data-i18n="fstep.2">आपका विवरण</b></p>
+              <div class="frow">
               <div class="field" id="fName">
                 <label for="inName" data-i18n="f.name.label">आपका नाम *</label>
                 <input id="inName" type="text" autocomplete="name" placeholder="पूरा नाम लिखिए" data-i18n-ph="f.name.ph" />
@@ -642,6 +645,7 @@
                 <input id="inPhone" type="tel" autocomplete="tel" inputmode="numeric" maxlength="10" placeholder="10 अंकों का मोबाइल नंबर" data-i18n-ph="f.phone.ph" />
                 <div class="err" data-i18n="f.phone.err">कृपया 10 अंकों का सही मोबाइल नंबर लिखिए।</div>
               </div>
+              </div>
               <div class="field">
                 <label for="inPlace" data-i18n="f.place.label">गाँव / शहर</label>
                 <input id="inPlace" type="text" autocomplete="address-level2" placeholder="जैसे — अमरपुर, बांका" data-i18n-ph="f.place.ph" />
@@ -650,8 +654,25 @@
                 <label for="inMsg" data-i18n="f.msg.label">संदेश (यदि चाहें)</label>
                 <textarea id="inMsg" rows="2" placeholder="संस्था के लिए आपका संदेश…" data-i18n-ph="f.msg.ph"></textarea>
               </div>
+              <fieldset class="acct">
+                <legend class="fstep"><span class="fs-n">3</span><b data-i18n="acct.legend">सदस्य-खाता</b> <small data-i18n="acct.opt">वैकल्पिक</small></legend>
+                <label class="switch"><input type="checkbox" id="acctToggle" aria-controls="acctFields" /><span class="sw" aria-hidden="true"></span><span data-i18n="acct.toggle">हाँ, मेरा खाता भी बनाइए</span></label>
+                <p class="acct-note" data-i18n="acct.note">खाता बनाने पर सदस्यता पत्र, सूचनाएँ और कार्य आप कभी भी लॉगिन करके देख सकेंगे। न बनाना चाहें तो बिना खाते के भी संकल्प दर्ज होगा।</p>
+                <div id="acctFields" hidden>
+                <div class="field" id="fEmail">
+                  <label for="inEmail" data-i18n="f.email.label">ईमेल</label>
+                  <input id="inEmail" type="email" autocomplete="email" inputmode="email" placeholder="जैसे name@gmail.com" data-i18n-ph="f.email.ph" />
+                  <div class="err" data-i18n="f.email.err">कृपया सही ईमेल लिखिए।</div>
+                </div>
+                <div class="field" id="fPw">
+                  <label for="inPw" data-i18n="f.pw.label">पासवर्ड (कम से कम 8 अक्षर)</label>
+                  <input id="inPw" type="password" autocomplete="new-password" />
+                  <div class="err" data-i18n="f.pw.err">पासवर्ड कम से कम 8 अक्षर का रखिए।</div>
+                </div>
+                </div>
+              </fieldset>
               <div class="field consent" id="jConsentWrap">
-                <p class="notice-mini" data-i18n="cn.join.notice"><b>सूचना:</b> हम आपका नाम, मोबाइल, गाँव/शहर, सदस्यता राशि और संदेश केवल आपकी सदस्यता दर्ज करने, रसीद बनाने और सदस्यता के बारे में आपसे संपर्क करने के लिए लेते हैं। यह जानकारी बेची या किसी और को नहीं दी जाती। आप कभी भी सहमति वापस ले सकते हैं या जानकारी मिटवा सकते हैं — <a href="#/privacy">पूरी गोपनीयता सूचना पढ़िए</a>।</p>
+                <p class="notice-mini" data-i18n="cn.join.notice"><b>सूचना:</b> हम आपका नाम, मोबाइल, गाँव/शहर, सदस्यता राशि, संदेश और (यदि दें तो) ईमेल केवल आपकी सदस्यता दर्ज करने, रसीद बनाने और सदस्यता के बारे में आपसे संपर्क करने के लिए लेते हैं। यह जानकारी बेची या किसी और को नहीं दी जाती। आप कभी भी सहमति वापस ले सकते हैं या जानकारी मिटवा सकते हैं — <a href="#/privacy">पूरी गोपनीयता सूचना पढ़िए</a>।</p>
                 <label class="check"><input type="checkbox" id="jConsent" /> <span data-i18n="cn.agree">मैं ऊपर बताए उद्देश्य के लिए अपनी जानकारी देने की सहमति देता/देती हूँ।</span></label>
                 <label class="check"><input type="checkbox" id="jAdult" /> <span data-i18n="cn.adult">मेरी आयु 18 वर्ष या उससे अधिक है। (18 वर्ष से कम हों तो माता-पिता/अभिभावक यह फ़ॉर्म भरें।)</span></label>
                 <div class="err" data-i18n="cn.err">आगे बढ़ने के लिए दोनों बॉक्स पर टिक कीजिए।</div>
@@ -662,6 +683,7 @@
             <div id="receipt" aria-live="polite">
               <h4 data-i18n="r.h">🪔 धन्यवाद! आपका संकल्प दर्ज हुआ</h4>
               <p style="margin:0;color:var(--ink-soft);font-size:.96rem" data-i18n="r.p">आप दीपांकर-कुंज परिवार के सदस्य हैं। नीचे के हरे बटन से अपना संकल्प WhatsApp पर भेजिए — सदस्यता वहीं पूरी हो जाएगी। रसीद भी सहेजकर रखिए।</p>
+              <p class="acct-ok" id="acctOk" hidden></p>
               <dl>
                 <dt data-i18n="r.id">सदस्य क्रमांक</dt><dd id="rId" class="num">—</dd>
                 <dt data-i18n="r.name">नाम</dt><dd id="rName">—</dd>
@@ -1100,10 +1122,10 @@
       <span class="wa-tip" data-i18n="wa.tip">WhatsApp पर जुड़िए</span>
     </a>
 
-    <script src="js/translations.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-    <script src="js/supabase-config.js"></script>
-    <script src="js/store.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/translations.js?v=20261117b"></script>
+    <script src="js/vendor/supabase-2.45.4.js?v=20261117b"></script>
+    <script src="js/supabase-config.js?v=20261117b"></script>
+    <script src="js/store.js?v=20261117b"></script>
+    <script src="js/main.js?v=20261117b"></script>
   </body>
 </html>

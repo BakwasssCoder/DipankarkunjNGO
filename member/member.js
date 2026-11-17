@@ -80,7 +80,7 @@
       sb.auth.signOut();
     });
   });
-  $("logout").addEventListener("click", function(){ sb.auth.signOut().then(function(){ showGate(); tab(true); }); });
+  $("logout").addEventListener("click", function(){ sb.auth.signOut().then(function(){ location.replace("../login/"); }); });
 
   /* ---------- dashboard ---------- */
   function load(){
@@ -143,5 +143,8 @@
   if(!sb){ showGate("डेटाबेस से जुड़ नहीं पाए — इंटरनेट जाँचकर पेज रीफ़्रेश कीजिए।"); return; }
   /* show the login straight away; open the dashboard if a saved session turns up */
   showGate(); tab(location.hash !== "#activate");
-  sb.auth.getSession().then(function(res){ if(res.data && res.data.session) load(); });
+  sb.auth.getSession().then(function(res){
+    if(res.data && res.data.session) load();
+    else if(location.hash !== "#activate") location.replace("../login/");   /* activation stays here */
+  });
 })();

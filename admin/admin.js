@@ -79,7 +79,7 @@
       return enter();
     }, function(){ $("loginBtn").disabled = false; $("loginErr").textContent = "इंटरनेट कनेक्शन जाँचिए।"; });
   });
-  $("logout").addEventListener("click", function(){ sb.auth.signOut().then(function(){ showLogin(); }); });
+  $("logout").addEventListener("click", function(){ sb.auth.signOut().then(function(){ location.replace("../login/"); }); });
   $("refreshBtn").addEventListener("click", reload);
 
   /* ---------- sidebar + routing ---------- */
@@ -609,5 +609,6 @@
   showLogin();
   sb.auth.getSession().then(function(res){
     if(res.data && res.data.session) enter().catch(function(){ showLogin("डेटाबेस से जुड़ नहीं पाए।"); });
+    else location.replace("../login/");   /* one shared login page for admins and members */
   });
 })();

@@ -152,3 +152,54 @@
 .visit-pill b{font-weight:800;color:var(--ink);font-size:1.05rem}
 .f-visits{display:inline-flex;align-items:center;gap:6px;color:#e9d9bc}
 .f-visits b{color:#fff}
+
+/* ---------- optional account in the membership form ---------- */
+.acct{margin:4px 0 16px;padding:14px 16px 2px;border:1.5px dashed var(--board);border-radius:14px;background:#f6f8ff}
+.acct legend{padding:0 8px;font-weight:800;color:var(--board)}
+.acct legend span{font-weight:600;color:var(--ink-soft)}
+.acct-note{margin:0 0 12px;font-size:.92rem;color:var(--ink-soft);line-height:1.6}
+.acct-ok{margin:10px 0;padding:10px 14px;border-radius:12px;background:#e3f5ea;color:#12703d;font-weight:700}
+.acct-ok a{color:var(--board)}
+
+/* ---------- join section v2: pinned steps, numbered form, account switch ---------- */
+@media (min-width:861px){ .join-grid > .rv-l{position:sticky;top:calc(var(--hdr-h) + 24px)} }
+.steps .sn{background:var(--board);color:#fff}
+.steps li:nth-child(2) .sn{background:var(--saffron)}
+.steps li:nth-child(3) .sn{background:var(--leaf)}
+.join-card{border:1.5px solid var(--line-strong);border-top:6px solid var(--saffron);box-shadow:0 18px 40px rgba(29,26,22,.08)}
+.fstep{display:flex;align-items:center;gap:10px;margin:22px 0 12px;font-size:1.05rem;color:var(--ink)}
+.join-card form > .fstep:first-child{margin-top:4px}
+.fs-n{flex:none;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--board);color:#fff;font-weight:800;font-size:.92rem}
+.frow ~ .fstep .fs-n,.fstep:nth-of-type(2) .fs-n{background:var(--saffron)}
+.acct .fs-n{background:var(--leaf)}
+.fstep small{font-weight:600;color:var(--ink-soft);font-size:.86rem}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media (max-width:560px){ .frow{grid-template-columns:1fr} }
+
+/* tiers: chosen card gets a coloured edge + check */
+.tier-card{position:relative;padding:14px 16px 13px;border-radius:14px;transition:border-color .15s,background .15s,box-shadow .15s}
+.tier-card .amt{font-size:1.6rem;color:var(--board)}
+.tier input:checked + .tier-card{border-color:var(--saffron);background:#fff7ec;box-shadow:inset 4px 0 0 var(--saffron)}
+.tier input:checked + .tier-card .amt{color:var(--saffron-deep)}
+.tier input:checked + .tier-card::before{content:"";position:absolute;right:12px;top:14px;width:22px;height:22px;border-radius:50%;
+  background:var(--saffron) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat}
+.pop .tier-card::after{top:-11px}
+.tier input:checked + .tier-card::after{right:44px}
+@media (hover:hover){ .tier-card:hover{border-color:var(--board)} }
+
+/* account: legend + switch instead of always-visible empty fields */
+.acct{border:1.5px solid var(--line-strong);background:#fbfaf6;padding:6px 16px 4px}
+.acct legend.fstep{margin:0;padding:0 8px}
+.switch{display:flex;align-items:center;gap:12px;min-height:44px;cursor:pointer;font-weight:700}
+.switch input{position:absolute;opacity:0;width:1px;height:1px}
+.sw{flex:none;width:46px;height:26px;border-radius:999px;background:#cfc6b2;position:relative;transition:background .2s}
+.sw::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.switch input:checked + .sw{background:var(--leaf)}
+.switch input:checked + .sw::after{transform:translateX(20px)}
+.switch input:focus-visible + .sw{outline:3px solid var(--saffron);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){ .sw,.sw::after{transition:none} }
+.acct-note{margin:4px 0 10px}
+#acctFields{padding-top:6px}
+/* overflow:hidden on the section (01-base) disables position:sticky; clip keeps the crop without that side effect */
+.join-sec{overflow:clip}
+.acct legend .fs-n{color:#fff;font-weight:800}

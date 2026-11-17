@@ -83,6 +83,25 @@
       return rpc("submit_membership", { p_name: d.name, p_phone: d.phone, p_place: d.place || "", p_tier: d.tier || "",
         p_amount: d.amount, p_message: d.msg || "", p_lang: d.lang || "hi", p_notice: NOTICE_VERSION });
     },
+    /* membership + new portal account (email/password) in one go; resolves to the member number */
+    joinWithAccount: function(email, password, d){
+      var auth = need().auth;
+      return auth.signUp({ email: email, password: password }).then(function(res){
+        if(res.error){
+          /* already registered: correct password → reuse that account, otherwise tell the person */
+          if(/registered|exists/i.test(res.error.message)){
+            return auth.signInWithPassword({ email: email, password: password }).then(function(r2){
+              if(r2.error) throw { code: "email_taken" };
+            });
+          }
+          throw { code: /password/i.test(res.error.message) ? "weak_password" : "signup", message: res.error.message };
+        }
+        if(!res.data.session) throw { code: "confirm_on" };   /* "Confirm email" switched on in Supabase */
+      }).then(function(){
+        return rpc("submit_membership_account", { p_name: d.name, p_phone: d.phone, p_place: d.place || "", p_tier: d.tier || "",
+          p_amount: d.amount, p_message: d.msg || "", p_lang: d.lang || "hi", p_notice: NOTICE_VERSION });
+      });
+    },
     submitMessage: function(d){
       return rpc("submit_message", { p_name: d.name, p_phone: d.phone, p_subject: d.subject, p_message: d.message, p_notice: NOTICE_VERSION });
     },

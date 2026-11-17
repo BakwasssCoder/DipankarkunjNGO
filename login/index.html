@@ -8,32 +8,67 @@
     <link rel="icon" type="image/jpeg" href="../assets/logo.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="../admin/admin.css" />
-    <link rel="stylesheet" href="../member/member.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Rozha+One&family=Tiro+Devanagari+Hindi&family=Mukta:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="login.css?v=20261117b" />
   </head>
   <body>
-    <main class="login">
-      <form id="form" class="login-card gate-card" novalidate>
-        <img src="../assets/logo.jpg" width="72" height="72" alt="" />
-        <h1>लॉगिन</h1>
-        <p class="muted">दीपांकर-कुंज [NGO] · सदस्य और एडमिन</p>
-        <label for="who">सदस्य क्रमांक या एडमिन ईमेल</label>
-        <input id="who" autocomplete="username" placeholder="जैसे DK-2026-1001" required />
-        <p class="hint" id="whoHint">सदस्य: अपना सदस्य क्रमांक लिखिए · एडमिन: ईमेल</p>
-        <label for="pw">पासवर्ड</label>
-        <input id="pw" type="password" autocomplete="current-password" required />
-        <p class="err" id="err" role="alert"></p>
-        <button class="btn btn-primary" type="submit" id="btn">लॉगिन करें</button>
-        <p class="demo-note">पहली बार? संस्था से मिले कोड से <a href="../member/#activate">पासवर्ड बनाइए</a></p>
-        <p class="demo-note">कोड या पासवर्ड नहीं है? WhatsApp: <a href="https://wa.me/917857043185">+91 78570 43185</a></p>
-        <p class="demo-note"><a href="../index.html">← वेबसाइट पर लौटें</a></p>
-      </form>
-    </main>
+    <div class="shell">
+      <!-- darkness → light: the institution's motto on blue, the form on white -->
+      <aside class="side" aria-label="दीपांकर-कुंज">
+        <a class="side-brand" href="../index.html">
+          <img src="../assets/logo.jpg" width="56" height="56" alt="" />
+          <span><b>दीपांकर-कुंज</b><small>पंजी. – 849 · वर्ष – 2010-11</small></span>
+        </a>
+        <div class="side-motto">
+          <svg class="diya" viewBox="0 0 64 64" aria-hidden="true">
+            <path d="M32 6c4 8 10 12 10 21a10 10 0 1 1-20 0c0-9 6-13 10-21z" fill="#f4b942"/>
+            <path d="M32 18c2 5 5 7 5 11.5a5 5 0 1 1-10 0C27 25 30 23 32 18z" fill="#fff4d6"/>
+            <path d="M8 42h48c-2 9-12 14-24 14S10 51 8 42z" fill="#e8700a"/>
+          </svg>
+          <p class="motto">तमसो मा<br />ज्योतिर्गमय</p>
+          <p class="motto-sub">अंधेरे से प्रकाश की ओर</p>
+        </div>
+        <p class="side-foot">अमरपुर, बांका (बिहार) · सदस्य और संस्था के एडमिन यहीं से लॉगिन करते हैं</p>
+      </aside>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-    <script src="../js/supabase-config.js"></script>
-    <script src="../js/store.js"></script>
-    <script src="login.js"></script>
+      <main class="pane">
+        <form id="form" class="card" novalidate>
+          <h1>लॉगिन करें</h1>
+          <p class="lead">अपने सदस्य क्रमांक या ईमेल से।</p>
+
+          <div class="f" id="fWho">
+            <div class="f-top"><label for="who">सदस्य क्रमांक या ईमेल</label><span class="chip" id="chip" hidden></span></div>
+            <input id="who" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="DK-2026-1001 या name@gmail.com" required aria-describedby="whoErr" />
+            <p class="f-err" id="whoErr"></p>
+          </div>
+
+          <div class="f" id="fPw">
+            <div class="f-top"><label for="pw">पासवर्ड</label></div>
+            <div class="pw-wrap">
+              <input id="pw" type="password" autocomplete="current-password" required aria-describedby="pwErr" />
+              <button type="button" class="pw-eye" id="eye" aria-label="पासवर्ड दिखाएँ" aria-pressed="false">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <p class="f-err" id="pwErr"></p>
+          </div>
+
+          <p class="alert" id="err" role="alert" hidden></p>
+          <button class="btn-main" type="submit" id="btn"><span>लॉगिन करें</span></button>
+
+          <div class="or"><span>पहली बार आ रहे हैं?</span></div>
+          <a class="btn-alt" href="../member/#activate">संस्था से मिले कोड से पासवर्ड बनाइए</a>
+          <a class="btn-alt" href="../index.html#judiye">सदस्य बनिए — खाते के साथ</a>
+
+          <p class="help">पासवर्ड भूल गए या कोड नहीं मिला? WhatsApp कीजिए — <a href="https://wa.me/917857043185">+91 78570 43185</a></p>
+          <p class="back"><a href="../index.html">← वेबसाइट पर लौटें</a></p>
+        </form>
+      </main>
+    </div>
+
+    <script src="../js/vendor/supabase-2.45.4.js?v=20261117b"></script>
+    <script src="../js/supabase-config.js?v=20261117b"></script>
+    <script src="../js/store.js?v=20261117b"></script>
+    <script src="login.js?v=20261117b"></script>
   </body>
 </html>
